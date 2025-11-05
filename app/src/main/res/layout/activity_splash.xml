@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pawty_yellow"
+    tools:context=".SplashActivity">
+
+    <ImageView
+        android:id="@+id/bunting"
+        android:layout_width="850dp"
+        android:layout_height="216dp"
+        android:layout_marginTop="-24dp"
+        android:contentDescription="@string/app_name"
+        android:rotation="-20"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_bunting_top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.587"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="1352dp"
+        android:layout_height="659dp"
+        android:layout_marginTop="4dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/app_name"
+        android:rotation="-10"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_pawty_wordmark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.434"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/bunting"
+        app:layout_constraintWidth_percent="0.65" />
+
+    <TextView
+        android:id="@+id/tagline"
+        android:layout_width="307dp"
+        android:layout_height="55dp"
+        android:elevation="3dp"
+        android:fontFamily="@font/marcellus"
+        android:gravity="center"
+        android:letterSpacing="0.02"
+        android:text="Let's get this pawty started!"
+        android:textColor="@color/pawty_text"
+        android:textSize="18sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="316dp" />
+
+    <ImageView
+        android:id="@+id/popper"
+        android:layout_width="951dp"
+        android:layout_height="495dp"
+        android:layout_marginBottom="16dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/app_name"
+        android:elevation="2dp"
+        android:rotation="-5"
+        android:scaleType="fitCenter"
+        android:src="@drawable/illu_popper_confetti"
+        android:translationX="-80dp"
+        android:translationY="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.374"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.55" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
