@@ -111,51 +111,51 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:helperTextTextColor="@color/pawty_dark_blue">
+                android:layout_marginTop="12dp"
+                app:boxBackgroundMode="filled"
+                app:boxCornerRadiusTopStart="14dp"
+                app:boxCornerRadiusTopEnd="14dp"
+                app:boxCornerRadiusBottomStart="14dp"
+                app:boxCornerRadiusBottomEnd="14dp"
+                app:boxBackgroundColor="@color/pawty_teal"
+                app:boxStrokeColor="@android:color/transparent"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                android:hint="@string/hint_email">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/pawty_teal"
-                    android:fontFamily="@font/marcellus"
-                    android:hint="@string/hint_email"
                     android:inputType="textEmailAddress"
-                    android:radius="12dp"
+                    android:fontFamily="@font/marcellus"
                     android:textColor="@color/pawty_text_secondary"
-                    android:textColorHighlight="@color/pawty_dark_blue"
-                    android:textColorHint="@color/pawty_dark_blue"
-                    android:textColorLink="@color/pawty_dark_blue"
-                    app:boxBackgroundMode="filled"
-                    app:boxBackgroundColor="@color/pawty_cream"
-                    app:boxStrokeColor="@color/pawty_dark_blue"
-                    app:boxStrokeWidth="2dp" />
+                    android:textColorHint="@color/pawty_text_secondary" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textColorHint="@color/pawty_dark_blue"
-                app:boxStrokeColor="@color/pawty_dark_blue">
+                android:layout_marginTop="10dp"
+                app:boxBackgroundMode="filled"
+                app:boxCornerRadiusTopStart="14dp"
+                app:boxCornerRadiusTopEnd="14dp"
+                app:boxCornerRadiusBottomStart="14dp"
+                app:boxCornerRadiusBottomEnd="14dp"
+                app:boxBackgroundColor="@color/pawty_teal"
+                app:boxStrokeColor="@android:color/transparent"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                android:hint="@string/hint_password">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/pawty_teal"
-                    android:fontFamily="@font/marcellus"
-                    android:hint="@string/hint_password"
                     android:inputType="textPassword"
-                    android:radius="12dp"
+                    android:fontFamily="@font/marcellus"
                     android:textColor="@color/pawty_text_secondary"
-                    android:textColorHighlight="@color/pawty_dark_blue"
-                    android:textColorHint="@color/pawty_dark_blue"
-                    android:textColorLink="@color/pawty_dark_blue"
-                    app:boxBackgroundColor="@color/pawty_cream"
-                    app:boxBackgroundMode="filled"
-                    app:boxStrokeColor="@color/pawty_dark_blue"
-                    app:boxStrokeWidth="2dp" />
+                    android:textColorHint="@color/pawty_text_secondary" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton

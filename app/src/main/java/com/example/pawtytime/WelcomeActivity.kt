@@ -11,6 +11,13 @@ class WelcomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
 
+        val btnCreate: MaterialButton = findViewById(R.id.btnCreateAccount)
+
+        btnCreate.isEnabled = true
+        btnCreate.setOnClickListener {
+            Snackbar.make(it, "Opening Pawty People…", Snackbar.LENGTH_SHORT).show()
+            startActivity(Intent(this, PawtyPeopleActivity::class.java))
+            }
         findViewById<MaterialButton>(R.id.btnGoogle).setOnClickListener {
                 Snackbar.make(it, "Google sign-in coming next", Snackbar.LENGTH_SHORT).show()
             }

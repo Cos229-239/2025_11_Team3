@@ -10,4 +10,18 @@
     <string name="login">Log In</string>
     <string name="or">Or</string>
     <string name="create_account">Create Account</string>
+
+    <string name="pawty_people_title">Pawty People</string>
+    <string name="hint_username">Enter Username *</string>
+    <string name="hint_password_create">Enter Password *</string>
+    <string name="hint_valid_email">Enter Valid Email Address *</string>
+    <string name="hint_phone">Enter Phone Number *</string>
+    <string name="hint_location">Enter Location *</string>
+
+    <string name="upload_info_header">Enter the following information to get verified</string>
+    <string name="btn_upload_profile">Upload Profile Picture</string>
+    <string name="btn_upload_id_front">Upload ID (Front)</string>
+    <string name="btn_upload_id_back">Upload ID (Back)</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
 </resources>
