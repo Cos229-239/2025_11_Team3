@@ -8,7 +8,9 @@
     <color name="pawty_dark_orange">#AF3E01</color>
     <color name="pawty_light_blue">#9BD2EB</color>
     <color name="pawty_accent_orange">#F58A07</color>
+    <color name="pawty_cream">#FFE995</color>
     <color name="pawty_background">#F2F4F7</color>
     <color name="pawty_text_primary">#101828</color>
     <color name="pawty_text_secondary">#0B4365</color>
+    <color name="pawty_text_third">#AF3E01</color>
 </resources>
