@@ -49,7 +49,7 @@ class PawtyPetsActivity : AppCompatActivity() {
     private lateinit var ivVaxPreview: ImageView
 
     private lateinit var btnAddAnother: Button
-    private lateinit var btnSave: Button
+    private lateinit var btnDone: Button
 
     private val pickPetPhoto =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -94,7 +94,7 @@ class PawtyPetsActivity : AppCompatActivity() {
         ivVaxPreview = findViewById(R.id.ivVaxPreview)
 
         btnAddAnother = findViewById(R.id.btnAddAnother)
-        btnSave = findViewById(R.id.btnSave)
+        btnDone = findViewById(R.id.btnDone)
     }
 
     private fun wireInteractions() {
@@ -118,7 +118,7 @@ class PawtyPetsActivity : AppCompatActivity() {
             clearForm()
         }
 
-        btnSave.setOnClickListener {
+        btnDone.setOnClickListener {
             val pet = collectPet()
             snack("Saved ${pet.name}.")
             finish()

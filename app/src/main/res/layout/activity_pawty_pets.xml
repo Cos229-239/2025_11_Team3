@@ -407,11 +407,11 @@
                         app:strokeWidth="2dp"/>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnSave"
+                        android:id="@+id/btnDone"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/save_and_finish"
+                        android:text="@string/done"
                         android:textColor="@color/pawty_text_secondary"
                         android:textAllCaps="false"
                         android:layout_marginStart="8dp"

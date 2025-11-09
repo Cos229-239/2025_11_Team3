@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -57,8 +58,8 @@ class PawtyPeopleActivity : AppCompatActivity() {
         setContentView(R.layout.activity_pawty_people)
         storageRef = Firebase.storage.reference
 
-        val btnBack: TextView = findViewById(R.id.btnBack)
-        val btnNext: TextView = findViewById(R.id.btnNext)
+        val btnBack: MaterialButton = findViewById(R.id.btnBack)
+        val btnNext: MaterialButton = findViewById(R.id.btnNext)
 
         ivProfilePreview = findViewById(R.id.ivProfilePreview)
         ivIdFrontPreview = findViewById(R.id.ivIdFrontPreview)

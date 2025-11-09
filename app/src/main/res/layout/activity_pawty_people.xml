@@ -52,6 +52,58 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:boxBackgroundMode="filled"
+                    app:boxCornerRadiusTopStart="14dp"
+                    app:boxCornerRadiusTopEnd="14dp"
+                    app:boxCornerRadiusBottomStart="14dp"
+                    app:boxCornerRadiusBottomEnd="14dp"
+                    app:boxBackgroundColor="@color/pawty_teal"
+                    app:boxStrokeColor="@android:color/transparent"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    android:hint="@string/hint_first_name">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etFirstName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"
+                        android:background="@null"
+                        android:textColor="@color/pawty_text_secondary"
+                        android:textColorHint="@color/pawty_text_secondary"
+                        android:fontFamily="@font/marcellus"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:boxBackgroundMode="filled"
+                    app:boxCornerRadiusTopStart="14dp"
+                    app:boxCornerRadiusTopEnd="14dp"
+                    app:boxCornerRadiusBottomStart="14dp"
+                    app:boxCornerRadiusBottomEnd="14dp"
+                    app:boxBackgroundColor="@color/pawty_teal"
+                    app:boxStrokeColor="@android:color/transparent"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    android:hint="@string/hint_last_name">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etLastName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"
+                        android:background="@null"
+                        android:textColor="@color/pawty_text_secondary"
+                        android:textColorHint="@color/pawty_text_secondary"
+                        android:fontFamily="@font/marcellus"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     app:boxBackgroundMode="filled"
                     app:boxCornerRadiusTopStart="14dp"
                     app:boxCornerRadiusTopEnd="14dp"
@@ -281,25 +333,35 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
-                    <TextView
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnBack"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/back"
+                        android:textAllCaps="false"
                         android:textColor="@color/pawty_text_secondary"
+                        android:backgroundTint="@color/pawty_teal"
                         android:fontFamily="@font/marcellus"
+                        app:cornerRadius="12dp"
+                        app:strokeColor="@color/pawty_dark_blue"
+                        app:strokeWidth="2dp"
                         android:padding="12dp" />
 
-                    <TextView
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnNext"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textAlignment="textEnd"
                         android:text="@string/next"
+                        android:textAllCaps="false"
                         android:textColor="@color/pawty_text_secondary"
+                        android:backgroundTint="@color/pawty_teal"
                         android:fontFamily="@font/marcellus"
+                        app:cornerRadius="12dp"
+                        app:strokeColor="@color/pawty_dark_blue"
+                        app:strokeWidth="2dp"
+                        android:layout_marginStart="8dp"
                         android:padding="12dp" />
                 </LinearLayout>
 

@@ -12,6 +12,8 @@
     <string name="create_account">Create Account</string>
 
     <string name="pawty_people_title">Pawty People</string>
+    <string name="hint_first_name">Enter First Name *</string>
+    <string name="hint_last_name">Enter Last Name *</string>
     <string name="hint_username">Enter Username *</string>
     <string name="hint_password_create">Enter Password *</string>
     <string name="hint_valid_email">Enter Valid Email Address *</string>
@@ -42,5 +44,5 @@
     <string name="btn_upload_pet_photo">Upload Pet Photo</string>
     <string name="btn_upload_vax">Upload Vaccine Records</string>
     <string name="add_another_pet">Add Another Pet</string>
-    <string name="save_and_finish">Save &amp; Finish</string>
+    <string name="done">Done</string>
 </resources>
