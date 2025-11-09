@@ -10,6 +10,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import com.google.firebase.storage.StorageReference
 
 class PawtyPeopleActivity : AppCompatActivity() {
     private lateinit var ivProfilePreview: ImageView
@@ -20,44 +23,71 @@ class PawtyPeopleActivity : AppCompatActivity() {
     private lateinit var zoneUploadIdFront: MaterialCardView
     private lateinit var zoneUploadIdBack: MaterialCardView
 
+    private lateinit var storageRef: StorageReference
+
     private val pickProfile =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let { ivProfilePreview.setImageURI(it); snack("Profile image selected") }
+            uri?.let {
+                ivProfilePreview.setImageURI(it)
+                snack("Uploading profile image...")
+                uploadImageToStorage(it, "profile_${System.currentTimeMillis()}.jpg")
+            }
         }
 
     private val pickIdFront =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let { ivIdFrontPreview.setImageURI(it); snack("Front ID image selected") }
+            uri?.let {
+                ivIdFrontPreview.setImageURI(it)
+                snack("Uploading front ID...")
+                uploadImageToStorage(it, "id_front_${System.currentTimeMillis()}.jpg")
+            }
         }
 
     private val pickIdBack =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let { ivIdBackPreview.setImageURI(it); snack("Back ID image selected") }
+            uri?.let {
+                ivIdBackPreview.setImageURI(it)
+                snack("Uploading back ID...")
+                uploadImageToStorage(it, "id_back_${System.currentTimeMillis()}.jpg")
+            }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pawty_people)
+        storageRef = Firebase.storage.reference
+
+        val btnBack: TextView = findViewById(R.id.btnBack)
+        val btnNext: TextView = findViewById(R.id.btnNext)
 
         ivProfilePreview = findViewById(R.id.ivProfilePreview)
         ivIdFrontPreview = findViewById(R.id.ivIdFrontPreview)
         ivIdBackPreview  = findViewById(R.id.ivIdBackPreview)
-
         zoneUploadProfile = findViewById(R.id.zoneUploadProfile)
         zoneUploadIdFront = findViewById(R.id.zoneUploadIdFront)
         zoneUploadIdBack  = findViewById(R.id.zoneUploadIdBack)
-
-        val btnBack: TextView = findViewById(R.id.btnBack)
-        val btnNext: TextView = findViewById(R.id.btnNext)
 
         zoneUploadProfile.setOnClickListener { pickProfile.launch("image/*") }
         zoneUploadIdFront.setOnClickListener { pickIdFront.launch("image/*") }
         zoneUploadIdBack.setOnClickListener { pickIdBack.launch("image/*") }
 
         btnBack.setOnClickListener { finish() }
-        //btnNext.setOnClickListener {
-            //startActivity(Intent(this, PawtyPetsActivity::class.java))
-        //}
+
+        btnNext.setOnClickListener {
+            startActivity(Intent(this@PawtyPeopleActivity, PawtyPetsActivity::class.java))
+        }
+    }
+    private fun uploadImageToStorage(uri: Uri, fileName: String) {
+        val fileRef = storageRef.child("users/uploads/$fileName")
+        fileRef.putFile(uri)
+            .addOnSuccessListener {
+                fileRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+                    snack("Upload complete")
+                }
+            }
+            .addOnFailureListener { e ->
+                snack("Upload failed: ${e.message}")
+            }
     }
 
     private fun snack(msg: String) =

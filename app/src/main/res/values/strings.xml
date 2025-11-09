@@ -24,4 +24,23 @@
     <string name="btn_upload_id_back">Upload ID (Back)</string>
     <string name="back">Back</string>
     <string name="next">Next</string>
+
+    <string name="pawty_pets_title">Pawty Pets</string>
+    <string name="hint_pet_name">Pet Name *</string>
+    <string name="hint_species">Species *</string>
+    <string name="hint_breed">Breed *</string>
+    <string name="hint_birthdate">Birthdate *</string>
+    <string name="hint_weight">Weight (lbs) *</string>
+    <string name="hint_sex">Sex *</string>
+    <string name="hint_likes">Likes</string>
+    <string name="hint_dislikes">Dislikes</string>
+    <string name="health_info_header">Health Info *</string>
+    <string name="hint_med_conditions">Medical Conditions *</string>
+    <string name="hint_medications">Medications *</string>
+    <string name="vaccinations_header">Vaccinations *</string>
+    <string name="hint_spayed_neutered">Spayed/Neutered *</string>
+    <string name="btn_upload_pet_photo">Upload Pet Photo</string>
+    <string name="btn_upload_vax">Upload Vaccine Records</string>
+    <string name="add_another_pet">Add Another Pet</string>
+    <string name="save_and_finish">Save &amp; Finish</string>
 </resources>
