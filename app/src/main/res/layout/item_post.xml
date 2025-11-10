@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardPreventCornerOverlap="true"
+    app:useCompatPadding="true"
+    app:contentPadding="12dp"
+    app:cardBackgroundColor="#FFE995">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false">
+
+        <!-- Header: avatar | name | follow pill | share -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/imgAvatar"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_avatar_circle"
+                android:contentDescription="@string/cd_avatar" />
+
+            <TextView
+                android:id="@+id/tvAuthor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="?attr/colorOnSurface"
+                android:text="@string/post_author_placeholder" />
+
+            <!-- Follow pill (needs width/height) -->
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipFollow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.Material3.Chip.Assist"
+                android:layout_marginEnd="8dp"
+                android:text="@string/follow"
+                app:chipMinHeight="36dp"
+                app:chipStartPadding="14dp"
+                app:chipEndPadding="14dp"
+                app:chipCornerRadius="18dp"
+                app:chipBackgroundColor="#7DB5CF"
+                app:chipStrokeWidth="0dp"
+                app:textAppearance="?attr/textAppearanceBodyMedium"
+                app:textColor="@android:color/black" />
+
+
+
+
+            <ImageButton
+                android:id="@+id/btnHeaderShare"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@android:color/transparent"
+                android:padding="8dp"
+                android:src="@drawable/ic_share"
+                android:contentDescription="@string/cd_share" />
+        </LinearLayout>
+
+        <!-- Image with overlay -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="220dp">
+
+            <ImageView
+                android:id="@+id/imgPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/sample_dog"
+                android:contentDescription="@string/cd_post_image"
+                tools:ignore="ImageContrastCheck" />
+
+            <View
+                android:id="@+id/overlayPhotoContrast"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#33000000" />
+        </FrameLayout>
+
+        <!-- Caption + actions -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:gravity="center_vertical"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:id="@+id/tvCaption"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:textColor="?attr/colorOnSurface"
+                android:text="@string/post_caption_placeholder" />
+
+            <ImageButton
+                android:id="@+id/btnLike"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@android:color/transparent"
+                android:padding="8dp"
+                android:src="@drawable/ic_like"
+                android:contentDescription="@string/cd_like" />
+
+            <ImageButton
+                android:id="@+id/btnSave"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@android:color/transparent"
+                android:padding="8dp"
+                android:src="@drawable/ic_bookmark"
+                android:contentDescription="@string/cd_save" />
+        </LinearLayout>
+
+        <!-- Comments row -->
+        <LinearLayout
+            android:id="@+id/rowComments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp">
+
+            <TextView
+                android:id="@+id/tvComments"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:text="@string/comments_placeholder" />
+
+            <ImageButton
+                android:id="@+id/btnCommentsExpand"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@android:color/transparent"
+                android:padding="8dp"
+                android:src="@drawable/ic_expand_more"
+                android:contentDescription="@string/cd_expand_comments" />
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
