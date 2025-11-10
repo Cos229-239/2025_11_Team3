@@ -3,4 +3,8 @@
     <string name="tagline">Let\'s get this pawty started!</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home_tab">Home</string>
+    <string name="events_tab">Events</string>
+    <string name="map_tab">Map</string>
+    <string name="shop_tab">Shop</string>
 </resources>
