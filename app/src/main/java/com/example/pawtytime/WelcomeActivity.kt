@@ -18,6 +18,10 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import android.util.Patterns
+import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 
 class WelcomeActivity : AppCompatActivity() {
 
@@ -59,26 +63,56 @@ class WelcomeActivity : AppCompatActivity() {
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
-
         googleClient = GoogleSignIn.getClient(this, gso)
 
         callbackManager = CallbackManager.Factory.create()
 
+        val etEmail = findViewById<TextInputEditText>(R.id.etEmail)
+        val etPassword = findViewById<TextInputEditText>(R.id.etPassword)
+
         val btnCreate: MaterialButton = findViewById(R.id.btnCreateAccount)
         btnCreate.isEnabled = true
         btnCreate.setOnClickListener {
-            Snackbar.make(it, "Opening Pawty People…", Snackbar.LENGTH_SHORT).show()
+            snack("Opening Pawty People…")
             startActivity(Intent(this, PawtyPeopleActivity::class.java))
             }
         findViewById<MaterialButton>(R.id.btnGoogle).setOnClickListener {
             googleSignInLauncher.launch(googleClient.signInIntent)
             }
-        findViewById<MaterialButton>(R.id.btnEmailLogin).setOnClickListener {
-                Snackbar.make(it, "Email login coming next", Snackbar.LENGTH_SHORT).show()
-            }
+
         findViewById<MaterialButton>(R.id.btnFacebook).setOnClickListener {
             LoginManager.getInstance()
                 .logInWithReadPermissions(this, listOf("public_profile", "email"))
+        }
+
+        findViewById<MaterialButton>(R.id.btnEmailLogin).setOnClickListener {
+            val email = etEmail.text?.toString()?.trim().orEmpty()
+            val password = etPassword.text?.toString()?.trim().orEmpty()
+
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                snack("Enter a valid email")
+                etEmail.requestFocus()
+                return@setOnClickListener
+            }
+            if (password.isEmpty()) {
+                snack("Enter your password")
+                etPassword.requestFocus()
+                return@setOnClickListener
+            }
+
+            Firebase.auth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener {
+                    snack("Signed in ✓")
+                    // startActivity(Intent(this, HomeActivity::class.java))
+                    // finish()
+                }.addOnFailureListener { e ->
+                    val msg = when (e) {
+                        is FirebaseAuthInvalidUserException -> "No account found for that email."
+                        is FirebaseAuthInvalidCredentialsException -> "Incorrect password."
+                        else -> e.message ?: "Sign-in failed."
+                    }
+                    snack(msg)
+                }
         }
 
         LoginManager.getInstance().registerCallback(
