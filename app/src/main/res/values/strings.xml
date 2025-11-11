@@ -45,4 +45,8 @@
     <string name="btn_upload_vax">Upload Vaccine Records</string>
     <string name="add_another_pet">Add Another Pet</string>
     <string name="done">Done</string>
+
+    <string name="fb_app_id">836826048730037</string>
+    <string name="fb_login_protocol_scheme">fb836826048730037</string>
+    <string name="facebook_client_token">6fb4f89c7829187e5aba416ad4c5235d</string>
 </resources>
