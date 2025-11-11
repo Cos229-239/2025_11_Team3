@@ -10,6 +10,11 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -17,10 +22,45 @@ import com.google.firebase.ktx.Firebase
 class WelcomeActivity : AppCompatActivity() {
 
     private lateinit var callbackManager: CallbackManager
+    private lateinit var googleClient: GoogleSignInClient
+
+    private val googleSignInLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val data = result.data
+        val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+        try {
+            val account = task.getResult(Exception::class.java)
+            val idToken = account.idToken
+            if (idToken.isNullOrEmpty()) {
+                snack("Google sign-in failed: empty token")
+                return@registerForActivityResult
+            }
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            Firebase.auth.signInWithCredential(credential)
+                .addOnSuccessListener {
+                    snack("Google sign-in ✓")
+                    // startActivity(Intent(this, HomeActivity::class.java))
+                    // finish()
+                }
+                .addOnFailureListener { e ->
+                    snack("Firebase auth failed: ${e.message}")
+                }
+        } catch (e: Exception) {
+            snack("Google sign-in error: ${e.message}")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        googleClient = GoogleSignIn.getClient(this, gso)
 
         callbackManager = CallbackManager.Factory.create()
 
@@ -31,7 +71,7 @@ class WelcomeActivity : AppCompatActivity() {
             startActivity(Intent(this, PawtyPeopleActivity::class.java))
             }
         findViewById<MaterialButton>(R.id.btnGoogle).setOnClickListener {
-                Snackbar.make(it, "Google sign-in coming next", Snackbar.LENGTH_SHORT).show()
+            googleSignInLauncher.launch(googleClient.signInIntent)
             }
         findViewById<MaterialButton>(R.id.btnEmailLogin).setOnClickListener {
                 Snackbar.make(it, "Email login coming next", Snackbar.LENGTH_SHORT).show()
