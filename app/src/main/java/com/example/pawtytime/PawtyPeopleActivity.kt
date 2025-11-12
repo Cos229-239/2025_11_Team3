@@ -5,15 +5,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import com.google.firebase.storage.StorageReference
+import com.google.android.material.textfield.TextInputEditText
+
 
 class PawtyPeopleActivity : AppCompatActivity() {
     private lateinit var ivProfilePreview: ImageView
@@ -24,49 +23,61 @@ class PawtyPeopleActivity : AppCompatActivity() {
     private lateinit var zoneUploadIdFront: MaterialCardView
     private lateinit var zoneUploadIdBack: MaterialCardView
 
-    private lateinit var storageRef: StorageReference
+    private var profileUrl: String? = null
+    private var idFrontUrl: String? = null
+    private var idBackUrl: String? = null
+
+    private val uploader by lazy { CloudinaryUploader(this) }
 
     private val pickProfile =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-                ivProfilePreview.setImageURI(it)
+            uri?: return@registerForActivityResult
+                ivProfilePreview.setImageURI(uri)
                 snack("Uploading profile image...")
-                uploadImageToStorage(it, "profile_${System.currentTimeMillis()}.jpg")
+                uploader.upload(uri) { url ->
+                    profileUrl = url
+                    snack(if (url != null) "Profile image uploaded ✓" else "Upload failed")
+                }
             }
-        }
 
     private val pickIdFront =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-                ivIdFrontPreview.setImageURI(it)
+            uri?: return@registerForActivityResult
+                ivIdFrontPreview.setImageURI(uri)
                 snack("Uploading front ID...")
-                uploadImageToStorage(it, "id_front_${System.currentTimeMillis()}.jpg")
+            uploader.upload(uri) { url ->
+                idFrontUrl = url
+                snack(if (url != null) "Front ID uploaded ✓" else "Upload failed")
+                }
             }
-        }
+
 
     private val pickIdBack =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-                ivIdBackPreview.setImageURI(it)
+            uri?: return@registerForActivityResult
+                ivIdBackPreview.setImageURI(uri)
                 snack("Uploading back ID...")
-                uploadImageToStorage(it, "id_back_${System.currentTimeMillis()}.jpg")
+            uploader.upload(uri) { url ->
+                idBackUrl = url
+                snack(if (url != null) "Back ID uploaded ✓" else "Upload failed")
+                }
             }
-        }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pawty_people)
-        storageRef = Firebase.storage.reference
 
         val btnBack: MaterialButton = findViewById(R.id.btnBack)
         val btnNext: MaterialButton = findViewById(R.id.btnNext)
 
         ivProfilePreview = findViewById(R.id.ivProfilePreview)
         ivIdFrontPreview = findViewById(R.id.ivIdFrontPreview)
-        ivIdBackPreview  = findViewById(R.id.ivIdBackPreview)
+        ivIdBackPreview = findViewById(R.id.ivIdBackPreview)
+
         zoneUploadProfile = findViewById(R.id.zoneUploadProfile)
         zoneUploadIdFront = findViewById(R.id.zoneUploadIdFront)
-        zoneUploadIdBack  = findViewById(R.id.zoneUploadIdBack)
+        zoneUploadIdBack = findViewById(R.id.zoneUploadIdBack)
 
         zoneUploadProfile.setOnClickListener { pickProfile.launch("image/*") }
         zoneUploadIdFront.setOnClickListener { pickIdFront.launch("image/*") }
@@ -75,20 +86,40 @@ class PawtyPeopleActivity : AppCompatActivity() {
         btnBack.setOnClickListener { finish() }
 
         btnNext.setOnClickListener {
-            startActivity(Intent(this@PawtyPeopleActivity, PawtyPetsActivity::class.java))
+            val person = collectPersonOrShowErrors() ?: return@setOnClickListener
+            val intent = Intent(this@PawtyPeopleActivity, PawtyPetsActivity::class.java)
+            intent.putExtra("person", person)
+            startActivity(intent)
         }
     }
-    private fun uploadImageToStorage(uri: Uri, fileName: String) {
-        val fileRef = storageRef.child("users/uploads/$fileName")
-        fileRef.putFile(uri)
-            .addOnSuccessListener {
-                fileRef.downloadUrl.addOnSuccessListener { downloadUrl ->
-                    snack("Upload complete")
-                }
-            }
-            .addOnFailureListener { e ->
-                snack("Upload failed: ${e.message}")
-            }
+
+    private fun collectPersonOrShowErrors(): PersonProfile? {
+        val firstName = findViewById<TextInputEditText>(R.id.etFirstName)?.text?.toString()?.trim().orEmpty()
+        val lastName  = findViewById<TextInputEditText>(R.id.etLastName)?.text?.toString()?.trim().orEmpty()
+        val username  = findViewById<TextInputEditText>(R.id.etUsername)?.text?.toString()?.trim().orEmpty()
+        val email     = findViewById<TextInputEditText>(R.id.etEmail)?.text?.toString()?.trim().orEmpty()
+        val password  = findViewById<TextInputEditText>(R.id.etPassword)?.text?.toString()?.trim().orEmpty()
+        val phone     = findViewById<TextInputEditText>(R.id.etPhone)?.text?.toString()?.trim()
+        val location  = findViewById<TextInputEditText>(R.id.etLocation)?.text?.toString()?.trim()
+
+        if (firstName.isEmpty() || lastName.isEmpty() || username.isEmpty() ||
+            email.isEmpty() || password.isEmpty()) {
+            snack("Please complete all required fields (*)")
+            return null
+        }
+
+        return PersonProfile(
+            firstName = firstName,
+            lastName = lastName,
+            username = username,
+            email = email,
+            password = password,
+            phone = phone,
+            location = location,
+            profileUrl = profileUrl,
+            idFrontUrl = idFrontUrl,
+            idBackUrl = idBackUrl
+        )
     }
 
     private fun snack(msg: String) =

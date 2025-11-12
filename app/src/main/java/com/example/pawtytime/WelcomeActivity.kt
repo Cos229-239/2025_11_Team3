@@ -22,6 +22,7 @@ import android.util.Patterns
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.firestore.ktx.firestore
 
 class WelcomeActivity : AppCompatActivity() {
 
@@ -43,6 +44,7 @@ class WelcomeActivity : AppCompatActivity() {
             val credential = GoogleAuthProvider.getCredential(idToken, null)
             Firebase.auth.signInWithCredential(credential)
                 .addOnSuccessListener {
+                    saveUserProfile()
                     snack("Google sign-in ✓")
                     // startActivity(Intent(this, HomeActivity::class.java))
                     // finish()
@@ -102,6 +104,7 @@ class WelcomeActivity : AppCompatActivity() {
 
             Firebase.auth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
+                    saveUserProfile()
                     snack("Signed in ✓")
                     // startActivity(Intent(this, HomeActivity::class.java))
                     // finish()
@@ -122,6 +125,7 @@ class WelcomeActivity : AppCompatActivity() {
                     val credential = FacebookAuthProvider.getCredential(result.accessToken.token)
                     Firebase.auth.signInWithCredential(credential)
                         .addOnSuccessListener {
+                            saveUserProfile()
                             snack("Facebook sign-in ✓")
                             //startActivity(Intent(this@WelcomeActivity, HomeActivity::class.java))
                             //finish()
@@ -148,6 +152,27 @@ class WelcomeActivity : AppCompatActivity() {
         if (::callbackManager.isInitialized) {
             callbackManager.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+    private fun saveUserProfile() {
+        val user = Firebase.auth.currentUser ?: return
+        val db = Firebase.firestore
+
+        val userData = mapOf(
+            "uid" to user.uid,
+            "email" to user.email,
+            "name" to (user.displayName ?: "Pawty User"),
+            "createdAt" to System.currentTimeMillis()
+        )
+
+        db.collection("users").document(user.uid)
+            .set(userData)
+            .addOnSuccessListener {
+                snack("User profile saved to Firestore ✓")
+            }
+            .addOnFailureListener { e ->
+                snack("Failed to save profile: ${e.message}")
+            }
     }
 
     private fun snack(msg: String) =

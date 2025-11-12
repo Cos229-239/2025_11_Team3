@@ -1,16 +1,20 @@
 package com.example.pawtytime
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
-
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.Timestamp
 
 data class Pet(
     val name: String = "",
@@ -30,6 +34,8 @@ data class Pet(
 )
 
 class PawtyPetsActivity : AppCompatActivity() {
+    private lateinit var person: PersonProfile
+
     private lateinit var etPetName: TextInputEditText
     private lateinit var etSpecies: TextInputEditText
     private lateinit var etBreed: TextInputEditText
@@ -51,25 +57,47 @@ class PawtyPetsActivity : AppCompatActivity() {
     private lateinit var btnAddAnother: Button
     private lateinit var btnDone: Button
 
+    private var petPhotoUrl: String? = null
+    private var vaxRecordUrl: String? = null
+
+    private val pets = mutableListOf<Pet>()
+
+    private val uploader by lazy { CloudinaryUploader(this) }
+
     private val pickPetPhoto =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-                ivPetPhotoPreview.setImageURI(it)
-                snack("Pet photo selected")
+            uri?: return@registerForActivityResult
+                ivPetPhotoPreview.setImageURI(uri)
+                snack("Uploading pet photo…")
+            uploader.upload(uri) { url ->
+                petPhotoUrl = url
+                snack(if (url != null) "Pet photo uploaded ✓" else "Upload failed")
+                }
             }
-        }
+
 
     private val pickVax =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-                ivVaxPreview.setImageURI(it)
-                snack("Vaccine record selected")
+            uri?: return@registerForActivityResult
+                ivVaxPreview.setImageURI(uri)
+                snack("Uploading vaccine record…")
+            uploader.upload(uri) { url ->
+                vaxRecordUrl = url
+                snack(if (url != null) "Vaccine record uploaded ✓" else "Upload failed")
+                }
             }
-        }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pawty_pets)
+
+        person = intent.getSerializableExtra("person") as? PersonProfile
+            ?: run {
+                snack("Missing profile info. Please start again.")
+                finish()
+                return
+            }
 
         bindViews()
         wireInteractions()
@@ -101,9 +129,6 @@ class PawtyPetsActivity : AppCompatActivity() {
         findViewById<View>(R.id.tilBirthdate)?.setOnClickListener {
             snack("Enter birthdate (e.g., MM/DD/YYYY)")
         }
-        etBirthdate.setOnClickListener {
-
-        }
 
         zoneUploadPetPhoto.setOnClickListener {
             pickPetPhoto.launch("image/*")
@@ -114,14 +139,23 @@ class PawtyPetsActivity : AppCompatActivity() {
 
         btnAddAnother.setOnClickListener {
             val pet = collectPet()
+            if (pet.name.isBlank()) {
+                snack("Please enter at least a pet name")
+                return@setOnClickListener
+            }
+            pets += pet
             snack("Saved ${pet.name}. Add another")
             clearForm()
+            petPhotoUrl = null
+            vaxRecordUrl = null
         }
 
         btnDone.setOnClickListener {
-            val pet = collectPet()
-            snack("Saved ${pet.name}.")
-            finish()
+            val current = collectPet()
+            if (current.name.isNotBlank() || current.species.isNotBlank() || current.breed.isNotBlank()) {
+                pets += current
+            }
+            createAccountAndSave(person, pets)
         }
     }
 
@@ -137,7 +171,9 @@ class PawtyPetsActivity : AppCompatActivity() {
             dislikes = etDislikes.readTrim(),
             medicalConditions = etMedical.readTrim(),
             medications = etMeds.readTrim(),
-            spayedNeutered = etSpayNeuter.readTrim()
+            spayedNeutered = etSpayNeuter.readTrim(),
+            photoUrl = petPhotoUrl,
+            vaxRecordUrl = vaxRecordUrl
         )
     }
 
@@ -149,6 +185,69 @@ class PawtyPetsActivity : AppCompatActivity() {
 
         ivPetPhotoPreview.setImageResource(android.R.drawable.ic_menu_camera)
         ivVaxPreview.setImageResource(android.R.drawable.ic_menu_camera)
+    }
+
+    private fun createAccountAndSave(person: PersonProfile, pets: List<Pet>) {
+        val auth = Firebase.auth
+        val db = Firebase.firestore
+
+        auth.createUserWithEmailAndPassword(person.email, person.password)
+            .addOnSuccessListener { authResult ->
+                val uid = authResult.user?.uid ?: run {
+                    snack("No user ID returned.")
+                    return@addOnSuccessListener
+                }
+
+                val userRef = db.collection("users").document(uid)
+                val verificationRef = userRef.collection("verification").document("identity")
+                val petsRef = userRef.collection("pets")
+
+                val userDoc = mapOf(
+                    "uid" to uid,
+                    "email" to person.email,
+                    "username" to person.username,
+                    "firstName" to person.firstName,
+                    "lastName" to person.lastName,
+                    "phone" to person.phone,
+                    "location" to person.location,
+                    "profileUrl" to person.profileUrl,
+                    "createdAt" to Timestamp.now()
+                )
+
+                userRef.set(userDoc)
+                    .continueWithTask {
+                        val verificationDoc = mapOf(
+                            "idFrontUrl" to person.idFrontUrl,
+                            "idBackUrl" to person.idBackUrl,
+                            "updatedAt" to Timestamp.now()
+                        )
+                        verificationRef.set(verificationDoc)
+                    }
+                    .continueWithTask {
+                        val batch = db.batch()
+                        pets.forEach { pet ->
+                            val doc = petsRef.document()
+                            batch.set(doc, pet)
+                        }
+                        batch.commit()
+                    }
+                    .addOnSuccessListener {
+                        getSharedPreferences("pawty_prefs", MODE_PRIVATE)
+                            .edit()
+                            .putBoolean("onboarding_complete", true)
+                            .apply()
+
+                        snack("Account created and data saved ✓")
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                    }
+                    .addOnFailureListener { e ->
+                        snack("Save failed: ${e.message}")
+                    }
+            }
+            .addOnFailureListener { e ->
+                snack("Sign-up failed: ${e.message}")
+            }
     }
 
     private fun snack(msg: String) =
