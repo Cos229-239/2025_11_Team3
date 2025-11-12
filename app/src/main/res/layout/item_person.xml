@@ -1,11 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:gravity="center_horizontal"
     android:paddingStart="8dp"
-    android:paddingEnd="8dp"
-    android:gravity="center_horizontal">
+    android:paddingEnd="8dp">
 
+    <!-- Circle avatar -->
     <ImageView
         android:id="@+id/imgAvatar"
         android:layout_width="56dp"
@@ -13,17 +16,33 @@
         android:src="@drawable/ic_avatar_circle"
         android:contentDescription="@string/cd_avatar" />
 
+    <!-- Name pill -->
     <TextView
         android:id="@+id/tvName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="2dp"
+        android:background="@drawable/rounded_chip_bg"
+        android:textColor="#0B4365"
+        android:textStyle="bold"
         android:maxLines="1"
         android:ellipsize="end"
-        android:text="@string/sample_name" />
+        tools:text="Rufus" />
 
+    <!-- Miles pill -->
     <TextView
         android:id="@+id/tvMiles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/sample_miles" />
+        android:layout_marginTop="4dp"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="4dp"
+        android:background="@drawable/rounded_chip_bg"
+        android:textColor="#0B4365"
+        android:maxLines="1"
+        android:ellipsize="end"
+        tools:text="2.1 mi" />
+
 </LinearLayout>

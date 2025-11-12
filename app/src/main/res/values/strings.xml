@@ -26,6 +26,7 @@
     <string name="cd_share">Share</string>
     <string name="cd_save">Save</string>
     <string name="cd_expand_comments">Expand comments</string>
+    <string name="like_count_zero">0</string>
 
     <!-- UI text -->
     <string name="follow">Follow</string>
