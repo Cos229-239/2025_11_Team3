@@ -6,114 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="#F3C725">
+    android:background="#FFE995">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <!-- Top bar -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/topBar"
-            android:layout_width="match_parent"
-            android:layout_height="84dp"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp">
-
-            <ImageButton
-                android:id="@+id/btnProfile"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="8dp"
-                android:src="@drawable/ic_avatar_circle"
-                android:contentDescription="@string/cd_profile"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-            <ImageView
-                android:id="@+id/imgLogo"
-                android:layout_width="0dp"
-                android:layout_height="90dp"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_pawty_logo"
-                android:contentDescription="@string/cd_logo"
-                app:layout_constraintStart_toEndOf="@id/btnProfile"
-                app:layout_constraintEnd_toStartOf="@id/rightActions"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp" />
-
-
-
-            <LinearLayout
-                android:id="@+id/rightActions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent">
-
-                <!-- Frame for Notifications -->
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp">
-
-                    <!-- Background circle -->
-                    <ImageView
-                        android:id="@+id/bgNotifCircle"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/bg_circle"
-                        tools:ignore="ImageContrastCheck" />
-
-                    <!-- Foreground button -->
-                    <ImageButton
-                        android:id="@+id/btnNotifications"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="@android:color/transparent"
-                        android:contentDescription="@string/cd_notifications"
-                        android:padding="8dp"
-                        android:src="@drawable/ic_notifications"
-                        tools:ignore="ImageContrastCheck" />
-                </FrameLayout>
-
-                <!-- Frame for Inbox -->
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <!-- Background circle -->
-                    <ImageView
-                        android:id="@+id/bgInboxCircle"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/bg_circle"
-                        tools:ignore="ImageContrastCheck" />
-
-                    <!-- Foreground button -->
-                    <ImageButton
-                        android:id="@+id/btnInbox"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="@android:color/transparent"
-                        android:contentDescription="@string/cd_inbox"
-                        android:padding="8dp"
-                        android:src="@drawable/ic_inbox"
-                        tools:ignore="ImageContrastCheck" />
-                </FrameLayout>
-            </LinearLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- FULL-PAGE FLOW PANEL (lighter yellow) -->
         <com.google.android.material.card.MaterialCardView

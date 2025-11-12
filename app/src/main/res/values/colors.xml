@@ -4,5 +4,7 @@
     <color name="pawty_teal">#1E8E89</color>
     <color name="pawty_orange">#FFA726</color>
     <color name="pawty_text">#333333</color>
+    <color name="liked_color">#0B4365</color>
+    <color name="pt_black">#000000</color>
 
 </resources>

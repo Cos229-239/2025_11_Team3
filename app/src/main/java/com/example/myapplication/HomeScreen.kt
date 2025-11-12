@@ -26,15 +26,6 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // Top actions
-        view.findViewById<ImageButton?>(R.id.btnProfile)?.setOnClickListener {
-            Toast.makeText(requireContext(), "Profile", Toast.LENGTH_SHORT).show()
-        }
-        view.findViewById<ImageButton?>(R.id.btnNotifications)?.setOnClickListener {
-            Toast.makeText(requireContext(), "Notifications", Toast.LENGTH_SHORT).show()
-        }
-        view.findViewById<ImageButton?>(R.id.btnInbox)?.setOnClickListener {
-            Toast.makeText(requireContext(), "Inbox", Toast.LENGTH_SHORT).show()
-        }
         view.findViewById<ImageButton?>(R.id.btnPeopleMore)?.setOnClickListener {
             Toast.makeText(requireContext(), "See more profiles", Toast.LENGTH_SHORT).show()
         }
@@ -92,15 +83,15 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
 
     data class PersonUi(
         val name: String,
-        @DrawableRes val avatarRes: Int,
+        @field:DrawableRes val avatarRes: Int,
         val miles: String
     )
 
     data class PostUi(
         val id: String,
         val author: String,
-        @DrawableRes val avatarRes: Int,
-        @DrawableRes val photoRes: Int,
+        @field:DrawableRes val avatarRes: Int,
+        @field:DrawableRes val photoRes: Int,
         val caption: String,
         var likeCount: Int = 0,
         var liked: Boolean = false,
@@ -142,7 +133,7 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
         private val items: MutableList<PostUi>
     ) : RecyclerView.Adapter<FeedAdapter.VH>() {
 
-        inner class VH(v: View) : RecyclerView.ViewHolder(v) {
+        class VH(v: View) : RecyclerView.ViewHolder(v) {
             // Header
             val imgAvatar: ImageView? = v.findViewById(R.id.imgAvatar)
             val tvAuthor: TextView? = v.findViewById(R.id.tvAuthor)
@@ -235,7 +226,7 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
 
             // optional tint for liked
             val likedColor = Color.parseColor("#0B4365")
-            val normalColor = ContextCompat.getColor(ctx, com.google.android.material.R.color.m3_sys_color_on_surface_variant)
+            val normalColor = ContextCompat.getColor(ctx, R.color.liked_color)
             h.btnLike?.imageTintList = ColorStateList.valueOf(if (item.liked) likedColor else normalColor)
 
             // a11y content description always available
