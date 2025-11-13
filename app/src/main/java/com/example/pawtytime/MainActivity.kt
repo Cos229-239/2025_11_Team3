@@ -1,5 +1,6 @@
 package com.example.pawtytime
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
@@ -12,11 +13,14 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.content.Intent
 import com.google.firebase.auth.FirebaseAuth
+import androidx.core.view.isVisible
 
 class MainActivity : AppCompatActivity() {
 
+
     lateinit var bottomNav : BottomNavigationView
 
+    @SuppressLint("InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -67,7 +71,7 @@ class MainActivity : AppCompatActivity() {
 
             profileOptions.setOnClickListener{
 
-                val isShowing = viewProfileOptions.visibility == View.VISIBLE
+                val isShowing = viewProfileOptions.isVisible
                 viewProfileOptions.visibility = if (isShowing) View.GONE else View.VISIBLE
 
                 val openedIcon = if (isShowing) R.drawable.add  else R.drawable.minus
@@ -79,7 +83,7 @@ class MainActivity : AppCompatActivity() {
             val changePetIcon = dropdownView.findViewById<ImageView>(R.id.pet_profile_icon)
 
             petProfileOptions.setOnClickListener{
-                val isShowing = viewPetProfileOptions.visibility == View.VISIBLE
+                val isShowing = viewPetProfileOptions.isVisible
                 viewPetProfileOptions.visibility = if (isShowing) View.GONE else View.VISIBLE
 
                 val openedIcon = if (isShowing) R.drawable.add else R.drawable.minus
