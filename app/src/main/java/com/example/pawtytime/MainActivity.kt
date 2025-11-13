@@ -12,6 +12,13 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.content.Intent
 import com.google.firebase.auth.FirebaseAuth
+import android.widget.TextView
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import coil.load
+import coil.transform.CircleCropTransformation
+import coil.size.Scale
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,6 +31,29 @@ class MainActivity : AppCompatActivity() {
         val profileBtn = findViewById<ImageButton>(R.id.profile_btn)
         val notifsBtn =findViewById<ImageButton>(R.id.notifs_btn)
         val inboxBtn = findViewById<ImageButton>(R.id.inbox_btn)
+
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(user.uid)
+                .get()
+                .addOnSuccessListener { doc ->
+                    val url = doc.getString("profileUrl")
+                    if (!url.isNullOrBlank()) {
+                        profileBtn.load(url) {
+                            placeholder(R.drawable.ic_profile)
+                            error(R.drawable.ic_profile)
+                            crossfade(true)
+                            transformations(CircleCropTransformation())
+                            scale(Scale.FILL)
+                        }
+                    } else {
+                        profileBtn.setImageResource(R.drawable.ic_profile)
+                    }
+                }
+        }
+
 
         loadFragment(HomeScreen())
         bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)!!
@@ -54,6 +84,45 @@ class MainActivity : AppCompatActivity() {
             val dropdownView = layoutInflater.inflate(R.layout.profile_dropdown, null)
             val popupWindow = PopupWindow(dropdownView, WRAP_CONTENT, WRAP_CONTENT, true)
             dropdownView.elevation = 10f
+
+            val dropdownAvatar = dropdownView.findViewById<ImageView>(R.id.dropdownAvatar)
+            val nameText = dropdownView.findViewById<TextView>(R.id.tvProfileName)
+
+            val user = FirebaseAuth.getInstance().currentUser
+            if (user != null) {
+                FirebaseFirestore.getInstance()
+                    .collection("users")
+                    .document(user.uid)
+                    .get()
+                    .addOnSuccessListener { doc ->
+                        val first = doc.getString("firstName") ?: ""
+                        val last = doc.getString("lastName") ?: ""
+                        val username = doc.getString("username") ?: ""
+                        val profileUrl = doc.getString("profileUrl")
+
+                        val fullName = "$first $last".trim()
+                        val displayName = when {
+                            fullName.isNotBlank() -> fullName
+                            username.isNotBlank() -> username
+                            else -> user.email ?: "Pawty User"
+                        }
+
+                        nameText.text = displayName
+
+                        if (!profileUrl.isNullOrBlank()) {
+                            dropdownAvatar.load(profileUrl) {
+                                placeholder(R.drawable.ic_profile)
+                                error(R.drawable.ic_profile)
+                                crossfade(true)
+                                transformations(CircleCropTransformation())
+                                scale(Scale.FILL)
+                            }
+                        } else {
+                            dropdownAvatar.setImageResource(R.drawable.ic_profile)
+                        }
+                    }
+            }
+
             popupWindow.showAsDropDown(profileBtn, 0, 10)
 
             dropdownView.findViewById<LinearLayout>(R.id.settingsBtn).setOnClickListener{

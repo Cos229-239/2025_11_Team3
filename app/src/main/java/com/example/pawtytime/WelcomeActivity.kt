@@ -46,8 +46,8 @@ class WelcomeActivity : AppCompatActivity() {
                 .addOnSuccessListener {
                     saveUserProfile()
                     snack("Google sign-in ✓")
-                    // startActivity(Intent(this, HomeActivity::class.java))
-                    // finish()
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
                 }
                 .addOnFailureListener { e ->
                     snack("Firebase auth failed: ${e.message}")
@@ -106,8 +106,8 @@ class WelcomeActivity : AppCompatActivity() {
                 .addOnSuccessListener {
                     saveUserProfile()
                     snack("Signed in ✓")
-                    // startActivity(Intent(this, HomeActivity::class.java))
-                    // finish()
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
                 }.addOnFailureListener { e ->
                     val msg = when (e) {
                         is FirebaseAuthInvalidUserException -> "No account found for that email."
@@ -127,8 +127,8 @@ class WelcomeActivity : AppCompatActivity() {
                         .addOnSuccessListener {
                             saveUserProfile()
                             snack("Facebook sign-in ✓")
-                            //startActivity(Intent(this@WelcomeActivity, HomeActivity::class.java))
-                            //finish()
+                            startActivity(Intent(this@WelcomeActivity, MainActivity::class.java))
+                            finish()
                         }
                         .addOnFailureListener { e ->
                             snack("Firebase auth failed: ${e.message}")

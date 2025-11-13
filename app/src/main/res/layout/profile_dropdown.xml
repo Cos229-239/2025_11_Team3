@@ -15,17 +15,22 @@
         android:padding="10dp">
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="40dp"
+            android:id="@+id/dropdownAvatar"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:src="@drawable/ic_profile"
-            android:layout_marginEnd="12dp"
-            android:contentDescription="@string/profile"
+            android:scaleType="centerCrop"
+            android:background="@android:color/transparent"
             />
         <TextView
+            android:id="@+id/tvProfileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/example_profile"
+            android:text=""
+            android:textColor="@color/pawty_text_secondary"
+            android:fontFamily="@font/marcellus"
             android:textSize="16sp"
+            android:layout_marginStart="8dp"
             />
     </LinearLayout>
 
@@ -53,7 +58,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/account_settings"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@color/pawty_text_secondary"
+            android:fontFamily="@font/marcellus"/>
     </LinearLayout>
 
     <LinearLayout
@@ -73,7 +80,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="@string/profile_dropdown"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@color/pawty_text_secondary"
+            android:fontFamily="@font/marcellus"/>
 
         <ImageView
             android:id="@+id/profile_icon"
@@ -81,6 +90,7 @@
             android:layout_height="20dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/add"
+            android:textColor="@color/pawty_dark_blue"
             android:contentDescription="@string/dropdownIcon"/>
 
     </LinearLayout>
@@ -112,6 +122,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/view"
                 android:textSize="14sp"
+                android:textColor="@color/pawty_text_secondary"
+                android:fontFamily="@font/marcellus"
                 />
         </LinearLayout>
 
@@ -131,6 +143,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/edit"
                 android:textSize="14sp"
+                android:textColor="@color/pawty_text_secondary"
+                android:fontFamily="@font/marcellus"
                 />
         </LinearLayout>
 
@@ -154,6 +168,8 @@
             android:layout_height="wrap_content"
             android:text="@string/pet_profile_dropdown"
             android:textSize="16sp"
+            android:textColor="@color/pawty_text_secondary"
+            android:fontFamily="@font/marcellus"
             android:layout_gravity="center_vertical"/>
 
         <ImageView
@@ -162,6 +178,7 @@
             android:layout_height="20dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/add"
+            android:textColor="@color/pawty_text_secondary"
             android:contentDescription="@string/dropdownIcon"/>
 
     </LinearLayout>
@@ -191,6 +208,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/view"
                 android:textSize="14sp"
+                android:textColor="@color/pawty_text_secondary"
+                android:fontFamily="@font/marcellus"
                 />
         </LinearLayout>
 
@@ -210,6 +229,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/edit"
                 android:textSize="14sp"
+                android:textColor="@color/pawty_text_secondary"
+                android:fontFamily="@font/marcellus"
                 />
         </LinearLayout>
 
@@ -232,6 +253,8 @@
             android:layout_height="wrap_content"
             android:text="@string/calendar"
             android:textSize="16sp"
+            android:textColor="@color/pawty_text_secondary"
+            android:fontFamily="@font/marcellus"
             />
     </LinearLayout>
 
@@ -251,7 +274,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/logout"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@color/pawty_text_secondary"
+            android:fontFamily="@font/marcellus"/>
     </LinearLayout>
 
 
