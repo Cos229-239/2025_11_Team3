@@ -1,0 +1,110 @@
+Index: app/src/main/java/com/example/myapplication/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.myapplication\r\n\r\nimport android.os.Bundle\r\nimport androidx.activity.ComponentActivity\r\nimport androidx.appcompat.app.AppCompatActivity\r\nimport androidx.activity.compose.setContent\r\nimport androidx.activity.enableEdgeToEdge\r\nimport androidx.compose.foundation.layout.fillMaxSize\r\nimport androidx.compose.foundation.layout.padding\r\nimport androidx.compose.material3.Scaffold\r\nimport androidx.compose.material3.Text\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.tooling.preview.Preview\r\nimport androidx.fragment.app.Fragment\r\nimport com.example.myapplication.databinding.ActivityMainBinding\r\nimport com.example.myapplication.ui.theme.MyApplicationTheme\r\n\r\n\r\n\r\n\r\nclass MainActivity : ComponentActivity() {\r\n\r\n    private lateinit var binding : ActivityMainBinding\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        binding = ActivityMainBinding.inflate(layoutInflater)\r\n        setContentView(binding.root)\r\n        replaceFragment(Home())\r\n        binding.bottomNavBar.setOnItemSelectedListener{\r\n\r\n                when(it.itemId){\r\n                    R.id.home -> replaceFragment(Home())\r\n                    R.id.events -> replaceFragment(Events())\r\n                    R.id.map -> replaceFragment(Map())\r\n                    R.id.shop -> replaceFragment(Shop())\r\n                }\r\n        }\r\n    }\r\n\r\n    private fun replaceFragment(fragment : Fragment){\r\n        val fragmentManager = supportFragmentManager\r\n        val fragmentTransaction = fragmentManager.beginTransaction()\r\n        fragmentTransaction.replace(R.id.mainframe_layout,fragment)\r\n        fragmentTransaction.commit()\r\n\r\n\r\n    }\r\n\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/myapplication/MainActivity.kt b/app/src/main/java/com/example/myapplication/MainActivity.kt
+--- a/app/src/main/java/com/example/myapplication/MainActivity.kt	(revision bda679e0351d265a7029929f3ffa449df5b54d28)
++++ b/app/src/main/java/com/example/myapplication/MainActivity.kt	(date 1762804414447)
+@@ -1,51 +1,47 @@
+ package com.example.myapplication
+ 
+-import android.os.Bundle
+-import androidx.activity.ComponentActivity
+ import androidx.appcompat.app.AppCompatActivity
+-import androidx.activity.compose.setContent
+-import androidx.activity.enableEdgeToEdge
+-import androidx.compose.foundation.layout.fillMaxSize
+-import androidx.compose.foundation.layout.padding
+-import androidx.compose.material3.Scaffold
+-import androidx.compose.material3.Text
+-import androidx.compose.runtime.Composable
+-import androidx.compose.ui.Modifier
+-import androidx.compose.ui.tooling.preview.Preview
++import android.os.Bundle
+ import androidx.fragment.app.Fragment
+-import com.example.myapplication.databinding.ActivityMainBinding
+-import com.example.myapplication.ui.theme.MyApplicationTheme
+-
++import com.google.android.material.bottomnavigation.BottomNavigationView
++import androidx.compose.ui.tooling.preview.Preview
+ 
++class MainActivity : AppCompatActivity() {
+ 
++    lateinit var bottomNav : BottomNavigationView
+ 
+-class MainActivity : ComponentActivity() {
+-
+-    private lateinit var binding : ActivityMainBinding
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+-        binding = ActivityMainBinding.inflate(layoutInflater)
+-        setContentView(binding.root)
+-        replaceFragment(Home())
+-        binding.bottomNavBar.setOnItemSelectedListener{
+-
+-                when(it.itemId){
+-                    R.id.home -> replaceFragment(Home())
+-                    R.id.events -> replaceFragment(Events())
+-                    R.id.map -> replaceFragment(Map())
+-                    R.id.shop -> replaceFragment(Shop())
++        setContentView(R.layout.activity_main)
++        loadFragment(Home())
++        bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavBar)!!
++        bottomNav.setOnItemSelectedListener {
++            when (it.itemId) {
++                R.id.home -> {
++                    loadFragment(Home())
++                    true
++                }
++                R.id.events -> {
++                    loadFragment(Events())
++                    true
++                }
++                R.id.map -> {
++                    loadFragment((Map()))
++                    true
++                }
++                R.id.shop -> {
++                    loadFragment(Shop())
++                    true
+                 }
+-        }
+-    }
++                else -> false
++            }
++        }
+ 
+-    private fun replaceFragment(fragment : Fragment){
+-        val fragmentManager = supportFragmentManager
+-        val fragmentTransaction = fragmentManager.beginTransaction()
+-        fragmentTransaction.replace(R.id.mainframe_layout,fragment)
+-        fragmentTransaction.commit()
+-
+-
++    }
++    private  fun loadFragment(fragment: Fragment){
++        val transaction = supportFragmentManager.beginTransaction()
++        transaction.replace(R.id.bottomNavBar)
++        transaction.commit()
+     }
+-
+ }
+ 
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_21\" default=\"true\" project-jdk-name=\"jbr-21\" project-jdk-type=\"JavaSDK\" />\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision bda679e0351d265a7029929f3ffa449df5b54d28)
++++ b/.idea/misc.xml	(date 1762804268262)
+@@ -1,4 +1,3 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ExternalStorageConfigurationManager" enabled="true" />
+   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK" />

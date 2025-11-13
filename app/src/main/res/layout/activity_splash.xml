@@ -68,10 +68,9 @@
         android:elevation="12dp"
         android:fontFamily="@font/marcellus"
         android:text="@string/tagline"
-        android:textColor="@color/pawty_text"
+        android:textColor="@color/pawty_text_primary"
         android:textSize="20sp"
         android:translationZ="20dp"
-
         app:layout_constraintBottom_toTopOf="@+id/popper"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
