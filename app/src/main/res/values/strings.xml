@@ -2,6 +2,16 @@
     <string name="app_name">PawtyTime</string>
     <string name="tagline">Let\'s get this pawty started!</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <!-- Home Screen Stuff -->
+    <!-- Content descriptions -->
+    <string name="cd_profile">Profile picture</string>
+    <string name="cd_notifications">Notifications icon</string>
+    <string name="cd_inbox">Inbox icon</string>
+    <string name="cd_info_icon">Information icon</string>
+
+    <!-- UI hints & labels -->
+    <string name="hint_search">Search</string>
+    <string name="tip_profile_settings">Tap your photo to open Profile &amp; Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="home_tab">Home</string>
     <string name="events_tab">Events</string>
@@ -65,4 +75,30 @@
     <string name="fb_app_id">836826048730037</string>
     <string name="fb_login_protocol_scheme">fb836826048730037</string>
     <string name="facebook_client_token">6fb4f89c7829187e5aba416ad4c5235d</string>
+    <!-- Item Post -->
+    <!-- content descriptions -->
+    <string name="cd_profile_button">Profile button</string>
+    <string name="cd_logo">PawtyTime logo</string>
+    <string name="for_you">For You</string>
+    <string name="recommended_profiles">Recommended profiles</string>
+    <string name="cd_more">See more</string>
+    <string name="cd_avatar">Author avatar</string>
+    <string name="cd_post_image">Post image</string>
+    <string name="cd_like">Like</string>
+    <string name="cd_share">Share</string>
+    <string name="cd_save">Save</string>
+    <string name="cd_expand_comments">Expand comments</string>
+    <string name="like_count_zero">0</string>
+
+    <!-- UI text -->
+    <string name="follow">Follow</string>
+    <string name="post_author_placeholder">Rufus</string>
+    <string name="post_caption_placeholder">Don’t take your eyes off the ball!</string>
+    <string name="like_count_placeholder">37</string>
+    <string name="comments_placeholder">23 comments</string>
+    <string name="sample_name">Rufus</string>
+    <string name="sample_miles">2.1 mi</string>
+
+    <!-- Item Post -->
+
 </resources>

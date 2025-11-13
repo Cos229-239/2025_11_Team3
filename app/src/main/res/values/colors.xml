@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="pawty_yellow">#F7C948</color>
+    <color name="pawty_teal_one">#1E8E89</color>
+    <color name="pawty_orange">#FFA726</color>
+    <color name="pawty_text">#333333</color>
+    <color name="liked_color">#0B4365</color>
+    <color name="pt_black">#000000</color>
     <color name="pawty_light_yellow">#FFE995</color>
     <color name="pawty_teal">#7DB5CF</color>
     <color name="pawty_dark_blue">#0B4365</color>
