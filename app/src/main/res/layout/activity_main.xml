@@ -21,19 +21,53 @@
         />
 
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="84dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="0dp"
-        android:scrollIndicators="left"
-        app:itemActiveIndicatorStyle="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_bar"
-        app:labelVisibilityMode="labeled"
-        android:background="@color/pawty_yellow" />
+        android:background="@color/pawty_yellow"
+        app:itemIconTint="@null"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        app:singleSelection="true"
+        app:selectionRequired="true">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/nav_home"
+            style="@style/PawtyNavButton"
+            android:text="@string/home_tab"
+            app:icon="@drawable/home"
+            app:iconTint="@null"
+            app:iconGravity="top"
+            app:iconSize="45dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/nav_events"
+            style="@style/PawtyNavButton"
+            android:text="@string/events_tab"
+            app:iconTint="@null"
+            app:icon="@drawable/events"
+            app:iconGravity="top"
+            app:iconSize="45dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/nav_map"
+            style="@style/PawtyNavButton"
+            android:text="@string/map_tab"
+            app:iconTint="@null"
+            app:icon="@drawable/map"
+            app:iconGravity="top"
+            app:iconSize="45dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/nav_shop"
+            style="@style/PawtyNavButton"
+            android:text="@string/shop_tab"
+            app:iconTint="@null"
+            app:icon="@drawable/shop"
+            app:iconGravity="top"
+            app:iconSize="45dp" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
 </RelativeLayout>

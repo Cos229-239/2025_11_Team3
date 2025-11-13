@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.button.MaterialButtonToggleGroup
 import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
@@ -22,7 +22,7 @@ import coil.size.Scale
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var bottomNav : BottomNavigationView
+    lateinit var bottomNav : MaterialButtonToggleGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,29 +56,18 @@ class MainActivity : AppCompatActivity() {
 
 
         loadFragment(HomeScreen())
-        bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)!!
-        bottomNav.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.home -> {
-                    loadFragment(HomeScreen())
-                    true
-                }
-                R.id.events -> {
-                    loadFragment(EventsScreen())
-                    true
-                }
-                R.id.map -> {
-                    loadFragment(MapScreen())
-                    true
-                }
-                R.id.shop -> {
-                    loadFragment(ShopScreen())
-                    true
-                }
-                else -> false
+        bottomNav = findViewById(R.id.bottomNav)
+        bottomNav.check(R.id.nav_home)
+        bottomNav.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            if (!isChecked) return@addOnButtonCheckedListener
+
+            when (checkedId) {
+                R.id.nav_home -> loadFragment(HomeScreen())
+                R.id.nav_events -> loadFragment(EventsScreen())
+                R.id.nav_map -> loadFragment(MapScreen())
+                R.id.nav_shop -> loadFragment(ShopScreen())
             }
         }
-        bottomNav.itemIconTintList = null
 
         profileBtn.setOnClickListener{
             val dropdownView = layoutInflater.inflate(R.layout.profile_dropdown, null)

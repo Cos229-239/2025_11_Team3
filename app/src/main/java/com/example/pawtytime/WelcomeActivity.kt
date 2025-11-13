@@ -104,7 +104,6 @@ class WelcomeActivity : AppCompatActivity() {
 
             Firebase.auth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
-                    saveUserProfile()
                     snack("Signed in ✓")
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()
