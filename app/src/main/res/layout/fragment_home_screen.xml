@@ -28,7 +28,7 @@
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp"
                 app:cardBackgroundColor="#FFE995"
-                app:contentPadding="16dp"
+                app:contentPadding="10dp"
                 app:cardPreventCornerOverlap="true"
                 app:useCompatPadding="true">
 
@@ -99,65 +99,72 @@
                         </com.google.android.material.card.MaterialCardView>
                     </LinearLayout>
 
-                    <!-- Recommended header on even-lighter chip-style background -->
+                    <!-- Recommended Profiles card -->
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardRecommended"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="12dp"
                         app:cardCornerRadius="16dp"
-                        app:cardBackgroundColor="#FFE995"
-                        app:strokeWidth="0dp"
+                        app:cardElevation="2dp"
+                        app:cardBackgroundColor="#FFF7D1"
                         app:contentPadding="8dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:minHeight="40dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:orientation="vertical">
 
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chipRecommended"
-                                android:layout_width="wrap_content"
+                            <!-- Header row: chip + arrow -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/recommended_profiles"
-                                android:textColor="#0B4365"
-                                app:chipMinHeight="36dp"
-                                app:chipStartPadding="14dp"
-                                app:chipEndPadding="14dp"
-                                app:chipCornerRadius="18dp"
-                                app:chipBackgroundColor="#7DB5CF"
-                                app:chipStrokeWidth="0dp" />
+                                android:minHeight="40dp"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
 
-                            <View
-                                android:layout_width="0dp"
-                                android:layout_height="0dp"
-                                android:layout_weight="1" />
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipRecommended"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/recommended_profiles"
+                                    android:textColor="#0B4365"
+                                    app:chipBackgroundColor="#7DB5CF"
+                                    app:chipCornerRadius="18dp"
+                                    app:chipMinHeight="36dp"
+                                    app:chipStartPadding="14dp"
+                                    app:chipEndPadding="14dp"/>
 
-                            <ImageButton
-                                android:id="@+id/btnPeopleMore"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:background="@android:color/transparent"
-                                android:padding="8dp"
-                                android:src="@drawable/ic_chevron_right"
-                                app:tint="#0B4365"
-                                android:contentDescription="@string/cd_more" />
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1" />
+
+                                <ImageButton
+                                    android:id="@+id/btnPeopleMore"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:background="@android:color/transparent"
+                                    android:padding="4dp"
+                                    android:src="@drawable/ic_chevron_right"
+                                    app:tint="#0B4365"
+                                    android:contentDescription="@string/cd_more" />
+                            </LinearLayout>
+
+                            <!-- Horizontal recommended profiles -->
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvPeople"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="8dp"
+                                android:paddingBottom="4dp"
+                                android:clipToPadding="false"
+                                android:nestedScrollingEnabled="false"
+                                tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                tools:listitem="@layout/item_person"
+                                tools:orientation="horizontal" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
-
-                    <!-- Horizontal recommended profiles -->
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvPeople"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="8dp"
-                        android:clipToPadding="false"
-                        android:nestedScrollingEnabled="false"
-                        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        tools:listitem="@layout/item_person"
-                        tools:orientation="horizontal" />
 
                     <!-- Posts feed -->
                     <androidx.recyclerview.widget.RecyclerView

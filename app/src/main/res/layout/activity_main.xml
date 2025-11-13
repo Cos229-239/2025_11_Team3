@@ -24,7 +24,7 @@
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
-        android:layout_height="84dp"
+        android:layout_height="88dp"
         android:layout_alignParentBottom="true"
         android:background="@color/pawty_yellow"
         app:itemIconTint="@null"
