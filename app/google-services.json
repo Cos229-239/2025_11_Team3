@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "432178269465",
+    "project_id": "pawtytime",
+    "storage_bucket": "pawtytime.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:432178269465:android:6094874b1f54dd59230988",
+        "android_client_info": {
+          "package_name": "com.example.pawtytime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "432178269465-audn97h9u7n45pv4tbesmn903gn2icbo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pawtytime",
+            "certificate_hash": "145e7575dfb5923bc0b2844f505b38f0719b13eb"
+          }
+        },
+        {
+          "client_id": "432178269465-dvfhginp77k4lusikgim995he3sa2uje.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdS4vUF_ecNZRfY22dsiFfCu_OWopAats"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "432178269465-dvfhginp77k4lusikgim995he3sa2uje.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
