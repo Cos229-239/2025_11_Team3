@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 
+
 class SplashActivity : AppCompatActivity() {
     private val auth by lazy { FirebaseAuth.getInstance() }
     private val prefs: SharedPreferences by lazy {

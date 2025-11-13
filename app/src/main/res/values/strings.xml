@@ -36,6 +36,9 @@
     <string name="login">Log In</string>
     <string name="or">Or</string>
     <string name="create_account">Create Account</string>
+    <!-- Added Logout Button string -->
+    <string name="logout">Logout</string>
+
 
     <string name="pawty_people_title">Pawty People</string>
     <string name="hint_first_name">Enter First Name *</string>

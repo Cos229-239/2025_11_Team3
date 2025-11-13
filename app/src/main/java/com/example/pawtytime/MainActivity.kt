@@ -10,6 +10,8 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
+import android.content.Intent
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
 
@@ -103,6 +105,16 @@ class MainActivity : AppCompatActivity() {
 
             dropdownView.findViewById<LinearLayout>(R.id.calendarBtn).setOnClickListener {
                 loadFragment(calendarScreen())
+                popupWindow.dismiss()
+            }
+            // Added Logout to MainActivity
+            dropdownView.findViewById<LinearLayout>(R.id.logoutBtn).setOnClickListener {
+                FirebaseAuth.getInstance().signOut()
+
+                val intent = Intent(this, SplashActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+
                 popupWindow.dismiss()
             }
 
