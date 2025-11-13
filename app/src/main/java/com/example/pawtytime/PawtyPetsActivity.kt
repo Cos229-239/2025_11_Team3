@@ -17,6 +17,9 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.Timestamp
 
 data class Pet(
+    // Hide own pet in recommended
+    val ownerUid: String? = null,
+
     val name: String = "",
     val species: String = "",
     val breed: String = "",
@@ -227,7 +230,11 @@ class PawtyPetsActivity : AppCompatActivity() {
                         val batch = db.batch()
                         pets.forEach { pet ->
                             val doc = petsRef.document()
-                            batch.set(doc, pet)
+
+                            // attach ownerUid to each pet
+                            val petWithOwner = pet.copy(ownerUid = uid)
+
+                            batch.set(doc, petWithOwner)
                         }
                         batch.commit()
                     }
