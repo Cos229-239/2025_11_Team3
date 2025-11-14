@@ -187,17 +187,12 @@
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_add"
         android:contentDescription="@string/create_post"
-
-
         app:backgroundTint="@color/pawty_blue_light"
-
-
         app:tint="@color/pawty_blue_dark"
-
+        app:useCompatPadding="true"
+        app:fabSize="normal"
+        app:shapeAppearanceOverlay="@style/PawtyRoundFab"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp" />
-
-
-
 
 </FrameLayout>

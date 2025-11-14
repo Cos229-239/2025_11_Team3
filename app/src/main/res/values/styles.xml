@@ -18,4 +18,9 @@
         <item name="android:backgroundTint">@android:color/transparent</item>
         <item name="rippleColor">@color/pawty_text_secondary</item>
     </style>
+
+    <style name="PawtyRoundFab" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>
