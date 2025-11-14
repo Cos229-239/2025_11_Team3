@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         val profileBtn = findViewById<ImageButton>(R.id.profile_btn)
         val notifsBtn =findViewById<ImageButton>(R.id.notifs_btn)
         val inboxBtn = findViewById<ImageButton>(R.id.inbox_btn)
+        val logoBtn = findViewById<ImageButton>(R.id.app_logo)
 
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
@@ -176,6 +177,10 @@ class MainActivity : AppCompatActivity() {
                 popupWindow.dismiss()
             }
 
+        }
+
+        logoBtn.setOnClickListener{
+            loadFragment(HomeScreen())
         }
 
         notifsBtn.setOnClickListener{

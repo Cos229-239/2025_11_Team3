@@ -22,13 +22,16 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_profile" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/app_logo"
             android:layout_width="159dp"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="19dp"
+            android:scaleType="centerInside"
             android:layout_toEndOf="@+id/profile_btn"
+            android:contentDescription="Go to Home"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_pawty_logo" />
 
         <ImageButton
@@ -38,7 +41,8 @@
             android:layout_marginStart="21dp"
             android:layout_toEndOf="@+id/app_logo"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_notifications" />
+            android:src="@drawable/ic_notifications"
+            android:contentDescription="notification button"/>
 
         <ImageButton
             android:id="@+id/inbox_btn"
@@ -47,7 +51,8 @@
             android:layout_marginStart="21dp"
             android:layout_toEndOf="@+id/notifs_btn"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_inbox" />
+            android:src="@drawable/ic_inbox"
+            android:contentDescription="Inbox Button"/>
 
 
     </RelativeLayout>
