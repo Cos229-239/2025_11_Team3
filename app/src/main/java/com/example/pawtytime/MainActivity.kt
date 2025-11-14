@@ -14,11 +14,10 @@ import android.content.Intent
 import com.google.firebase.auth.FirebaseAuth
 import android.widget.TextView
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import coil.load
 import coil.transform.CircleCropTransformation
 import coil.size.Scale
+
 
 class MainActivity : AppCompatActivity() {
 

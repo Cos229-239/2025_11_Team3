@@ -18,5 +18,4 @@
         <item name="android:backgroundTint">@android:color/transparent</item>
         <item name="rippleColor">@color/pawty_text_secondary</item>
     </style>
-
 </resources>
