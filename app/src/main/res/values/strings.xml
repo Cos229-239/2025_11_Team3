@@ -104,4 +104,5 @@
     <string name="sample_name">Rufus</string>
     <string name="sample_miles">2.1 mi</string>
 
+    <string name="google_maps_key">AIzaSyAiCbW3p1rt-ASz9IFcw3JgxhsZ2dTs1mU</string>
 </resources>
