@@ -29,8 +29,6 @@ class WelcomeActivity : AppCompatActivity() {
     private lateinit var callbackManager: CallbackManager
     private lateinit var googleClient: GoogleSignInClient
 
-    private val prefs by lazy { getSharedPreferences("pawty_prefs", MODE_PRIVATE) }
-
     private val googleSignInLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -48,8 +46,8 @@ class WelcomeActivity : AppCompatActivity() {
                 .addOnSuccessListener {
                     saveUserProfile()
                     snack("Google sign-in ✓")
-                    // startActivity(Intent(this, HomeActivity::class.java))
-                    // finish()
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
                 }
                 .addOnFailureListener { e ->
                     snack("Firebase auth failed: ${e.message}")
@@ -106,21 +104,10 @@ class WelcomeActivity : AppCompatActivity() {
 
             Firebase.auth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
-                    saveUserProfile()
                     snack("Signed in ✓")
-
-                    // mark onboarding as complete
-                    getSharedPreferences("pawty_prefs", MODE_PRIVATE)
-                        .edit()
-                        .putBoolean("onboarding_complete", true)
-                        .apply()
-
-                    // go to MainActivity
-                    val intent = Intent(this@WelcomeActivity, MainActivity::class.java)
-                    startActivity(intent)
+                    startActivity(Intent(this, MainActivity::class.java))
                     finish()
-                }
-                .addOnFailureListener { e ->
+                }.addOnFailureListener { e ->
                     val msg = when (e) {
                         is FirebaseAuthInvalidUserException -> "No account found for that email."
                         is FirebaseAuthInvalidCredentialsException -> "Incorrect password."
@@ -139,8 +126,8 @@ class WelcomeActivity : AppCompatActivity() {
                         .addOnSuccessListener {
                             saveUserProfile()
                             snack("Facebook sign-in ✓")
-                            //startActivity(Intent(this@WelcomeActivity, HomeActivity::class.java))
-                            //finish()
+                            startActivity(Intent(this@WelcomeActivity, MainActivity::class.java))
+                            finish()
                         }
                         .addOnFailureListener { e ->
                             snack("Firebase auth failed: ${e.message}")
@@ -172,12 +159,13 @@ class WelcomeActivity : AppCompatActivity() {
 
         val userData = mapOf(
             "uid" to user.uid,
-            "email" to (user.email ?: ""),
+            "email" to user.email,
+            "name" to (user.displayName ?: "Pawty User"),
             "createdAt" to System.currentTimeMillis()
         )
 
         db.collection("users").document(user.uid)
-            .set(userData, com.google.firebase.firestore.SetOptions.merge())
+            .set(userData)
             .addOnSuccessListener {
                 snack("User profile saved to Firestore ✓")
             }
@@ -185,7 +173,6 @@ class WelcomeActivity : AppCompatActivity() {
                 snack("Failed to save profile: ${e.message}")
             }
     }
-
 
     private fun snack(msg: String) =
         Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show()

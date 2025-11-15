@@ -1,11 +1,10 @@
 package com.example.pawtytime
 
-import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.button.MaterialButtonToggleGroup
 import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
@@ -13,14 +12,18 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.content.Intent
 import com.google.firebase.auth.FirebaseAuth
-import androidx.core.view.isVisible
+import android.widget.TextView
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import coil.load
+import coil.transform.CircleCropTransformation
+import coil.size.Scale
 
 class MainActivity : AppCompatActivity() {
 
+    lateinit var bottomNav : MaterialButtonToggleGroup
 
-    lateinit var bottomNav : BottomNavigationView
-
-    @SuppressLint("InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -28,36 +31,88 @@ class MainActivity : AppCompatActivity() {
         val profileBtn = findViewById<ImageButton>(R.id.profile_btn)
         val notifsBtn =findViewById<ImageButton>(R.id.notifs_btn)
         val inboxBtn = findViewById<ImageButton>(R.id.inbox_btn)
+        val logoBtn = findViewById<ImageButton>(R.id.app_logo)
+
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(user.uid)
+                .get()
+                .addOnSuccessListener { doc ->
+                    val url = doc.getString("profileUrl")
+                    if (!url.isNullOrBlank()) {
+                        profileBtn.load(url) {
+                            placeholder(R.drawable.ic_profile)
+                            error(R.drawable.ic_profile)
+                            crossfade(true)
+                            transformations(CircleCropTransformation())
+                            scale(Scale.FILL)
+                        }
+                    } else {
+                        profileBtn.setImageResource(R.drawable.ic_profile)
+                    }
+                }
+        }
+
 
         loadFragment(HomeScreen())
-        bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)!!
-        bottomNav.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.home -> {
-                    loadFragment(HomeScreen())
-                    true
-                }
-                R.id.events -> {
-                    loadFragment(EventsScreen())
-                    true
-                }
-                R.id.map -> {
-                    loadFragment(MapScreen())
-                    true
-                }
-                R.id.shop -> {
-                    loadFragment(ShopScreen())
-                    true
-                }
-                else -> false
+        bottomNav = findViewById(R.id.bottomNav)
+        bottomNav.check(R.id.nav_home)
+        bottomNav.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            if (!isChecked) return@addOnButtonCheckedListener
+
+            when (checkedId) {
+                R.id.nav_home -> loadFragment(HomeScreen())
+                R.id.nav_events -> loadFragment(EventsScreen())
+                R.id.nav_map -> loadFragment(MapScreen())
+                R.id.nav_shop -> loadFragment(ShopScreen())
             }
         }
-        bottomNav.itemIconTintList = null
 
         profileBtn.setOnClickListener{
             val dropdownView = layoutInflater.inflate(R.layout.profile_dropdown, null)
             val popupWindow = PopupWindow(dropdownView, WRAP_CONTENT, WRAP_CONTENT, true)
             dropdownView.elevation = 10f
+
+            val dropdownAvatar = dropdownView.findViewById<ImageView>(R.id.dropdownAvatar)
+            val nameText = dropdownView.findViewById<TextView>(R.id.tvProfileName)
+
+            val user = FirebaseAuth.getInstance().currentUser
+            if (user != null) {
+                FirebaseFirestore.getInstance()
+                    .collection("users")
+                    .document(user.uid)
+                    .get()
+                    .addOnSuccessListener { doc ->
+                        val first = doc.getString("firstName") ?: ""
+                        val last = doc.getString("lastName") ?: ""
+                        val username = doc.getString("username") ?: ""
+                        val profileUrl = doc.getString("profileUrl")
+
+                        val fullName = "$first $last".trim()
+                        val displayName = when {
+                            fullName.isNotBlank() -> fullName
+                            username.isNotBlank() -> username
+                            else -> user.email ?: "Pawty User"
+                        }
+
+                        nameText.text = displayName
+
+                        if (!profileUrl.isNullOrBlank()) {
+                            dropdownAvatar.load(profileUrl) {
+                                placeholder(R.drawable.ic_profile)
+                                error(R.drawable.ic_profile)
+                                crossfade(true)
+                                transformations(CircleCropTransformation())
+                                scale(Scale.FILL)
+                            }
+                        } else {
+                            dropdownAvatar.setImageResource(R.drawable.ic_profile)
+                        }
+                    }
+            }
+
             popupWindow.showAsDropDown(profileBtn, 0, 10)
 
             dropdownView.findViewById<LinearLayout>(R.id.settingsBtn).setOnClickListener{
@@ -71,7 +126,7 @@ class MainActivity : AppCompatActivity() {
 
             profileOptions.setOnClickListener{
 
-                val isShowing = viewProfileOptions.isVisible
+                val isShowing = viewProfileOptions.visibility == View.VISIBLE
                 viewProfileOptions.visibility = if (isShowing) View.GONE else View.VISIBLE
 
                 val openedIcon = if (isShowing) R.drawable.add  else R.drawable.minus
@@ -83,7 +138,7 @@ class MainActivity : AppCompatActivity() {
             val changePetIcon = dropdownView.findViewById<ImageView>(R.id.pet_profile_icon)
 
             petProfileOptions.setOnClickListener{
-                val isShowing = viewPetProfileOptions.isVisible
+                val isShowing = viewPetProfileOptions.visibility == View.VISIBLE
                 viewPetProfileOptions.visibility = if (isShowing) View.GONE else View.VISIBLE
 
                 val openedIcon = if (isShowing) R.drawable.add else R.drawable.minus
@@ -122,6 +177,10 @@ class MainActivity : AppCompatActivity() {
                 popupWindow.dismiss()
             }
 
+        }
+
+        logoBtn.setOnClickListener{
+            loadFragment(HomeScreen())
         }
 
         notifsBtn.setOnClickListener{

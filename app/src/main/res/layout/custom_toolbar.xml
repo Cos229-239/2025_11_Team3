@@ -8,41 +8,51 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ImageButton
             android:id="@+id/profile_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_profile"
-            android:layout_marginStart="15dp"
-            android:background="?attr/selectableItemBackgroundBorderless"/>
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="28dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/cd_profile"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_profile" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/app_logo"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
+            android:layout_width="159dp"
+            android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="33dp"
+            android:layout_marginStart="19dp"
+            android:scaleType="centerInside"
             android:layout_toEndOf="@+id/profile_btn"
+            android:contentDescription="Go to Home"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_pawty_logo" />
 
         <ImageButton
             android:id="@+id/notifs_btn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginStart="33dp"
+            android:layout_marginStart="21dp"
             android:layout_toEndOf="@+id/app_logo"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_notifications"/>
+            android:src="@drawable/ic_notifications"
+            android:contentDescription="notification button"/>
+
         <ImageButton
             android:id="@+id/inbox_btn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_inbox"
+            android:layout_marginStart="21dp"
             android:layout_toEndOf="@+id/notifs_btn"
-            android:layout_marginStart="33dp"
-            android:background="?attr/selectableItemBackgroundBorderless" />
-
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_inbox"
+            android:contentDescription="Inbox Button"/>
 
 
     </RelativeLayout>
