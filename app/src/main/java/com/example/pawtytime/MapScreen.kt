@@ -11,6 +11,11 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.PopupWindow
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MapScreen : Fragment(), OnMapReadyCallback {
 
@@ -49,6 +54,72 @@ class MapScreen : Fragment(), OnMapReadyCallback {
                 .title("Local Pet Shop")
         )
     }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val zoomIn = view.findViewById<ImageButton>(R.id.btnZoomIn)
+        val zoomOut = view.findViewById<ImageButton>(R.id.btnZoomOut)
+        val filterBtn = view.findViewById<FloatingActionButton>(R.id.btnFilter)
+
+        zoomIn.setOnClickListener {
+            googleMap?.animateCamera(
+                CameraUpdateFactory.zoomIn()
+            )
+        }
+
+        zoomOut.setOnClickListener {
+            googleMap?.animateCamera(
+                CameraUpdateFactory.zoomOut()
+            )
+        }
+
+        filterBtn.setOnClickListener {
+            val dropdownView = layoutInflater.inflate(R.layout.filter_dropdown, null)
+            val popupWindow = PopupWindow(
+                dropdownView,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                true
+            )
+            popupWindow.elevation = 10f
+
+
+            popupWindow.showAsDropDown(filterBtn, -dropdownView.width / 2, 16)
+
+
+            val typeRow = dropdownView.findViewById<LinearLayout>(R.id.type_options)
+            val typeHidden = dropdownView.findViewById<LinearLayout>(R.id.hidden_type)
+            val typeIcon = dropdownView.findViewById<ImageView>(R.id.type_icon)
+
+            typeRow.setOnClickListener {
+                val showing = typeHidden.visibility == View.VISIBLE
+                typeHidden.visibility = if (showing) View.GONE else View.VISIBLE
+                typeIcon.setImageResource(if (showing) R.drawable.add else R.drawable.minus)
+            }
+
+
+            val distRow = dropdownView.findViewById<LinearLayout>(R.id.distance_options)
+            val distHidden = dropdownView.findViewById<LinearLayout>(R.id.hidden_distance)
+            val distIcon = dropdownView.findViewById<ImageView>(R.id.distance_icon)
+
+            distRow.setOnClickListener {
+                val showing = distHidden.visibility == View.VISIBLE
+                distHidden.visibility = if (showing) View.GONE else View.VISIBLE
+                distIcon.setImageResource(if (showing) R.drawable.add else R.drawable.minus)
+            }
+
+            val searchRow = dropdownView.findViewById<LinearLayout>(R.id.search_options)
+            val searchHidden = dropdownView.findViewById<LinearLayout>(R.id.hidden_search)
+            val searchIcon = dropdownView.findViewById<ImageView>(R.id.search_icon)
+
+            searchRow.setOnClickListener {
+                val showing = searchHidden.visibility == View.VISIBLE
+                searchHidden.visibility = if (showing) View.GONE else View.VISIBLE
+                searchIcon.setImageResource(if (showing) R.drawable.add else R.drawable.minus)
+            }
+        }
+    }
+
 
     override fun onResume() {
         super.onResume()
