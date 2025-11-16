@@ -94,7 +94,7 @@
                         <ImageView
                             android:layout_width="18dp"
                             android:layout_height="18dp"
-                            android:src="@drawable/ic_red_pin"
+                            android:src="@drawable/ic_pin_event"
                             android:contentDescription="Event pin" />
 
                         <TextView
@@ -118,7 +118,7 @@
                         <ImageView
                             android:layout_width="18dp"
                             android:layout_height="18dp"
-                            android:src="@drawable/ic_blue_pin"
+                            android:src="@drawable/ic_pin_product"
                             android:contentDescription="Product pin" />
 
                         <TextView
@@ -142,7 +142,7 @@
                         <ImageView
                             android:layout_width="18dp"
                             android:layout_height="18dp"
-                            android:src="@drawable/ic_orange_pin"
+                            android:src="@drawable/ic_pin_service"
                             android:contentDescription="Services pin" />
 
                         <TextView

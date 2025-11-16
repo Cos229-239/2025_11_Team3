@@ -47,7 +47,7 @@
     <string name="hint_password_create">Enter Password *</string>
     <string name="hint_valid_email">Enter Valid Email Address *</string>
     <string name="hint_phone">Enter Phone Number *</string>
-    <string name="hint_location">Enter Location *</string>
+    <string name="hint_location">Enter City, State, Zip *</string>
 
     <string name="upload_info_header">Enter the following information to get verified</string>
     <string name="btn_upload_profile">Upload Profile Picture</string>

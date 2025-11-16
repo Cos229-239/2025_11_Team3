@@ -16,11 +16,21 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import android.location.Geocoder
+import java.util.Locale
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
 
 class MapScreen : Fragment(), OnMapReadyCallback {
 
     private lateinit var mapView: MapView
     private var googleMap: GoogleMap? = null
+
+    private val auth by lazy { FirebaseAuth.getInstance() }
+    private val db by lazy { FirebaseFirestore.getInstance() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,22 +48,84 @@ class MapScreen : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+        loadUserLocationAndCenterMap()
 
-        val tampa = LatLng(27.9506, -82.4572)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(tampa, 11f))
-
-        map.addMarker(
-            MarkerOptions()
-                .position(LatLng(27.96, -82.45))
-                .title("Pawtumn Festival")
+        addMapMarker(
+            lat = 27.96,
+            lng = -82.45,
+            title = "Pawtumn Festival",
+            iconRes = R.drawable.ic_pin_event
         )
 
-        map.addMarker(
-            MarkerOptions()
-                .position(LatLng(27.94, -82.46))
-                .title("Local Pet Shop")
+        addMapMarker(
+            lat = 27.94,
+            lng = -82.46,
+            title = "Local Pet Shop",
+            iconRes = R.drawable.ic_pin_product
+        )
+
+        addMapMarker(
+            lat = 27.92,
+            lng = -82.44,
+            title = "Mobile Grooming",
+            iconRes = R.drawable.ic_pin_service
         )
     }
+
+    private fun addMapMarker(
+        lat: Double,
+        lng: Double,
+        title: String,
+        iconRes: Int
+    ) {
+        val pos = LatLng(lat, lng)
+
+        googleMap?.addMarker(
+            MarkerOptions()
+                .position(pos)
+                .title(title)
+                .icon(
+                    BitmapHelper.vectorToBitmap(
+                        requireContext(),
+                        iconRes,
+                        sizeDp = 32f
+                    )
+                )
+                .anchor(0.5f, 1f)
+        )
+    }
+
+    private fun loadUserLocationAndCenterMap() {
+        val uid = auth.currentUser?.uid ?: return
+
+        db.collection("users")
+            .document(uid)
+            .get()
+            .addOnSuccessListener { doc ->
+                val locationString = doc.getString("location")
+
+                if (!locationString.isNullOrBlank()) {
+                    geocodeAndCenter(locationString)
+                }
+            }
+    }
+
+    private fun geocodeAndCenter(locationString: String) {
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+
+        try {
+            val results = geocoder.getFromLocationName(locationString, 1)
+            if (!results.isNullOrEmpty()) {
+                val loc = results[0]
+                val latLng = LatLng(loc.latitude, loc.longitude)
+
+                googleMap?.moveCamera(
+                    CameraUpdateFactory.newLatLngZoom(latLng, 11f)
+                )
+            }
+        } catch (_: Exception) { }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -119,7 +191,6 @@ class MapScreen : Fragment(), OnMapReadyCallback {
             }
         }
     }
-
 
     override fun onResume() {
         super.onResume()

@@ -180,14 +180,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:backgroundTint="@color/pawty_orange"
+                android:backgroundTint="@color/pawty_dark_blue"
                 android:fontFamily="@font/marcellus"
                 android:text="@string/create_account"
                 android:textAllCaps="false"
-                android:textColor="@color/pawty_text_third"
+                android:textColor="@color/pawty_light_blue"
                 android:textStyle="bold"
                 app:cornerRadius="12dp"
-                app:strokeColor="@color/pawty_dark_orange"
+                app:strokeColor="@color/pawty_dark_blue"
                 app:strokeWidth="2dp" />
         </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

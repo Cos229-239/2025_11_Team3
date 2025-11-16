@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.ktx.Firebase
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -18,7 +17,6 @@ import com.google.firebase.firestore.SetOptions
 
 
 class PawtyPeopleActivity : AppCompatActivity() {
-    // NEW: Firebase handles
     private val auth by lazy { FirebaseAuth.getInstance() }
     private val db by lazy { FirebaseFirestore.getInstance() }
 
@@ -101,7 +99,6 @@ class PawtyPeopleActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
-
     }
 
     private fun collectPersonOrShowErrors(): PersonProfile? {
@@ -132,7 +129,7 @@ class PawtyPeopleActivity : AppCompatActivity() {
             idBackUrl = idBackUrl
         )
     }
-    // CLASS-LEVEL FUNCTION
+
     private fun savePersonProfileToFirestore(person: PersonProfile, onDone: () -> Unit) {
         val uid = auth.currentUser?.uid
 
@@ -144,12 +141,11 @@ class PawtyPeopleActivity : AppCompatActivity() {
 
         val safeProfile = person.copy(password = "")
 
-        // 1) Save full onboarding profile
+
         db.collection("profiles")
             .document(uid)
             .set(safeProfile)
             .addOnSuccessListener {
-                // 2) Also update 'users/{uid}' with username, name & profileUrl
                 val niceName = person.username.ifBlank {
                     listOf(person.firstName, person.lastName)
                         .filter { it.isNotBlank() }
@@ -157,8 +153,8 @@ class PawtyPeopleActivity : AppCompatActivity() {
                 }.ifBlank { "Pawty Friend" }
 
                 val updates = mutableMapOf<String, Any>(
-                    "username"  to person.username,                 // 👈 NEW: username for recommended
-                    "name"      to niceName,                        // optional: full display name
+                    "username"  to person.username,
+                    "name"      to niceName,
                     "firstName" to person.firstName,
                     "lastName"  to person.lastName,
                     "location"  to (person.location ?: ""),
@@ -179,7 +175,6 @@ class PawtyPeopleActivity : AppCompatActivity() {
                 onDone()
             }
     }
-
 
     private fun snack(msg: String) =
         Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show()
