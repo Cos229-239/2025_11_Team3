@@ -40,7 +40,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:textStyle="bold"
-                android:textColor="@color/pt_black"
+                android:textColor="@color/pawty_text_secondary"
+                android:fontFamily="@font/marcellus"
                 android:maxLines="1"
                 android:ellipsize="end"
                 tools:text="@string/post_author_placeholder"
@@ -52,16 +53,11 @@
             <!-- Follow chip -->
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipFollow"
-                style="@style/Widget.Material3.Chip.Assist"
+                style="@style/PawtyFilterChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/follow"
-                android:textColor="#0B4365"
-                app:chipBackgroundColor="#7DB5CF"
-                app:chipMinHeight="36dp"
-                app:chipStartPadding="12dp"
-                app:chipEndPadding="12dp"
-                app:chipCornerRadius="18dp"
+                android:textColor="@color/pawty_text_secondary"
                 app:layout_constraintEnd_toStartOf="@id/btnShare"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />
@@ -95,7 +91,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="12dp"
-            android:textColor="@color/pt_black"
+            android:textColor="@color/pawty_text_secondary"
+            android:fontFamily="@font/marcellus"
             tools:text="@string/post_caption_placeholder" />
 
         <!-- Actions row -->
@@ -123,7 +120,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:textColor="@color/pt_black"
+                android:textColor="@color/pawty_text_secondary"
+                android:fontFamily="@font/marcellus"
                 android:textSize="14sp"
                 android:text="@string/like_count_zero"
                 tools:text="12" />
@@ -159,7 +157,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/pt_black"
+                android:textColor="@color/pawty_text_secondary"
+                android:fontFamily="@font/marcellus"
                 android:text="@string/comments_placeholder" />
 
             <ImageButton

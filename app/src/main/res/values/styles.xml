@@ -23,4 +23,21 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+
+    <style name="TextAppearance.Pawty.Chip" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:fontFamily">@font/marcellus</item>
+        <item name="fontFamily">@font/marcellus</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/pawty_text_secondary</item>
+    </style>
+
+
+    <style name="PawtyFilterChip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="android:textAppearance">@style/TextAppearance.Pawty.Chip</item>
+        <item name="chipBackgroundColor">@color/pawty_teal</item>
+        <item name="chipMinHeight">36dp</item>
+        <item name="chipCornerRadius">18dp</item>
+        <item name="chipStartPadding">14dp</item>
+        <item name="chipEndPadding">14dp</item>
+    </style>
 </resources>
