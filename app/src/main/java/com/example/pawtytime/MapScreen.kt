@@ -1,30 +1,50 @@
 package com.example.pawtytime
 
+import android.content.Context
+import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.PopupWindow
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.PopupWindow
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import android.location.Geocoder
-import java.util.Locale
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import android.Manifest
-import android.content.pm.PackageManager
-import androidx.core.app.ActivityCompat
+import java.util.Locale
+import android.graphics.Bitmap
+import android.graphics.Canvas
+
+enum class PinType { EVENT, PRODUCT, SERVICE }
 
 class MapScreen : Fragment(), OnMapReadyCallback {
+
+    private data class MapItem(
+        val id: String,
+        val type: PinType,
+        val position: LatLng,
+        val title: String,
+        val zip: String? = null,
+        var marker: com.google.android.gms.maps.model.Marker? = null
+    )
+
+    private val allItems = mutableListOf<MapItem>()
+    private var userHomeLatLng: LatLng? = null
 
     private lateinit var mapView: MapView
     private var googleMap: GoogleMap? = null
@@ -50,80 +70,57 @@ class MapScreen : Fragment(), OnMapReadyCallback {
         googleMap = map
         loadUserLocationAndCenterMap()
 
-        addMapMarker(
-            lat = 27.96,
-            lng = -82.45,
-            title = "Pawtumn Festival",
-            iconRes = R.drawable.ic_pin_event
+        allItems.clear()
+        allItems += listOf(
+            MapItem(
+                id = "event1",
+                type = PinType.EVENT,
+                position = LatLng(27.96, -82.45),
+                title = "Pawtumn Festival",
+                zip = "33606"
+            ),
+            MapItem(
+                id = "product1",
+                type = PinType.PRODUCT,
+                position = LatLng(27.94, -82.46),
+                title = "Local Pet Shop",
+                zip = "33607"
+            ),
+            MapItem(
+                id = "service1",
+                type = PinType.SERVICE,
+                position = LatLng(27.93, -82.44),
+                title = "Grooming Service",
+                zip = "33609"
+            ),
+            MapItem(
+                id = "event2",
+                type = PinType.EVENT,
+                position = LatLng(27.8428, -82.6995), // Pinellas Park
+                title = "Dog Costume Parade",
+                zip = "33781"
+            ),
+            MapItem(
+                id = "product2",
+                type = PinType.PRODUCT,
+                position = LatLng(28.5383, -81.3792), // Downtown Orlando
+                title = "Orlando Barkery",
+                zip = "32801"
+            ),
+            MapItem(
+                id = "service2",
+                type = PinType.SERVICE,
+                position = LatLng(28.4132, -81.5812), // Near Disney
+                title = "Magical Grooming",
+                zip = "32830"
+            )
+            )
+
+        applyMapFilters(
+            activeTypes = emptySet(),
+            maxDistanceMiles = null,
+            searchZip = null
         )
-
-        addMapMarker(
-            lat = 27.94,
-            lng = -82.46,
-            title = "Local Pet Shop",
-            iconRes = R.drawable.ic_pin_product
-        )
-
-        addMapMarker(
-            lat = 27.92,
-            lng = -82.44,
-            title = "Mobile Grooming",
-            iconRes = R.drawable.ic_pin_service
-        )
-    }
-
-    private fun addMapMarker(
-        lat: Double,
-        lng: Double,
-        title: String,
-        iconRes: Int
-    ) {
-        val pos = LatLng(lat, lng)
-
-        googleMap?.addMarker(
-            MarkerOptions()
-                .position(pos)
-                .title(title)
-                .icon(
-                    BitmapHelper.vectorToBitmap(
-                        requireContext(),
-                        iconRes,
-                        sizeDp = 32f
-                    )
-                )
-                .anchor(0.5f, 1f)
-        )
-    }
-
-    private fun loadUserLocationAndCenterMap() {
-        val uid = auth.currentUser?.uid ?: return
-
-        db.collection("users")
-            .document(uid)
-            .get()
-            .addOnSuccessListener { doc ->
-                val locationString = doc.getString("location")
-
-                if (!locationString.isNullOrBlank()) {
-                    geocodeAndCenter(locationString)
-                }
-            }
-    }
-
-    private fun geocodeAndCenter(locationString: String) {
-        val geocoder = Geocoder(requireContext(), Locale.getDefault())
-
-        try {
-            val results = geocoder.getFromLocationName(locationString, 1)
-            if (!results.isNullOrEmpty()) {
-                val loc = results[0]
-                val latLng = LatLng(loc.latitude, loc.longitude)
-
-                googleMap?.moveCamera(
-                    CameraUpdateFactory.newLatLngZoom(latLng, 11f)
-                )
-            }
-        } catch (_: Exception) { }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -135,14 +132,12 @@ class MapScreen : Fragment(), OnMapReadyCallback {
 
         zoomIn.setOnClickListener {
             googleMap?.animateCamera(
-                CameraUpdateFactory.zoomIn()
-            )
+                CameraUpdateFactory.zoomIn())
         }
 
         zoomOut.setOnClickListener {
             googleMap?.animateCamera(
-                CameraUpdateFactory.zoomOut()
-            )
+                CameraUpdateFactory.zoomOut())
         }
 
         filterBtn.setOnClickListener {
@@ -154,10 +149,7 @@ class MapScreen : Fragment(), OnMapReadyCallback {
                 true
             )
             popupWindow.elevation = 10f
-
-
             popupWindow.showAsDropDown(filterBtn, -dropdownView.width / 2, 16)
-
 
             val typeRow = dropdownView.findViewById<LinearLayout>(R.id.type_options)
             val typeHidden = dropdownView.findViewById<LinearLayout>(R.id.hidden_type)
@@ -189,6 +181,201 @@ class MapScreen : Fragment(), OnMapReadyCallback {
                 searchHidden.visibility = if (showing) View.GONE else View.VISIBLE
                 searchIcon.setImageResource(if (showing) R.drawable.add else R.drawable.minus)
             }
+
+            val cbEvent = dropdownView.findViewById<CheckBox>(R.id.cbTypeEvent)
+            val cbProduct = dropdownView.findViewById<CheckBox>(R.id.cbTypeProduct)
+            val cbService = dropdownView.findViewById<CheckBox>(R.id.cbTypeService)
+
+            val cb10 = dropdownView.findViewById<CheckBox>(R.id.cbDist10)
+            val cb25 = dropdownView.findViewById<CheckBox>(R.id.cbDist25)
+            val cb50 = dropdownView.findViewById<CheckBox>(R.id.cbDist50)
+            val cbCustomDist = dropdownView.findViewById<CheckBox>(R.id.cbDistCustom)
+            val etCustomMiles = dropdownView.findViewById<EditText>(R.id.etCustomMiles)
+
+            val cbSearchLocation = dropdownView.findViewById<CheckBox>(R.id.cbSearchLocation)
+            val etZipCode = dropdownView.findViewById<EditText>(R.id.etZipCode)
+
+            fun recomputeFilters() {
+                val types = mutableSetOf<PinType>()
+                if (cbEvent.isChecked) types += PinType.EVENT
+                if (cbProduct.isChecked) types += PinType.PRODUCT
+                if (cbService.isChecked) types += PinType.SERVICE
+
+                val maxDist: Double? = when {
+                    cb10.isChecked -> 10.0
+                    cb25.isChecked -> 25.0
+                    cb50.isChecked -> 50.0
+                    cbCustomDist.isChecked ->
+                        etCustomMiles.text.toString().trim().toDoubleOrNull()
+                    else -> null
+                }
+
+                val zip: String? =
+                    if (cbSearchLocation.isChecked)
+                        etZipCode.text.toString().trim().takeIf { it.isNotEmpty() }
+                    else null
+
+                applyMapFilters(
+                    activeTypes = types,
+                    maxDistanceMiles = maxDist,
+                    searchZip = zip)
+            }
+
+            val distanceChecks = listOf(cb10, cb25, cb50, cbCustomDist)
+
+            fun setDistanceExclusive(selected: CheckBox) {
+                distanceChecks.forEach { cb ->
+                    if (cb != selected) cb.isChecked = false
+                }
+                etCustomMiles.isEnabled = cbCustomDist.isChecked
+            }
+
+            distanceChecks.forEach { cb ->
+                cb.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) setDistanceExclusive(cb)
+                    recomputeFilters()
+                }
+            }
+
+            cbEvent.setOnCheckedChangeListener { _, _ -> recomputeFilters() }
+            cbProduct.setOnCheckedChangeListener { _, _ -> recomputeFilters() }
+            cbService.setOnCheckedChangeListener { _, _ -> recomputeFilters() }
+
+            cbSearchLocation.setOnCheckedChangeListener { _, isChecked ->
+                etZipCode.isEnabled = isChecked
+                recomputeFilters()
+            }
+
+            etCustomMiles.addTextChangedListener { recomputeFilters() }
+            etZipCode.addTextChangedListener { recomputeFilters() }
+        }
+    }
+
+    private fun loadUserLocationAndCenterMap() {
+        val uid = auth.currentUser?.uid ?: return
+
+        db.collection("users")
+            .document(uid)
+            .get()
+            .addOnSuccessListener { doc ->
+                val locationString = doc.getString("location")
+                if (!locationString.isNullOrBlank()) {
+                    geocodeAndCenter(locationString)
+                }
+            }
+    }
+
+    private fun geocodeAndCenter(locationString: String) {
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+
+        try {
+            val results = geocoder.getFromLocationName(locationString, 1)
+            if (!results.isNullOrEmpty()) {
+                val loc = results[0]
+                val latLng = LatLng(loc.latitude, loc.longitude)
+
+                userHomeLatLng = latLng
+                googleMap?.moveCamera(
+                    CameraUpdateFactory.newLatLngZoom(latLng, 11f)
+                )
+            }
+        } catch (_: Exception) { }
+    }
+
+    private fun bitmapFromVector(context: Context, resId: Int): BitmapDescriptor {
+        val drawable = AppCompatResources.getDrawable(context, resId)!!
+
+        val targetDp = 32
+        val density = context.resources.displayMetrics.density
+        val sizePx = (targetDp * density).toInt()
+
+        val bitmap = Bitmap.createBitmap(
+            sizePx,
+            sizePx,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+
+        drawable.setBounds(0, 0, sizePx, sizePx)
+        drawable.draw(canvas)
+
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
+    }
+
+    private fun distanceMiles(from: LatLng, to: LatLng): Double {
+        val results = FloatArray(1)
+        android.location.Location.distanceBetween(
+            from.latitude, from.longitude,
+            to.latitude, to.longitude,
+            results
+        )
+        val meters = results[0].toDouble()
+        return meters / 1609.34
+    }
+
+    private fun centerOnZip(zip: String) {
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+
+        try {
+            val query = "$zip, USA"
+            val results = geocoder.getFromLocationName(query, 1)
+            if (!results.isNullOrEmpty()) {
+                val loc = results[0]
+                val latLng = LatLng(loc.latitude, loc.longitude)
+
+                googleMap?.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(latLng, 11f)
+                )
+            }
+        } catch (_: Exception) {
+
+        }
+    }
+
+    private fun applyMapFilters(
+        activeTypes: Set<PinType>,
+        maxDistanceMiles: Double?,
+        searchZip: String?
+    ) {
+        val map = googleMap ?: return
+        map.clear()
+
+        val userCenter = userHomeLatLng
+
+        allItems.forEach { item ->
+            if (activeTypes.isNotEmpty() && item.type !in activeTypes) return@forEach
+
+            if (maxDistanceMiles != null && userCenter != null) {
+                val d = distanceMiles(userCenter, item.position)
+                if (d > maxDistanceMiles) return@forEach
+            }
+
+            if (!searchZip.isNullOrBlank()) {
+                val itemZip = item.zip?.trim()
+                if (itemZip.isNullOrBlank() ||
+                    !itemZip.equals(searchZip.trim(), ignoreCase = true)
+                ) {
+                    return@forEach
+                }
+            }
+
+            val iconRes = when (item.type) {
+                PinType.EVENT -> R.drawable.ic_pin_event
+                PinType.PRODUCT -> R.drawable.ic_pin_product
+                PinType.SERVICE -> R.drawable.ic_pin_service
+            }
+
+            val marker = map.addMarker(
+                MarkerOptions()
+                    .position(item.position)
+                    .title(item.title)
+                    .icon(bitmapFromVector(requireContext(), iconRes))
+            )
+            item.marker = marker
+        }
+
+        if (!searchZip.isNullOrBlank()) {
+            centerOnZip(searchZip)
         }
     }
 
