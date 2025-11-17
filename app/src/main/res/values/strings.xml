@@ -90,6 +90,7 @@
     <string name="cd_like">Like</string>
     <string name="cd_share">Share</string>
     <string name="cd_save">Save</string>
+    <string name="cd_comment">Comment</string>
     <string name="cd_expand_comments">Expand comments</string>
     <string name="like_count_zero">0</string>
     <string name="create_post">Create post</string>
@@ -100,7 +101,7 @@
     <string name="post_author_placeholder">Rufus</string>
     <string name="post_caption_placeholder">Don’t take your eyes off the ball!</string>
     <string name="like_count_placeholder">37</string>
-    <string name="comments_placeholder">23 comments</string>
+    <string name="comments_placeholder">Comments</string>
     <string name="sample_name">Rufus</string>
     <string name="sample_miles">2.1 mi</string>
 

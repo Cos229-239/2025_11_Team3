@@ -103,6 +103,7 @@
             android:padding="6dp"
             android:gravity="center_vertical">
 
+            <!-- Like + count -->
             <ImageButton
                 android:id="@+id/btnLike"
                 android:layout_width="48dp"
@@ -111,9 +112,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_like"
-                app:tint="#0B4365"
                 android:contentDescription="@string/cd_like" />
-
 
             <TextView
                 android:id="@+id/tvLikeCount"
@@ -126,19 +125,40 @@
                 android:text="@string/like_count_zero"
                 tools:text="12" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+            <!-- Comment + count -->
+            <ImageButton
+                android:id="@+id/btnComment"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="16dp"
+                android:padding="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_comment"
+                android:contentDescription="@string/cd_comment" />
 
+            <TextView
+                android:id="@+id/tvCommentCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:textColor="@color/pawty_text_secondary"
+                android:fontFamily="@font/marcellus"
+                android:textSize="14sp"
+                tools:text="23" />
+
+            <!-- Save -->
             <ImageButton
                 android:id="@+id/btnSave"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:layout_marginStart="16dp"
                 android:padding="8dp"
-                android:background="@android:color/transparent"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
                 android:src="@drawable/ic_bookmark"
                 android:contentDescription="@string/cd_save" />
+
         </LinearLayout>
 
         <!-- Comments row -->
