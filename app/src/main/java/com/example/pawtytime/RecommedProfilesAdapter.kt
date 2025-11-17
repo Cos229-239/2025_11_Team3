@@ -35,7 +35,10 @@ class RecommendedProfilesAdapter(
                 .joinToString(" ")
         }
 
-        holder.tvMiles.text = profile.location ?: ""
+        holder.tvMiles.text = profile.location
+            ?.takeIf { it.isNotBlank() }
+            ?.let { "$it mi away" }
+            ?: ""
 
         // NEW: load avatar from profileUrl if present
         val url = profile.profileUrl

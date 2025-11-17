@@ -20,6 +20,9 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import android.location.Geocoder
+import android.location.Location
+import java.util.Locale
 
 class HomeScreen : Fragment(R.layout.fragment_home_screen) {
 
@@ -85,39 +88,110 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
     private fun loadRecommendedProfiles() {
         val myUid = auth.currentUser?.uid
 
-        db.collectionGroup("pets")
-            .limit(20)
-            .get()
-            .addOnSuccessListener { snap ->
-                people.clear()
+        if (myUid == null) {
+            // No signed-in user – just show names with no distance
+            db.collectionGroup("pets")
+                .limit(20)
+                .get()
+                .addOnSuccessListener { snap ->
+                    people.clear()
+                    snap.documents.forEach { doc ->
+                        val pet = doc.toObject(Pet::class.java) ?: return@forEach
+                        val displayName = pet.name.ifBlank { "Pawty Pup" }
 
-                snap.documents.forEach { doc ->
-                    val pet = doc.toObject(Pet::class.java) ?: return@forEach
-
-                    // Added ownerUid to each pet doc, then can hide own pets
-                    val ownerUid = doc.getString("ownerUid")
-                    if (myUid != null && ownerUid == myUid) return@forEach // Skip own pets
-
-                    val displayName = pet.name.ifBlank { "Pawty Pup" }
-
-                    people.add(
-                        PersonUi(
-                            name = displayName,
-                            avatarUrl = pet.photoUrl,               //  use pet image here
-                            avatarRes = R.drawable.ic_avatar_circle, // fallback avatar
-                            miles = pet.breed
+                        people.add(
+                            PersonUi(
+                                name = displayName,
+                                avatarUrl = pet.photoUrl,
+                                avatarRes = R.drawable.ic_avatar_circle,
+                                miles = ""
+                            )
                         )
-                    )
+                    }
+                    peopleAdapter.notifyDataSetChanged()
                 }
+            return
+        }
 
-                peopleAdapter.notifyDataSetChanged()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(
-                    requireContext(),
-                    "Failed to load pets: ${e.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
+        // 1) Get *your* location from users/{myUid}
+        db.collection("users").document(myUid)
+            .get()
+            .addOnSuccessListener { meSnap ->
+                val myLocation = meSnap.getString("location") ?: ""
+
+                db.collectionGroup("pets")
+                    .limit(20)
+                    .get()
+                    .addOnSuccessListener { snap ->
+                        val petDocs = snap.documents
+                        if (petDocs.isEmpty()) {
+                            people.clear()
+                            peopleAdapter.notifyDataSetChanged()
+                            return@addOnSuccessListener
+                        }
+
+                        // temp list that we will sort
+                        val temp = mutableListOf<PersonUi>()
+                        var remaining = petDocs.size
+
+                        fun maybeFinish() {
+                            if (remaining == 0) {
+                                // sort by parsed miles: closest first, blanks last
+                                val sorted = temp.sortedBy { parseMiles(it.miles) }
+                                people.clear()
+                                people.addAll(sorted)
+                                peopleAdapter.notifyDataSetChanged()
+                            }
+                        }
+
+                        petDocs.forEach { doc ->
+                            val pet = doc.toObject(Pet::class.java) ?: run {
+                                remaining--
+                                maybeFinish()
+                                return@forEach
+                            }
+
+                            val ownerUid = doc.getString("ownerUid")
+                            // skip my own pets
+                            if (ownerUid == null || ownerUid == myUid) {
+                                remaining--
+                                maybeFinish()
+                                return@forEach
+                            }
+
+                            val displayName = pet.name.ifBlank { "Pawty Pup" }
+
+                            // 2) For each owner, fetch their location
+                            db.collection("users").document(ownerUid)
+                                .get()
+                                .addOnSuccessListener { ownerSnap ->
+                                    val ownerLocation = ownerSnap.getString("location")
+
+                                    val milesText =
+                                        if (myLocation.isNotBlank() && !ownerLocation.isNullOrBlank()) {
+                                            distanceMilesBetweenLocations(myLocation, ownerLocation)
+                                        } else {
+                                            ""
+                                        }
+
+                                    temp.add(
+                                        PersonUi(
+                                            name = displayName,
+                                            avatarUrl = pet.photoUrl,
+                                            avatarRes = R.drawable.ic_avatar_circle,
+                                            miles = milesText
+                                        )
+                                    )
+
+                                    remaining--
+                                    maybeFinish()
+                                }
+                                .addOnFailureListener {
+                                    remaining--
+                                    maybeFinish()
+                                }
+                        }
+                    }
             }
     }
 
@@ -170,6 +244,42 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+    }
+
+    private fun distanceMilesBetweenLocations(
+        fromLocation: String,
+        toLocation: String
+    ): String {
+        return try {
+            val geocoder = Geocoder(requireContext(), Locale.getDefault())
+
+            val fromList = geocoder.getFromLocationName(fromLocation, 1)
+            val toList = geocoder.getFromLocationName(toLocation, 1)
+
+            if (fromList.isNullOrEmpty() || toList.isNullOrEmpty()) {
+                ""
+            } else {
+                val from = fromList[0]
+                val to = toList[0]
+
+                val result = FloatArray(1)
+                Location.distanceBetween(
+                    from.latitude, from.longitude,
+                    to.latitude, to.longitude,
+                    result
+                )
+
+                val miles = result[0] / 1609.34f
+                String.format(Locale.getDefault(), "%.1f mi away", miles)
+            }
+        } catch (e: Exception) {
+            ""
+        }
+    }
+
+    private fun parseMiles(milesText: String): Double {
+        val numberPart = milesText.substringBefore(" ").trim()
+        return numberPart.toDoubleOrNull() ?: Double.MAX_VALUE
     }
 
     /* --------------------- Models ---------------------- */

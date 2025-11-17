@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|end"
                 android:layout_margin="12dp"
-                android:contentDescription="Filter map"
+                android:contentDescription="@string/filter_map"
                 app:srcCompat="@drawable/ic_filter"
                 app:backgroundTint="@color/pawty_blue_light"
                 app:tint="@color/pawty_blue_dark"
@@ -95,7 +95,7 @@
                             android:layout_width="18dp"
                             android:layout_height="18dp"
                             android:src="@drawable/ic_pin_event"
-                            android:contentDescription="Event pin" />
+                            android:contentDescription="@string/cd_event_pin" />
 
                         <TextView
                             android:id="@+id/tvLegendEvent"
@@ -103,7 +103,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:fontFamily="@font/marcellus"
-                            android:text="Event"
+                            android:text="@string/legend_event"
                             android:textColor="@color/pawty_text_primary"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -119,7 +119,7 @@
                             android:layout_width="18dp"
                             android:layout_height="18dp"
                             android:src="@drawable/ic_pin_product"
-                            android:contentDescription="Product pin" />
+                            android:contentDescription="@string/cd_product_pin" />
 
                         <TextView
                             android:id="@+id/tvLegendProduct"
@@ -127,7 +127,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:fontFamily="@font/marcellus"
-                            android:text="Product"
+                            android:text="@string/legend_product"
                             android:textColor="@color/pawty_text_primary"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -143,7 +143,7 @@
                             android:layout_width="18dp"
                             android:layout_height="18dp"
                             android:src="@drawable/ic_pin_service"
-                            android:contentDescription="Services pin" />
+                            android:contentDescription="@string/cd_services_pin" />
 
                         <TextView
                             android:id="@+id/tvLegendServices"
@@ -151,7 +151,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:fontFamily="@font/marcellus"
-                            android:text="Services"
+                            android:text="@string/legend_services"
                             android:textColor="@color/pawty_text_primary"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -183,9 +183,8 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
-                        android:contentDescription="Zoom in"
+                        android:contentDescription="@string/zoom_in"
                         android:src="@drawable/ic_add"
-                        android:tint="@color/pawty_blue_dark"
                         android:scaleType="centerInside" />
 
                     <View
@@ -199,9 +198,9 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
-                        android:contentDescription="Zoom out"
+                        android:contentDescription="@string/zoom_out"
                         android:src="@drawable/minus"
-                        android:tint="@color/pawty_blue_dark"
+
                         android:scaleType="centerInside" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

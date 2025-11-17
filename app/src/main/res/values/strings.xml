@@ -106,4 +106,18 @@
     <string name="sample_miles">2.1 mi</string>
 
     <string name="google_maps_key">AIzaSyAiCbW3p1rt-ASz9IFcw3JgxhsZ2dTs1mU</string>
+
+    <string name="filter_map">Filter map</string>
+
+    <string name="cd_event_pin">Event pin</string>
+    <string name="legend_event">Event</string>
+
+    <string name="cd_product_pin">Product pin</string>
+    <string name="legend_product">Product</string>
+
+    <string name="cd_services_pin">Services pin</string>
+    <string name="legend_services">Services</string>
+
+    <string name="zoom_in">Zoom in</string>
+    <string name="zoom_out">Zoom out</string>
 </resources>
