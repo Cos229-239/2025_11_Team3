@@ -7,7 +7,7 @@
     android:background="@color/pawty_yellow">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="View Profile Screen"
