@@ -88,11 +88,19 @@
         <!-- Caption -->
         <TextView
             android:id="@+id/tvCaption"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:background="@drawable/rounded_caption_bg"
             android:textColor="@color/pawty_text_secondary"
             android:fontFamily="@font/marcellus"
+            android:textSize="14sp"
+            android:maxLines="3"
+            android:ellipsize="end"
             tools:text="@string/post_caption_placeholder" />
 
         <!-- Actions row -->
