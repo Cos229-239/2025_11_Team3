@@ -38,6 +38,7 @@
     <string name="create_account">Create Account</string>
     <!-- Added Logout Button string -->
     <string name="logout">Logout</string>
+    <string name="create_caption">Write a Caption</string>
 
 
     <string name="pawty_people_title">Pawty People</string>

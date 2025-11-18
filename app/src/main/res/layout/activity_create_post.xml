@@ -42,34 +42,35 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="Write a caption"
+            android:layout_marginTop="10dp"
             app:boxBackgroundMode="filled"
             app:boxCornerRadiusTopStart="14dp"
             app:boxCornerRadiusTopEnd="14dp"
             app:boxCornerRadiusBottomStart="14dp"
             app:boxCornerRadiusBottomEnd="14dp"
-            app:boxBackgroundColor="@color/pawty_cream">
+            app:boxBackgroundColor="@color/pawty_cream"
+            app:boxStrokeColor="@android:color/transparent"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            android:hint="@string/create_caption"
+            android:textColorHint="@color/pawty_text_secondary">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etPostCaption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="4" />
+                android:background="@null"
+                android:textColor="@color/pawty_text_secondary"
+                android:fontFamily="@font/marcellus"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPost"
+            style="@style/PawtyPrimaryButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Post"
-            android:textAllCaps="false"
-            android:textColor="@color/pawty_text_secondary"
-            android:backgroundTint="@color/pawty_teal"
-            app:cornerRadius="12dp"
-            app:strokeColor="@color/pawty_dark_blue"
-            app:strokeWidth="2dp" />
+            android:text="Post" />
 
     </LinearLayout>
 </ScrollView>
