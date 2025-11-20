@@ -113,11 +113,13 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                 peopleAdapter.notifyDataSetChanged()
             }
             .addOnFailureListener { e ->
-                Toast.makeText(
-                    requireContext(),
-                    "Failed to load pets: ${e.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
+                if(isAdded) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Failed to load pets: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
     }
 

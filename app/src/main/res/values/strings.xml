@@ -103,5 +103,32 @@
     <string name="comments_placeholder">23 comments</string>
     <string name="sample_name">Rufus</string>
     <string name="sample_miles">2.1 mi</string>
+    <string name="view_profile_screen">View Profile Screen</string>
+    <string name="back_btn">Back</string>
+    <string name="more_options_btn">More Options</string>
+    <string name="profile_view_pic">profile_view_pic</string>
+    <string name="initial_value">0</string>
+    <string name="pt_followers">Followers</string>
+    <string name="pt_following">Following</string>
+    <string name="posts">Posts</string>
+    <string name="pt_reposts">Reposts</string>
+    <string name="post_image">post_image</string>
+    <string name="profile_posts_scroll">profile posts scroll</string>
+    <string name="tagged">Tagged</string>
+    <string name="view_username">Username:</string>
+    <string name="edit_username">username</string>
+    <string name="view_first_name">First Name:</string>
+    <string name="edit_first_name">firstname</string>
+    <string name="view_last_name">Last Name:</string>
+    <string name="edit_lastname">lastname</string>
+    <string name="view_email">Email:</string>
+    <string name="edit_email">email</string>
+    <string name="view_password">Password:</string>
+    <string name="edit_password">password</string>
+    <string name="view_phone_number">Phone Number:</string>
+    <string name="edit_phone_number">1234567890</string>
+    <string name="view_location">Location:</string>
+    <string name="edit_location">location</string>
+    <string name="edit_bio">Bio:</string>
 
 </resources>
