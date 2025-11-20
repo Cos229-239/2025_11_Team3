@@ -3,8 +3,12 @@ package com.example.pawtytime
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
@@ -25,7 +29,19 @@ class CreatePostActivity : AppCompatActivity() {
     private lateinit var etPostCaption: TextInputEditText
     private lateinit var btnPost: MaterialButton
 
+    // NEW: "Posting as" UI
+    private lateinit var rowPostingAs: View
+    private lateinit var tvPostingAsValue: TextView
+
     private var photoUrl: String? = null
+
+    // NEW: which pet we're posting as
+    private data class PetChoice(
+        val name: String,
+        val photoUrl: String?
+    )
+
+    private var selectedPet: PetChoice? = null
 
     private val pickPostImage =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -46,6 +62,17 @@ class CreatePostActivity : AppCompatActivity() {
         zonePostImage = findViewById(R.id.zonePostImage)
         etPostCaption = findViewById(R.id.etPostCaption)
         btnPost = findViewById(R.id.btnPost)
+
+        // NEW: hook up "Posting as" row
+        rowPostingAs = findViewById(R.id.rowPostingAs)
+        tvPostingAsValue = findViewById(R.id.tvPostingAsValue)
+
+        rowPostingAs.setOnClickListener {
+            openPetPicker()
+        }
+        tvPostingAsValue.setOnClickListener {
+            openPetPicker()
+        }
 
         zonePostImage.setOnClickListener {
             pickPostImage.launch("image/*")
@@ -85,53 +112,133 @@ class CreatePostActivity : AppCompatActivity() {
                 val name = userDoc.getString("name").orEmpty()
                 val avatarUrl = userDoc.getString("profileUrl")
 
-                // 2) Load FIRST pet for this user
-                db.collection("users")
-                    .document(uid)
-                    .collection("pets")
-                    .limit(1)
-                    .get()
-                    .addOnSuccessListener { petSnap ->
-                        val petDoc = petSnap.documents.firstOrNull()
-                        val pet = petDoc?.toObject(Pet::class.java)
+                val authorUsername = username.ifBlank {
+                    name.ifBlank { user.email ?: "Pawty User" }
+                }
 
-                        val postRef = db.collection("posts").document()
-                        val post = Post(
-                            id = postRef.id,
-                            authorUid = uid,
-                            authorUsername = username.ifBlank { name.ifBlank { user.email ?: "Pawty User" } },
-                            authorName = name,
-                            authorAvatarUrl = avatarUrl,
+                val chosenPet = selectedPet
 
-                            // NEW: use pet info for the post header
-                            petName = pet?.name.orEmpty(),
-                            petPhotoUrl = pet?.photoUrl,
+                // If user already picked a pet, use that and skip extra query
+                if (chosenPet != null) {
+                    val postRef = db.collection("posts").document()
+                    val post = Post(
+                        id = postRef.id,
+                        authorUid = uid,
+                        authorUsername = authorUsername,
+                        authorName = name,
+                        authorAvatarUrl = avatarUrl,
 
-                            photoUrl = photo,
-                            caption = caption,
-                            likeCount = 0,
-                            createdAt = System.currentTimeMillis()
-                        )
+                        // use chosen pet
+                        petName = chosenPet.name,
+                        petPhotoUrl = chosenPet.photoUrl,
 
-                        postRef.set(post, SetOptions.merge())
-                            .addOnSuccessListener {
-                                snack("Posted ✓")
-                                setResult(RESULT_OK)
-                                finish()
-                            }
-                            .addOnFailureListener { e ->
-                                snack("Failed to post: ${e.message}")
-                            }
-                    }
-                    .addOnFailureListener { e ->
-                        snack("Failed to load pet: ${e.message}")
-                    }
+                        photoUrl = photo,
+                        caption = caption,
+                        likeCount = 0,
+                        createdAt = System.currentTimeMillis()
+                    )
+
+                    postRef.set(post, SetOptions.merge())
+                        .addOnSuccessListener {
+                            snack("Posted ✓")
+                            setResult(RESULT_OK)
+                            finish()
+                        }
+                        .addOnFailureListener { e ->
+                            snack("Failed to post: ${e.message}")
+                        }
+                } else {
+                    // Otherwise: fallback to FIRST pet in /users/{uid}/pets like before
+                    db.collection("users")
+                        .document(uid)
+                        .collection("pets")
+                        .limit(1)
+                        .get()
+                        .addOnSuccessListener { petSnap ->
+                            val petDoc = petSnap.documents.firstOrNull()
+                            val pet = petDoc?.toObject(Pet::class.java)
+
+                            val postRef = db.collection("posts").document()
+                            val post = Post(
+                                id = postRef.id,
+                                authorUid = uid,
+                                authorUsername = authorUsername,
+                                authorName = name,
+                                authorAvatarUrl = avatarUrl,
+
+                                // fallback pet info (may be empty if no pets)
+                                petName = pet?.name.orEmpty(),
+                                petPhotoUrl = pet?.photoUrl,
+
+                                photoUrl = photo,
+                                caption = caption,
+                                likeCount = 0,
+                                createdAt = System.currentTimeMillis()
+                            )
+
+                            postRef.set(post, SetOptions.merge())
+                                .addOnSuccessListener {
+                                    snack("Posted ✓")
+                                    setResult(RESULT_OK)
+                                    finish()
+                                }
+                                .addOnFailureListener { e ->
+                                    snack("Failed to post: ${e.message}")
+                                }
+                        }
+                        .addOnFailureListener { e ->
+                            snack("Failed to load pet: ${e.message}")
+                        }
+                }
             }
             .addOnFailureListener { e ->
                 snack("Failed to load profile: ${e.message}")
             }
     }
 
+    // NEW: picker to choose pet for the post
+    private fun openPetPicker() {
+        val user = auth.currentUser
+        if (user == null) {
+            snack("You must be signed in to choose a pet.")
+            return
+        }
+
+        db.collection("users")
+            .document(user.uid)
+            .collection("pets")
+            .get()
+            .addOnSuccessListener { petsSnap ->
+                val pets = petsSnap.documents.map { doc ->
+                    val name = doc.getString("name")?.takeIf { it.isNotBlank() } ?: "Pawty Pet"
+                    val photoUrl = doc.getString("photoUrl")
+                    PetChoice(name, photoUrl)
+                }
+
+                if (pets.isEmpty()) {
+                    snack("No pets found. Add a pet first!")
+                    return@addOnSuccessListener
+                }
+
+                val names = pets.map { it.name }.toTypedArray()
+
+                AlertDialog.Builder(this)
+                    .setTitle("Post as which pet?")
+                    .setItems(names) { dialog, which ->
+                        val pet = pets[which]
+                        selectedPet = pet
+                        tvPostingAsValue.text = pet.name
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+            }
+            .addOnFailureListener { e ->
+                snack("Couldn't load pets: ${e.message}")
+            }
+    }
 
     private fun snack(msg: String) =
         Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show()

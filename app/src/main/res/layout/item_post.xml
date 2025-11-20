@@ -199,5 +199,16 @@
                 android:contentDescription="@string/cd_expand_comments" />
         </LinearLayout>
 
+        <!-- Comments list (collapsed by default) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvComments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="12dp"
+            android:visibility="gone"
+            tools:listitem="@layout/item_comment" />
+
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

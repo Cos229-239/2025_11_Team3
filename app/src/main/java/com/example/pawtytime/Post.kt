@@ -13,7 +13,10 @@ data class Post(
 
     val photoUrl: String? = null,
     val caption: String = "",
-    val likeCount: Int = 0,
+
+    // used Long + likedBy so we can track who liked it
+    val likeCount: Long = 0L,
+    val likedBy: Map<String, Boolean> = emptyMap(),
+
     val createdAt: Long = System.currentTimeMillis()
 )
-
