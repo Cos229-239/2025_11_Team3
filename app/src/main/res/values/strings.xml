@@ -103,5 +103,9 @@
     <string name="comments_placeholder">23 comments</string>
     <string name="sample_name">Rufus</string>
     <string name="sample_miles">2.1 mi</string>
+    <string name="breed">Breed</string>
+    <string name="age">Age</string>
+    <string name="likes">Likes</string>
+    <string name="dislikes">Dislikes</string>
 
 </resources>
