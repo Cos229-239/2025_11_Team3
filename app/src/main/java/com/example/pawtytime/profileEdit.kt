@@ -78,6 +78,7 @@ class profileEdit : Fragment() {
         // val passwordField = view.findViewById<EditText>(R.id.profile_edit_password) (need to do this separately)
         val phoneField = view.findViewById<EditText>(R.id.profile_edit_phone_number)
         val locationField = view.findViewById<EditText>(R.id.profile_edit_location)
+        val bioField = view.findViewById<EditText>(R.id.profile_edit_bio)
         editProfImage = view.findViewById<ImageButton>(R.id.profile_edit_pic_btn)
         val saveChanges = view.findViewById<Button>(R.id.edit_profile_save_changes)
 
@@ -96,6 +97,7 @@ class profileEdit : Fragment() {
                 emailField.setText(document.getString("email"))
                 phoneField.setText(document.getString("phone"))
                 locationField.setText(document.getString("location"))
+                bioField.setText(document.getString("Bio"))
 
             }
         editProfImage.setOnClickListener {
@@ -109,14 +111,16 @@ class profileEdit : Fragment() {
             val newEmailField = emailField.text.toString()
             val newPhone = phoneField.text.toString()
             val newLocation = locationField.text.toString()
+            val newBio = bioField.text.toString()
 
             val profUpdates = mapOf(
-                "username" to newUsername,
+                "username"  to newUsername,
                 "firstName" to newFirstName,
-                "lastName" to newLastName,
-                "email" to newEmailField,
-                "phone" to newPhone,
-                "location" to newLocation
+                "lastName"  to newLastName,
+                "email"     to newEmailField,
+                "phone"     to newPhone,
+                "location"  to newLocation,
+                "bio"       to newBio
             )
 
             db.collection("users").document(userId ?: "")

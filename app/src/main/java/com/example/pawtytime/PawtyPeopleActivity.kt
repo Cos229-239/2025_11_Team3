@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.ktx.Firebase
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -114,6 +113,7 @@ class PawtyPeopleActivity : AppCompatActivity() {
         val password  = findViewById<TextInputEditText>(R.id.etPassword)?.text?.toString()?.trim().orEmpty()
         val phone     = findViewById<TextInputEditText>(R.id.etPhone)?.text?.toString()?.trim()
         val location  = findViewById<TextInputEditText>(R.id.etLocation)?.text?.toString()?.trim()
+        val bio = findViewById<EditText>(R.id.profile_edit_bio)?.text?.toString()?.trim()
 
 
         if (firstName.isEmpty() || lastName.isEmpty() || username.isEmpty() ||
@@ -133,6 +133,7 @@ class PawtyPeopleActivity : AppCompatActivity() {
             profileUrl = profileUrl,
             idFrontUrl = idFrontUrl,
             idBackUrl = idBackUrl,
+            bio = bio
         )
     }
     // CLASS-LEVEL FUNCTION
@@ -166,6 +167,7 @@ class PawtyPeopleActivity : AppCompatActivity() {
                     "lastName"  to person.lastName,
                     "location"  to (person.location ?: ""),
                     "phone"     to (person.phone ?: ""),
+                    "bio"       to (person.bio ?: ""),
                     "followers" to emptyMap<String, Boolean>(),   // empty map for followers (will be implemented)
                     "following" to emptyMap<String, Boolean>(),     // empty map for people you're following
                     "postsCount" to 0

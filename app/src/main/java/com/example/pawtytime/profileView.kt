@@ -36,9 +36,7 @@ class ProfileView : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
+        setContentView(R.layout.activity_pawty_people)
     }
 
     override fun onCreateView(
@@ -120,11 +118,13 @@ class ProfileView : Fragment() {
                     val last = doc.getString("lastName") ?: ""
                     val username = doc.getString("username") ?: ""
                     val profileUrl = doc.getString("profileUrl")
+                    val bio = doc.getString("bio")
 
                     val fullName = "$first $last".trim()
 
                     usernameText.text = username
                     nameText.text = fullName
+                    bioText.text = bio
 
                 }
         }
@@ -144,8 +144,7 @@ class ProfileView : Fragment() {
 
 
         // profile buttons click listeners
-        backBtn.setOnClickListener {
-        }
+
         settingsBtn.setOnClickListener {
 
         }
