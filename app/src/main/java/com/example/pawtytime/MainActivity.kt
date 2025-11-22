@@ -58,15 +58,15 @@ class MainActivity : AppCompatActivity() {
 
         loadFragment(HomeScreen())
         bottomNav = findViewById(R.id.bottomNav)
-        bottomNav.check(R.id.home)
+        bottomNav.check(R.id.nav_home)
         bottomNav.addOnButtonCheckedListener { group, checkedId, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
 
             when (checkedId) {
-                R.id.home -> loadFragment(HomeScreen())
-                R.id.events -> loadFragment(EventsScreen())
-                R.id.map -> loadFragment(MapScreen())
-                R.id.shop -> loadFragment(ShopScreen())
+                R.id.nav_home -> loadFragment(HomeScreen())
+                R.id.nav_events -> loadFragment(EventsScreen())
+                R.id.nav_map -> loadFragment(MapScreen())
+                R.id.nav_shop -> loadFragment(ShopScreen())
             }
         }
 
