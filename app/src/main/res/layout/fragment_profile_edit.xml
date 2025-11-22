@@ -4,14 +4,244 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Notifications"
-    android:background="@color/pawty_yellow">
+    android:background="@color/pawty_yellow"
+    >
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:background="@color/pawty_yellow">
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Edit Profile Screen"
-        android:textSize="30dp"
-        android:layout_gravity="center" />
+        android:layout_margin="20dp"
+        android:padding="25dp"
+        android:background="@drawable/round_corners"
+        android:orientation="vertical"
+        >
+
+        <ImageButton
+            android:id="@+id/profile_edit_pic_btn"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/ic_profile"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Edit profile pic"/>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+            
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/view_username"
+                android:layout_weight="1"
+                android:textColor="@color/pawty_orange"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="@string/edit_username"
+                android:id="@+id/profile_edit_username"
+                android:textAlignment="viewEnd"
+                android:textSize="15sp"
+                android:inputType="text"
+                android:textColor="@color/pawty_grey"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/view_first_name"
+                android:textColor="@color/pawty_orange"
+                android:layout_weight="1"
+                />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:id="@+id/profile_edit_firstname"
+                android:text="@string/edit_first_name"
+                android:textColor="@color/pawty_grey"
+                android:textSize="15sp"
+                android:inputType="text"
+                android:textAlignment="viewEnd"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/view_last_name"
+                android:textColor="@color/pawty_orange"
+                android:layout_weight="1"
+                />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:id="@+id/profile_edit_lastname"
+                android:text="@string/edit_lastname"
+                android:textColor="@color/pawty_grey"
+                android:textSize="15sp"
+                android:inputType="text"
+                android:textAlignment="viewEnd"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_bio"
+                android:textColor="@color/pawty_orange"
+                android:layout_weight="1"
+                />
+
+            <EditText
+                android:id="@+id/profile_edit_bio"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:inputType="text"
+                android:text="bio"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/pawty_grey"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/view_email"
+                android:textColor="@color/pawty_orange"
+                android:layout_weight="1"
+                />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:id="@+id/profile_edit_email"
+                android:text="@string/edit_email"
+                android:textSize="15sp"
+                android:inputType="text"
+                android:textColor="@color/pawty_grey"
+                android:textAlignment="viewEnd"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/view_phone_number"
+                android:textColor="@color/pawty_orange"
+                android:layout_weight="1"
+                />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:id="@+id/profile_edit_phone_number"
+                android:text="@string/edit_phone_number"
+                android:textSize="15sp"
+                android:textColor="@color/pawty_grey"
+                android:textAlignment="viewEnd"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/view_location"
+                android:textColor="@color/pawty_orange"
+                android:layout_weight="1"
+                />
+
+            <EditText
+                android:id="@+id/profile_edit_location"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:inputType="text"
+                android:text="@string/edit_location"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/pawty_grey"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/view_password"
+                android:textColor="@color/pawty_orange"
+                android:layout_weight="1"
+                />
+
+            <Button
+                android:id="@+id/profile_edit_password"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:inputType="text"
+                android:text="Change Password"
+                android:textAlignment="viewEnd"
+                android:backgroundTint="@color/pawty_yellow"
+
+                android:textColor="@color/pawty_grey"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/edit_profile_save_changes"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="30dp"
+            android:backgroundTint="@color/pawty_yellow"
+           android:layout_marginTop="20dp"
+            android:text="Save"
+            android:textColor="@color/pt_black" />
+    </LinearLayout>
+
+    </ScrollView>
+
+
+
 
 </FrameLayout>

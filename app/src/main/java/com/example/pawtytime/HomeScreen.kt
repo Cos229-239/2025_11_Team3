@@ -110,6 +110,7 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                     }
                     peopleAdapter.notifyDataSetChanged()
                 }
+
             return
         }
 
