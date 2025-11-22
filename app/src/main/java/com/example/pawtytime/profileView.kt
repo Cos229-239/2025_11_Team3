@@ -36,7 +36,6 @@ class ProfileView : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pawty_people)
     }
 
     override fun onCreateView(
