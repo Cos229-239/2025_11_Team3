@@ -1,59 +1,78 @@
 package com.example.pawtytime
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.Timestamp
+import java.util.Calendar
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class EventsScreen : Fragment(R.layout.fragment_events_screen) {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [EventsScreen.newInstance] factory method to
- * create an instance of this fragment.
- */
-class EventsScreen : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var rvEvents: RecyclerView
+    private lateinit var adapter: EventsAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private val items = mutableListOf<EventUi>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_events_screen, container, false)
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment EventsScreen.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            EventsScreen().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        rvEvents = view.findViewById(R.id.rvEvents)
+        rvEvents.layoutManager = LinearLayoutManager(requireContext())
+        adapter = EventsAdapter(items)
+        rvEvents.adapter = adapter
+
+        view.findViewById<FloatingActionButton>(R.id.btnCreateEvent)
+            .setOnClickListener {
+                Toast.makeText(requireContext(), "Create Event coming soon", Toast.LENGTH_SHORT).show()
             }
+
+        showDemoEvents()
+    }
+
+    private fun showDemoEvents() {
+        val now = Calendar.getInstance()
+
+        val demo1Time = now.clone() as Calendar
+        demo1Time.add(Calendar.DAY_OF_YEAR, 1)
+        demo1Time.set(Calendar.HOUR_OF_DAY, 18)
+        demo1Time.set(Calendar.MINUTE, 0)
+
+        val demo2Time = now.clone() as Calendar
+        demo2Time.add(Calendar.DAY_OF_YEAR, 3)
+        demo2Time.set(Calendar.HOUR_OF_DAY, 11)
+        demo2Time.set(Calendar.MINUTE, 30)
+
+        val demoEvents = listOf(
+            EventUi(
+                id = "demo1",
+                title = "Yappy Hour @ Tampa Bay Brewing Co",
+                dateTime = Timestamp(demo1Time.time),
+                addressLine = "1600 E 8th Ave",
+                city = "Tampa",
+                state = "FL",
+                zip = "33605",
+                imageUrl = null,
+                goingCount = 5,
+                interestedCount = 12
+            ),
+            EventUi(
+                id = "demo2",
+                title = "Pawtumn Festival",
+                dateTime = Timestamp(demo2Time.time),
+                addressLine = "123 Pawty Lane",
+                city = "Tampa",
+                state = "FL",
+                zip = "33602",
+                imageUrl = null,
+                goingCount = 8,
+                interestedCount = 20
+            )
+        )
+
+        adapter.replaceAll(demoEvents)
     }
 }
