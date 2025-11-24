@@ -156,4 +156,6 @@
 
     <string name="events_near_you">Events Near You</string>
     <string name="create_event">Create Event</string>
+    <string name="interested">Interested</string>
+    <string name="going">Going</string>
 </resources>

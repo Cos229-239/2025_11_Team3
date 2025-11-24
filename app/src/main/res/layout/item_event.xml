@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imgEvent"
+            android:layout_width="match_parent"
+            android:layout_height="190dp"
+            android:scaleType="centerCrop"
+            android:background="@color/pawty_light_blue"
+            tools:src="@drawable/sample_dog" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp"
+            android:background="@color/pawty_light_blue">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvEventDateTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/pawty_text_secondary"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/marcellus"
+                    tools:text="Thurs, Oct 23 4pm" />
+
+                <Space
+                    android:layout_width="12dp"
+                    android:layout_height="wrap_content"/>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="@color/pawty_text_secondary"/>
+
+                <TextView
+                    android:id="@+id/tvInterestedCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/pawty_text_secondary"
+                    android:textSize="12sp"
+                    android:paddingStart="4dp"
+                    android:fontFamily="@font/marcellus"
+                    tools:text="@string/interested" />
+
+                <Space
+                    android:layout_width="12dp"
+                    android:layout_height="wrap_content"/>
+
+                <CheckBox
+                    android:id="@+id/cbGoing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/going"
+                    android:textColor="@color/pawty_text_secondary"
+                    android:fontFamily="@font/marcellus"
+                    android:textSize="12sp"
+                    android:buttonTint="@color/pawty_blue_dark" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvEventTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/pawty_text_secondary"
+                android:textSize="16sp"
+                android:fontFamily="@font/marcellus"
+                android:textStyle="bold"
+                tools:text="Yappy Hour @ Tampa Bay Brewing Co" />
+
+            <TextView
+                android:id="@+id/tvEventLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/pawty_text_secondary"
+                android:textSize="14sp"
+                android:fontFamily="@font/marcellus"
+                tools:text="1600 E 8th Ave Tampa, FL 33605" />
+
+            <LinearLayout
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_profile"
+                    app:tint="@color/pawty_text_secondary"/>
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginStart="4dp"
+                    android:src="@drawable/ic_profile"
+                    app:tint="@color/pawty_text_secondary"/>
+
+                <TextView
+                    android:id="@+id/tvSocialMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/pawty_text_secondary"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/marcellus"
+                    tools:text="Comet is interested" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
