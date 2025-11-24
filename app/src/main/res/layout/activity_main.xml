@@ -18,7 +18,8 @@
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
         android:layout_above="@+id/bottomNav"
-        />
+        android:name="com.example.pawtytime.HomeScreen"
+        tools:layout="@layout/item_post" />
 
 
     <com.google.android.material.button.MaterialButtonToggleGroup
