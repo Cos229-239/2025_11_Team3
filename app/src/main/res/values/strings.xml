@@ -153,4 +153,7 @@
 
     <string name="zoom_in">Zoom in</string>
     <string name="zoom_out">Zoom out</string>
+
+    <string name="events_near_you">Events Near You</string>
+    <string name="create_event">Create Event</string>
 </resources>
