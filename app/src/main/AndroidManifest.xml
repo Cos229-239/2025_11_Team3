@@ -70,6 +70,10 @@
             android:exported="false"
             android:theme="@style/Theme.PawtyTime" />
 
+        <activity
+            android:name=".CreateEventActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

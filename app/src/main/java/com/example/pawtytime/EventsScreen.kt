@@ -2,13 +2,13 @@ package com.example.pawtytime
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Timestamp
 import java.util.Calendar
+import android.content.Intent
 
 class EventsScreen : Fragment(R.layout.fragment_events_screen) {
 
@@ -27,7 +27,9 @@ class EventsScreen : Fragment(R.layout.fragment_events_screen) {
 
         view.findViewById<FloatingActionButton>(R.id.btnCreateEvent)
             .setOnClickListener {
-                Toast.makeText(requireContext(), "Create Event coming soon", Toast.LENGTH_SHORT).show()
+                startActivity(
+                    Intent(requireContext(), CreateEventActivity::class.java)
+                )
             }
 
         showDemoEvents()
