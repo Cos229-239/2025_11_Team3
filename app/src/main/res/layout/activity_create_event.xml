@@ -1,7 +1,326 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/pawty_yellow">
+    android:background="@color/pawty_yellow"
+    android:fillViewport="true">
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardCreateEvent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            app:cardBackgroundColor="@color/pawty_light_yellow"
+            app:cardCornerRadius="24dp"
+            app:cardUseCompatPadding="true"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tvCreateEventTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Create an Event"
+                    android:textColor="@color/pawty_blue_dark"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/marcellus"
+                    android:layout_marginBottom="12dp"/>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    app:cardCornerRadius="14dp"
+                    app:cardBackgroundColor="@color/pawty_teal">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEventTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:padding="12dp"
+                        android:hint="Event Title *"
+                        android:textColor="@color/pawty_text_secondary"
+                        android:textColorHint="@color/pawty_text_secondary"
+                        android:fontFamily="@font/marcellus"
+                        android:textSize="16sp"/>
+                </com.google.android.material.card.MaterialCardView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="14dp"
+                        app:cardBackgroundColor="@color/pawty_teal">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etEventDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:padding="12dp"
+                            android:hint="Date *"
+                            android:inputType="date"
+                            android:textColor="@color/pawty_text_secondary"
+                            android:textColorHint="@color/pawty_text_secondary"
+                            android:fontFamily="@font/marcellus"
+                            android:textSize="16sp"/>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <Space
+                        android:layout_width="8dp"
+                        android:layout_height="wrap_content"/>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="14dp"
+                        app:cardBackgroundColor="@color/pawty_teal">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etEventTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:padding="12dp"
+                            android:hint="Time *"
+                            android:inputType="time"
+                            android:textColor="@color/pawty_text_secondary"
+                            android:textColorHint="@color/pawty_text_secondary"
+                            android:fontFamily="@font/marcellus"
+                            android:textSize="16sp"/>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <Space
+                        android:layout_width="8dp"
+                        android:layout_height="wrap_content"/>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="14dp"
+                        app:cardBackgroundColor="@color/pawty_teal">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etEventAmPm"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:padding="12dp"
+                            android:hint="AM/PM *"
+                            android:inputType="textCapCharacters"
+                            android:textColor="@color/pawty_text_secondary"
+                            android:textColorHint="@color/pawty_text_secondary"
+                            android:fontFamily="@font/marcellus"
+                            android:textSize="16sp"/>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:cardCornerRadius="14dp"
+                    app:cardBackgroundColor="@color/pawty_teal">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etStreet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:padding="12dp"
+                        android:hint="Street Address *"
+                        android:textColor="@color/pawty_text_secondary"
+                        android:textColorHint="@color/pawty_text_secondary"
+                        android:fontFamily="@font/marcellus"
+                        android:textSize="16sp"/>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:cardCornerRadius="14dp"
+                    app:cardBackgroundColor="@color/pawty_teal">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etCity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:padding="12dp"
+                        android:hint="City *"
+                        android:textColor="@color/pawty_text_secondary"
+                        android:textColorHint="@color/pawty_text_secondary"
+                        android:fontFamily="@font/marcellus"
+                        android:textSize="16sp"/>
+                </com.google.android.material.card.MaterialCardView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="14dp"
+                        app:cardBackgroundColor="@color/pawty_teal">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etState"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:padding="12dp"
+                            android:hint="State *"
+                            android:textColor="@color/pawty_text_secondary"
+                            android:textColorHint="@color/pawty_text_secondary"
+                            android:fontFamily="@font/marcellus"
+                            android:textSize="16sp"/>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <Space
+                        android:layout_width="8dp"
+                        android:layout_height="wrap_content"/>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="14dp"
+                        app:cardBackgroundColor="@color/pawty_teal">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etZip"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:inputType="number"
+                            android:padding="12dp"
+                            android:hint="Zip Code *"
+                            android:textColor="@color/pawty_text_secondary"
+                            android:textColorHint="@color/pawty_text_secondary"
+                            android:fontFamily="@font/marcellus"
+                            android:textSize="16sp"/>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:cardCornerRadius="14dp"
+                    app:cardBackgroundColor="@color/pawty_teal">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:gravity="top|start"
+                        android:background="@android:color/transparent"
+                        android:padding="12dp"
+                        android:hint="Event Description"
+                        android:textColor="@color/pawty_text_secondary"
+                        android:textColorHint="@color/pawty_text_secondary"
+                        android:fontFamily="@font/marcellus"
+                        android:textSize="16sp"
+                        android:inputType="textMultiLine"
+                        android:maxLines="5"/>
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/tvSelectImageLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Select Event Image"
+                    android:textColor="@color/pawty_blue_dark"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/marcellus"/>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/zoneEventImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="4dp"
+                    app:cardCornerRadius="14dp"
+                    app:cardUseCompatPadding="true"
+                    app:cardBackgroundColor="@color/pawty_teal">
+
+                    <ImageView
+                        android:id="@+id/ivEventImagePreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/select_event_image"
+                        android:src="@android:drawable/ic_menu_camera"/>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Buttons row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="16dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCancelEvent"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/back"
+                        android:textAllCaps="false"
+                        android:textColor="@color/pawty_text_secondary"
+                        android:backgroundTint="@color/pawty_teal"
+                        android:fontFamily="@font/marcellus"
+                        app:cornerRadius="12dp"
+                        app:strokeColor="@color/pawty_dark_blue"
+                        app:strokeWidth="2dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSaveEvent"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/save_event"
+                        android:textColor="@color/pawty_text_secondary"
+                        android:textAllCaps="false"
+                        android:layout_marginStart="8dp"
+                        android:backgroundTint="@color/pawty_teal"
+                        android:fontFamily="@font/marcellus"
+                        app:cornerRadius="12dp"
+                        app:strokeColor="@color/pawty_dark_blue"
+                        app:strokeWidth="2dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

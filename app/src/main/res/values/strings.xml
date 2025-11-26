@@ -158,4 +158,6 @@
     <string name="create_event">Create Event</string>
     <string name="interested">Interested</string>
     <string name="going">Going</string>
+    <string name="save_event">Save Event</string>
+    <string name="select_event_image">Select Event Image</string>
 </resources>
