@@ -7,6 +7,11 @@
         <item name="colorPrimary">@color/pawty_dark_blue</item>
         <item name="colorControlActivated">@color/pawty_dark_blue</item>
         <item name="colorOnPrimary">@android:color/white</item>
+
+        <!-- Global app font: Marcellus -->
+        <item name="android:fontFamily">@font/marcellus</item>
+        <item name="fontFamily">@font/marcellus</item>
+
     </style>
 
 </resources>

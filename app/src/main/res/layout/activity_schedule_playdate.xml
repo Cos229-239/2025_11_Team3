@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pawty_yellow"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/pawty_cream">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Pet photo -->
+                <ImageView
+                    android:id="@+id/ivPetPhoto"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_gravity="center_horizontal"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_avatar_circle" />
+
+                <!-- Pet name (age) -->
+                <TextView
+                    android:id="@+id/tvPetNameAge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/marcellus"
+                    android:text="Klaus (3 yrs)"
+                    android:textColor="@color/pawty_text_primary"
+                    android:textSize="20sp" />
+
+                <!-- Schedule with PetName -->
+                <TextView
+                    android:id="@+id/tvScheduleWith"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/marcellus"
+                    android:text="Schedule with Klaus"
+                    android:textColor="@color/pawty_dark_blue"
+                    android:textSize="16sp" />
+
+                <!-- Privacy Status -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/marcellus"
+                    android:text="Privacy Status:"
+                    android:textColor="@color/pawty_text_primary"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardPrivacyStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:cardCornerRadius="50dp"
+                    app:cardBackgroundColor="@color/pawty_pill_blue"
+                    app:cardElevation="0dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="8dp">
+
+                        <!-- Checkbox icon on the left -->
+                        <ImageView
+                            android:id="@+id/ivPrivacyCheckbox"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_checkbox_empty"
+                        android:contentDescription="Privacy selected state" />
+
+                        <!-- Text in the middle -->
+                        <TextView
+                            android:id="@+id/tvPrivacyStatus"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:text="Select privacy"
+                            android:textColor="@color/pawty_dark_blue"
+                            android:fontFamily="@font/marcellus"
+                            android:textSize="14sp" />
+
+                        <!-- Dropdown arrow on the right -->
+                        <ImageView
+                            android:id="@+id/ivPrivacyDropdown"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_dropdown"
+                            android:contentDescription="Open privacy options" />
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+                </LinearLayout>
+
+                <!-- Check Availability -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/marcellus"
+                    android:text="Check Availability"
+                    android:textColor="@color/pawty_text_primary"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCalendar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/marcellus"
+                    android:text="Calendar"
+                    android:textColor="@color/pawty_dark_blue"
+                    app:backgroundTint="@color/pawty_pill_blue"
+                    app:cornerRadius="50dp"
+                    app:icon="@drawable/ic_calendar"
+                    app:iconGravity="textStart"
+                    app:iconPadding="8dp"
+                    app:iconTint="@null" />
+
+                <!-- Time Availability -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/marcellus"
+                    android:text="Time Availability"
+                    android:textColor="@color/pawty_text_primary"
+                    android:textSize="14sp" />
+
+                <!-- Every Day / Custom Days -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnEveryDay"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:text="Every Day"
+                        android:fontFamily="@font/marcellus"
+                        android:textColor="@color/pawty_dark_blue"
+                        app:cornerRadius="50dp"
+                        app:backgroundTint="@color/pawty_pill_blue"
+                        app:icon="@drawable/ic_checkbox_empty"
+                        app:iconPadding="8dp"
+                        app:iconGravity="textStart"
+                        app:iconTint="@null" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCustomDays"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="1"
+                        android:text="Custom Days"
+                        android:fontFamily="@font/marcellus"
+                        android:textColor="@color/pawty_dark_blue"
+                        app:cornerRadius="50dp"
+                        app:backgroundTint="@color/pawty_pill_blue"
+                        app:icon="@drawable/ic_checkbox_empty"
+                        app:iconPadding="8dp"
+                        app:iconGravity="textStart"
+                        app:iconTint="@null" />
+                </LinearLayout>
+
+                <!-- Days of week -->
+                <LinearLayout
+                    android:id="@+id/layoutDaysRow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDaySun"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="4dp"
+                        android:text="S"
+                        android:textAllCaps="false"
+                        android:gravity="center"
+                        android:fontFamily="@font/marcellus"
+                        android:textSize="14sp"
+                        android:textColor="@color/pawty_dark_blue"
+                        app:cornerRadius="16dp"
+                        app:backgroundTint="@color/pawty_pill_blue"
+                        app:iconTint="@null"
+                        app:iconGravity="textStart"
+                        app:iconPadding="4dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDayMon"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="4dp"
+                        android:text="M"
+                        android:textAllCaps="false"
+                        android:gravity="center"
+                        android:fontFamily="@font/marcellus"
+                        android:textSize="14sp"
+                        android:textColor="@color/pawty_dark_blue"
+                        app:cornerRadius="16dp"
+                        app:backgroundTint="@color/pawty_pill_blue"
+                        app:iconTint="@null"
+                        app:iconGravity="textStart"
+                        app:iconPadding="4dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDayTue"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="4dp"
+                        android:text="T"
+                        android:textAllCaps="false"
+                        android:gravity="center"
+                        android:fontFamily="@font/marcellus"
+                        android:textSize="14sp"
+                        android:textColor="@color/pawty_dark_blue"
+                        app:cornerRadius="16dp"
+                        app:backgroundTint="@color/pawty_pill_blue"
+                        app:iconTint="@null"
+                        app:iconGravity="textStart"
+                        app:iconPadding="4dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDayWed"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="4dp"
+                        android:text="W"
+                        android:textAllCaps="false"
+                        android:gravity="center"
+                        android:fontFamily="@font/marcellus"
+                        android:textSize="14sp"
+                        android:textColor="@color/pawty_dark_blue"
+                        app:cornerRadius="16dp"
+                        app:backgroundTint="@color/pawty_pill_blue"
+                        app:iconTint="@null"
+                        app:iconGravity="textStart"
+                        app:iconPadding="4dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDayThu"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="4dp"
+                        android:text="T"
+                        android:textAllCaps="false"
+                        android:gravity="center"
+                        android:fontFamily="@font/marcellus"
+                        android:textSize="14sp"
+                        android:textColor="@color/pawty_dark_blue"
+                        app:cornerRadius="16dp"
+                        app:backgroundTint="@color/pawty_pill_blue"
+                        app:iconTint="@null"
+                        app:iconGravity="textStart"
+                        app:iconPadding="4dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDayFri"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="4dp"
+                        android:text="F"
+                        android:textAllCaps="false"
+                        android:gravity="center"
+                        android:fontFamily="@font/marcellus"
+                        android:textSize="14sp"
+                        android:textColor="@color/pawty_dark_blue"
+                        app:cornerRadius="16dp"
+                        app:backgroundTint="@color/pawty_pill_blue"
+                        app:iconTint="@null"
+                        app:iconGravity="textStart"
+                        app:iconPadding="4dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDaySat"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="4dp"
+                        android:text="S"
+                        android:textAllCaps="false"
+                        android:gravity="center"
+                        android:fontFamily="@font/marcellus"
+                        android:textSize="14sp"
+                        android:textColor="@color/pawty_dark_blue"
+                        app:cornerRadius="16dp"
+                        app:backgroundTint="@color/pawty_pill_blue"
+                        app:iconTint="@null"
+                        app:iconGravity="textStart"
+                        app:iconPadding="4dp" />
+                </LinearLayout>
+
+
+                <!-- Time range -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnTimeRange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_gravity="start"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="6dp"
+                    android:text="10:00 AM - 10:00 PM"
+                    android:textSize="13sp"
+                    android:textColor="@color/pawty_dark_blue"
+                    android:fontFamily="@font/marcellus"
+                    app:cornerRadius="50dp"
+                    app:backgroundTint="@color/pawty_pill_blue"
+                    app:iconTint="@null" />
+
+
+                <!-- Choose a location -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/marcellus"
+                    android:text="Choose a Location"
+                    android:textColor="@color/pawty_text_primary"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnChooseOnMap"
+                    android:layout_width="242dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/marcellus"
+                    android:text="Choose on Map"
+                    android:textColor="@color/pawty_dark_blue"
+                    app:backgroundTint="@color/pawty_pill_blue"
+                    app:cornerRadius="50dp"
+                    app:icon="@drawable/ic_map"
+                    app:iconGravity="textStart"
+                    app:iconPadding="8dp"
+                    app:iconTint="@null" />
+
+                <!-- Invite others (optional) -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/marcellus"
+                    android:text="Invite Others (optional)"
+                    android:textColor="@color/pawty_text_primary"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSearchProfiles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Search Profiles"
+                    android:fontFamily="@font/marcellus"
+                    android:textColor="@color/pawty_dark_blue"
+                    app:cornerRadius="50dp"
+                    app:icon="@drawable/ic_search"
+                    app:iconGravity="textStart"
+                    app:iconPadding="8dp"
+                    app:backgroundTint="@color/pawty_pill_blue"
+                    app:iconTint="@null" />
+
+
+                <!-- Pick activities -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/marcellus"
+                    android:text="Pick Activities"
+                    android:textColor="@color/pawty_text_primary"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical">
+
+                    <!-- Walking -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnActivityWalk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="Walking"
+                        android:fontFamily="@font/marcellus"
+                        android:textColor="@color/pawty_dark_blue"
+                        app:cornerRadius="50dp"
+                        app:backgroundTint="@color/pawty_pill_blue"
+                        app:iconTint="@null"
+                        app:iconGravity="textStart"
+                        app:iconPadding="8dp" />
+
+                    <!-- Fetch -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnActivityFetch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="Fetch"
+                        android:fontFamily="@font/marcellus"
+                        android:textColor="@color/pawty_dark_blue"
+                        app:cornerRadius="50dp"
+                        app:backgroundTint="@color/pawty_pill_blue"
+                        app:iconTint="@null"
+                        app:iconGravity="textStart"
+                        app:iconPadding="8dp" />
+
+                    <!-- Other -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnActivityOther"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Other"
+                        android:fontFamily="@font/marcellus"
+                        android:textColor="@color/pawty_dark_blue"
+                        app:cornerRadius="50dp"
+                        app:backgroundTint="@color/pawty_pill_blue"
+                        app:iconTint="@null"
+                        app:iconGravity="textStart"
+                        app:iconPadding="8dp" />
+
+                    <!-- Text field for custom activity (shown only when Other is checked) -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layoutActivityOther"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:visibility="gone">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etActivityOther"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Describe other activity"
+                            android:fontFamily="@font/marcellus"
+                            android:textColor="@color/pawty_text_primary"
+                            android:textColorHint="@color/pawty_text_primary" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+
+
+                <!-- Create Playdate -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCreatePlaydate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="Create Playdate"
+                    android:textColor="@color/pawty_dark_blue"
+                    android:fontFamily="@font/marcellus"
+                    app:cornerRadius="50dp"
+                    app:backgroundTint="@color/pawty_pill_blue" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
