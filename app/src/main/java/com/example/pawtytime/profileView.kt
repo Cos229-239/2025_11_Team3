@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.example.pawtytime.Post
+import com.example.pawtytime.PostAdapter
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -65,7 +67,7 @@ class ProfileView : Fragment() {
 
         // inflate each tab
         val postsView = layoutInflater.inflate(R.layout.profile_view_posts, tabContainer, false)
-        val repostsView = layoutInflater.inflate(R.layout.profile_view_reposts, tabContainer, false)
+        val petPostsView = layoutInflater.inflate(R.layout.profile_view_reposts, tabContainer, false)
         val taggedView = layoutInflater.inflate(R.layout.tagged_posts_view, tabContainer, false)
 
         //default
@@ -86,24 +88,20 @@ class ProfileView : Fragment() {
         recyclerView.adapter = adapter
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
 
-
         if(currentUserId != null) {
             FirebaseFirestore.getInstance()
                 .collection("posts")
-                .whereEqualTo("userId", currentUserId)
-                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .whereEqualTo("authorUid", currentUserId)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener { documents ->
-                    for (doc in documents) {
-                        val post = doc.toObject(Post::class.java)
-                        postsList.add(post)
-                    }
-                    Toast.makeText(
-                        requireContext(),
-                        "Loaded ${postsList.size} posts",
+                    val newPosts = documents.map { it.toObject(Post::class.java) }
+                    adapter.setPosts(newPosts)   // ✅ update adapter properly
+                    Toast.makeText(requireContext(),
+                        "Loaded ${newPosts.size} posts",
                         Toast.LENGTH_SHORT
+
                     ).show()
-                    adapter.notifyDataSetChanged()
                 }
         }
         if(currentUserId != null) {
@@ -134,7 +132,7 @@ class ProfileView : Fragment() {
         }
         repostsTab.setOnClickListener {
             tabContainer.removeAllViews()
-            tabContainer.addView(repostsView)
+            tabContainer.addView(petPostsView)
         }
         taggedTab.setOnClickListener {
             tabContainer.removeAllViews()

@@ -7,12 +7,6 @@
     android:background="@color/pawty_yellow">
 
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:text="@string/view_profile_screen"
-        android:textSize="30sp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -179,13 +173,13 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:text=""
+                    android:text="First and Last Name"
                     android:textSize="20sp" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/profile_bio_more"
-                    android:text=""
+                    android:text="Profile Bio"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:textSize="15sp"
@@ -214,7 +208,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:text="@string/pt_reposts"
+                android:text="Pet Posts"
                 android:layout_weight="1"
                 android:textColor="@color/pt_black"/>
 
@@ -227,25 +221,14 @@
                 android:text="@string/tagged"
                 android:textColor="@color/pt_black" />
         </LinearLayout>
-            <ScrollView
-                android:id="@+id/profile_tabs"
-                android:contentDescription="@string/profile_posts_scroll"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/view_profile_tabs"
-                android:fillViewport="true">
 
                 <FrameLayout
                     android:id="@+id/profile_tabs_container"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/view_profile_tabs"
                     />
-            </ScrollView>
+
         </RelativeLayout>
-
-
-    </androidx.core.widget.NestedScrollView>
-
-
 
 </FrameLayout>
