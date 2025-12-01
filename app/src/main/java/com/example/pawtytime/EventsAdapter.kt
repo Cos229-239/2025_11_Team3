@@ -15,9 +15,11 @@ class EventsAdapter(
     private val items: MutableList<EventUi>
 ) : RecyclerView.Adapter<EventsAdapter.VH>() {
 
-    private val dateFormat = SimpleDateFormat("EEE MMM d · h:mm a", Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("MM/dd/yyyy h:mm a", Locale.getDefault())
 
-    inner class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private val interestedIds = mutableSetOf<String>()
+
+    class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imgEvent: ImageView = itemView.findViewById(R.id.imgEvent)
         val tvDateTime: TextView = itemView.findViewById(R.id.tvEventDateTime)
         val tvTitle: TextView = itemView.findViewById(R.id.tvEventTitle)
@@ -26,6 +28,15 @@ class EventsAdapter(
 
         val ivInterestedIcon: ImageView = itemView.findViewById(R.id.ivInterestedIcon)
         val cbGoing: CheckBox = itemView.findViewById(R.id.cbGoing)
+    }
+
+    private fun bindStarIcon(view: ImageView, isInterested: Boolean) {
+        val resId = if (isInterested) {
+            R.drawable.ic_star_filled
+        } else {
+            R.drawable.ic_star
+        }
+        view.setImageResource(resId)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -54,13 +65,32 @@ class EventsAdapter(
         holder.tvLocation.text =
             "${item.addressLine}, ${item.city}, ${item.state} ${item.zip}"
 
-        holder.tvSocialMessage.text = item.description.ifBlank {
-            "Comet is interested"
+        holder.tvSocialMessage.text = "Comet is interested"
+
+        val isInterested = interestedIds.contains(item.id)
+        bindStarIcon(holder.ivInterestedIcon, isInterested)
+
+        holder.ivInterestedIcon.setOnClickListener {
+            val currentlyInterested = interestedIds.contains(item.id)
+            val newState = !currentlyInterested
+
+            if (newState) {
+                interestedIds.add(item.id)
+            } else {
+                interestedIds.remove(item.id)
+            }
+
+            bindStarIcon(holder.ivInterestedIcon, newState)
         }
 
-        holder.ivInterestedIcon.isSelected = false
+        holder.cbGoing.setOnCheckedChangeListener(null)
         holder.cbGoing.isChecked = false
+
+        holder.cbGoing.setOnCheckedChangeListener { _, isChecked ->
+
+        }
     }
+
 
     fun replaceAll(newItems: List<EventUi>) {
         items.clear()
