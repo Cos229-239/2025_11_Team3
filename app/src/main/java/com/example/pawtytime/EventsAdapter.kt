@@ -12,7 +12,8 @@ import java.util.Locale
 import android.widget.CheckBox
 
 class EventsAdapter(
-    private val items: MutableList<EventUi>
+    private val items: MutableList<EventUi>,
+    private val onEventClicked: (EventUi) -> Unit = {}
 ) : RecyclerView.Adapter<EventsAdapter.VH>() {
 
     private val dateFormat = SimpleDateFormat("MM/dd/yyyy h:mm a", Locale.getDefault())
@@ -90,6 +91,10 @@ class EventsAdapter(
                         bindStarIcon(holder.ivInterestedIcon, false)
                     }
                 }
+            }
+
+            holder.itemView.setOnClickListener {
+                onEventClicked(item)
             }
         }
 

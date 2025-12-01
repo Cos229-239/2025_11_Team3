@@ -12,6 +12,8 @@ import com.google.firebase.firestore.Query
 
 class EventsScreen : Fragment(R.layout.fragment_events_screen) {
 
+    private val items = mutableListOf<EventUi>()
+
     private val db by lazy { FirebaseFirestore.getInstance() }
 
     private lateinit var rvEvents: RecyclerView
@@ -22,7 +24,15 @@ class EventsScreen : Fragment(R.layout.fragment_events_screen) {
 
         rvEvents = view.findViewById(R.id.rvEvents)
         rvEvents.layoutManager = LinearLayoutManager(requireContext())
-        adapter = EventsAdapter(mutableListOf())
+        adapter = EventsAdapter(items) { event ->
+            val ctx = requireContext()
+            val intent = android.content.Intent(ctx, EventDetailActivity::class.java).apply {
+                putExtra("eventId", event.id)
+            }
+            startActivity(intent)
+        }
+
+
         rvEvents.adapter = adapter
 
         view.findViewById<FloatingActionButton>(R.id.btnCreateEvent)
