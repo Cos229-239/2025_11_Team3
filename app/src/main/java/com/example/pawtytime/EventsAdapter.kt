@@ -60,7 +60,6 @@ class EventsAdapter(
         }
 
         holder.tvDateTime.text = dateFormat.format(item.dateTime.toDate())
-
         holder.tvTitle.text = item.title
         holder.tvLocation.text =
             "${item.addressLine}, ${item.city}, ${item.state} ${item.zip}"
@@ -81,16 +80,39 @@ class EventsAdapter(
             }
 
             bindStarIcon(holder.ivInterestedIcon, newState)
+
+            if (newState) {
+                holder.cbGoing.setOnCheckedChangeListener(null)
+                holder.cbGoing.isChecked = false
+                holder.cbGoing.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) {
+                        interestedIds.remove(item.id)
+                        bindStarIcon(holder.ivInterestedIcon, false)
+                    }
+                }
+            }
         }
 
         holder.cbGoing.setOnCheckedChangeListener(null)
         holder.cbGoing.isChecked = false
 
         holder.cbGoing.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                interestedIds.remove(item.id)
+                bindStarIcon(holder.ivInterestedIcon, false)
+            }
+        }
 
+        holder.cbGoing.setOnCheckedChangeListener(null)
+        holder.cbGoing.isChecked = false
+
+        holder.cbGoing.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                interestedIds.remove(item.id)
+                bindStarIcon(holder.ivInterestedIcon, false)
+            }
         }
     }
-
 
     fun replaceAll(newItems: List<EventUi>) {
         items.clear()
