@@ -7,26 +7,25 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.card.MaterialCardView
 import java.text.SimpleDateFormat
 import java.util.Locale
 import android.widget.CheckBox
 
 class EventsAdapter(
     private val items: MutableList<EventUi>,
-    private val onEventClicked: (EventUi) -> Unit = {}
+    private val onEventClicked: (EventUi) -> Unit
 ) : RecyclerView.Adapter<EventsAdapter.VH>() {
 
     private val dateFormat = SimpleDateFormat("MM/dd/yyyy h:mm a", Locale.getDefault())
 
-    private val interestedIds = mutableSetOf<String>()
-
     class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val card: MaterialCardView = itemView.findViewById(R.id.cardEvent)
         val imgEvent: ImageView = itemView.findViewById(R.id.imgEvent)
         val tvDateTime: TextView = itemView.findViewById(R.id.tvEventDateTime)
         val tvTitle: TextView = itemView.findViewById(R.id.tvEventTitle)
         val tvLocation: TextView = itemView.findViewById(R.id.tvEventLocation)
         val tvSocialMessage: TextView = itemView.findViewById(R.id.tvSocialMessage)
-
         val ivInterestedIcon: ImageView = itemView.findViewById(R.id.ivInterestedIcon)
         val cbGoing: CheckBox = itemView.findViewById(R.id.cbGoing)
     }
@@ -67,57 +66,44 @@ class EventsAdapter(
 
         holder.tvSocialMessage.text = "Comet is interested"
 
-        val isInterested = interestedIds.contains(item.id)
+        val isInterested = EventRsvpState.interestedIds.contains(item.id)
+        val isGoing = EventRsvpState.goingIds.contains(item.id)
+
         bindStarIcon(holder.ivInterestedIcon, isInterested)
 
+        holder.cbGoing.setOnCheckedChangeListener(null)
+        holder.cbGoing.isChecked = isGoing
+
         holder.ivInterestedIcon.setOnClickListener {
-            val currentlyInterested = interestedIds.contains(item.id)
-            val newState = !currentlyInterested
+            val currentlyInterested = EventRsvpState.interestedIds.contains(item.id)
+            val newInterested = !currentlyInterested
 
-            if (newState) {
-                interestedIds.add(item.id)
-            } else {
-                interestedIds.remove(item.id)
-            }
-
-            bindStarIcon(holder.ivInterestedIcon, newState)
-
-            if (newState) {
-                holder.cbGoing.setOnCheckedChangeListener(null)
+            if (newInterested) {
+                EventRsvpState.interestedIds.add(item.id)
+                EventRsvpState.goingIds.remove(item.id)
                 holder.cbGoing.isChecked = false
-                holder.cbGoing.setOnCheckedChangeListener { _, isChecked ->
-                    if (isChecked) {
-                        interestedIds.remove(item.id)
-                        bindStarIcon(holder.ivInterestedIcon, false)
-                    }
-                }
+            } else {
+                EventRsvpState.interestedIds.remove(item.id)
             }
 
-            holder.itemView.setOnClickListener {
-                onEventClicked(item)
+            bindStarIcon(holder.ivInterestedIcon, newInterested)
+        }
+
+        holder.cbGoing.setOnCheckedChangeListener { _, checked ->
+            if (checked) {
+                EventRsvpState.goingIds.add(item.id)
+                EventRsvpState.interestedIds.remove(item.id)
+                bindStarIcon(holder.ivInterestedIcon, false)
+            } else {
+                EventRsvpState.goingIds.remove(item.id)
             }
         }
 
-        holder.cbGoing.setOnCheckedChangeListener(null)
-        holder.cbGoing.isChecked = false
-
-        holder.cbGoing.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                interestedIds.remove(item.id)
-                bindStarIcon(holder.ivInterestedIcon, false)
-            }
-        }
-
-        holder.cbGoing.setOnCheckedChangeListener(null)
-        holder.cbGoing.isChecked = false
-
-        holder.cbGoing.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                interestedIds.remove(item.id)
-                bindStarIcon(holder.ivInterestedIcon, false)
-            }
+        holder.itemView.setOnClickListener {
+            onEventClicked(item)
         }
     }
+
 
     fun replaceAll(newItems: List<EventUi>) {
         items.clear()

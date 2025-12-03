@@ -32,7 +32,6 @@ class EventsScreen : Fragment(R.layout.fragment_events_screen) {
             startActivity(intent)
         }
 
-
         rvEvents.adapter = adapter
 
         view.findViewById<FloatingActionButton>(R.id.btnCreateEvent)
@@ -61,5 +60,10 @@ class EventsScreen : Fragment(R.layout.fragment_events_screen) {
             .addOnFailureListener { e ->
                 Log.e("EventsScreen", "Failed to load events", e)
             }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        adapter.notifyDataSetChanged()
     }
 }

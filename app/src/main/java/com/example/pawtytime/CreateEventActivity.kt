@@ -15,6 +15,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Locale
+import android.widget.CheckBox
 
 class CreateEventActivity : AppCompatActivity() {
 
@@ -30,10 +31,13 @@ class CreateEventActivity : AppCompatActivity() {
     private lateinit var etDate: TextInputEditText
     private lateinit var etTime: TextInputEditText
     private lateinit var etAmPm: TextInputEditText
+    private lateinit var etVenue: TextInputEditText
     private lateinit var etAddress: TextInputEditText
     private lateinit var etCity: TextInputEditText
     private lateinit var etState: TextInputEditText
     private lateinit var etZip: TextInputEditText
+    private lateinit var cbPublic: CheckBox
+    private lateinit var cbPrivate: CheckBox
     private lateinit var etDescription: TextInputEditText
     private lateinit var btnSave: MaterialButton
     private lateinit var btnBack: MaterialButton
@@ -59,20 +63,41 @@ class CreateEventActivity : AppCompatActivity() {
         etDate = findViewById(R.id.etEventDate)
         etTime = findViewById(R.id.etEventTime)
         etAmPm = findViewById(R.id.etEventAmPm)
+        etVenue = findViewById(R.id.etVenueName)
         etAddress = findViewById(R.id.etStreet)
         etCity = findViewById(R.id.etCity)
         etState = findViewById(R.id.etState)
         etZip = findViewById(R.id.etZip)
+        cbPublic = findViewById(R.id.cbPublic)
+        cbPrivate = findViewById(R.id.cbPrivate)
         etDescription = findViewById(R.id.etDescription)
         btnSave = findViewById(R.id.btnSaveEvent)
         btnBack = findViewById(R.id.btnCancelEvent)
-
 
         val tapToPick = View.OnClickListener {
             pickEventImage.launch("image/*")
         }
         zoneEventImage.setOnClickListener(tapToPick)
         ivEventImagePreview.setOnClickListener(tapToPick)
+
+        cbPublic.isChecked = true
+        cbPrivate.isChecked = false
+
+        cbPublic.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                cbPrivate.isChecked = false
+            } else if (!cbPrivate.isChecked) {
+                cbPublic.isChecked = true
+            }
+        }
+
+        cbPrivate.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                cbPublic.isChecked = false
+            } else if (!cbPublic.isChecked) {
+                cbPrivate.isChecked = true
+            }
+        }
 
         btnSave.setOnClickListener { saveEvent() }
         btnBack.setOnClickListener { finish() }
@@ -83,6 +108,7 @@ class CreateEventActivity : AppCompatActivity() {
         val dateStr = etDate.text?.toString()?.trim().orEmpty()
         val timeStr = etTime.text?.toString()?.trim().orEmpty()
         val ampm = etAmPm.text?.toString()?.trim().orEmpty()
+        val venue = etVenue.text?.toString()?.trim().orEmpty()
         val addr = etAddress.text?.toString()?.trim().orEmpty()
         val city = etCity.text?.toString()?.trim().orEmpty()
         val state = etState.text?.toString()?.trim().orEmpty()
@@ -97,7 +123,7 @@ class CreateEventActivity : AppCompatActivity() {
         }
 
         val dateTimeStr = "$dateStr $timeStr $ampm"
-        val formatter = java.text.SimpleDateFormat("MM/DD/YYYY HH:MM a", Locale.getDefault())
+        val formatter = java.text.SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.getDefault())
 
         val parsedDate = try {
             formatter.parse(dateTimeStr)
@@ -125,6 +151,13 @@ class CreateEventActivity : AppCompatActivity() {
         val lng = results[0].longitude
         val currentUid = auth.currentUser?.uid ?: "anonymous"
 
+        if (!cbPublic.isChecked && !cbPrivate.isChecked) {
+            Toast.makeText(this, "Please choose Public or Private", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val visibility = if (cbPrivate.isChecked) "private" else "public"
+
         btnSave.isEnabled = false
 
         val imageUri = selectedImageUri
@@ -140,13 +173,15 @@ class CreateEventActivity : AppCompatActivity() {
                             title = title,
                             desc = desc,
                             timestamp = timestamp,
+                            venueName = venue,
                             addr = addr,
                             city = city,
                             state = state,
                             zip = zip,
                             lat = lat,
                             lng = lng,
-                            createdByUid = currentUid
+                            createdByUid = currentUid,
+                            visibility = visibility
                         )
                     }
                 }
@@ -157,13 +192,15 @@ class CreateEventActivity : AppCompatActivity() {
                 title = title,
                 desc = desc,
                 timestamp = timestamp,
+                venueName = venue,
                 addr = addr,
                 city = city,
                 state = state,
                 zip = zip,
                 lat = lat,
                 lng = lng,
-                createdByUid = currentUid
+                createdByUid = currentUid,
+                visibility = visibility
             )
         }
     }
@@ -173,18 +210,21 @@ class CreateEventActivity : AppCompatActivity() {
         title: String,
         desc: String,
         timestamp: Timestamp,
+        venueName: String,
         addr: String,
         city: String,
         state: String,
         zip: String,
         lat: Double,
         lng: Double,
-        createdByUid: String
+        createdByUid: String,
+        visibility: String
     ) {
         val eventData = hashMapOf(
             "title" to title,
             "description" to desc,
             "dateTime" to timestamp,
+            "venueName" to venueName,
             "addressLine" to addr,
             "city" to city,
             "state" to state,
@@ -194,7 +234,8 @@ class CreateEventActivity : AppCompatActivity() {
             "imageUrl" to imageUrl,
             "createdByUid" to createdByUid,
             "goingCount" to 0L,
-            "interestedCount" to 0L
+            "interestedCount" to 0L,
+            "visibility" to visibility
         )
 
         db.collection("events")

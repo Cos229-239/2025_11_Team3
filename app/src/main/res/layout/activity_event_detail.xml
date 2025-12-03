@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,13 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="0dp">
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardDetailShell"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="24dp"
+            android:layout_marginTop="8dp"
             app:cardBackgroundColor="@color/pawty_light_yellow"
+            app:cardCornerRadius="24dp"
             app:cardUseCompatPadding="true"
             app:cardElevation="4dp">
 
@@ -24,26 +27,249 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="8dp">
 
-                <TextView
-                    android:id="@+id/tvDetailTitle"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardDetailEvent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Event Details"
-                    android:textSize="20sp"
-                    android:textColor="@color/pawty_blue_dark"
-                    android:fontFamily="@font/marcellus" />
+                    app:cardCornerRadius="18dp"
+                    app:cardUseCompatPadding="false"
+                    app:cardBackgroundColor="@color/pawty_teal"
+                    app:strokeWidth="0dp">
 
-                <TextView
-                    android:id="@+id/tvDetailEventId"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="(event id here)"
-                    android:textSize="14sp"
-                    android:textColor="@color/pawty_blue_dark"
-                    android:fontFamily="@font/marcellus" />
+                    <!-- This layout has NO padding so the image can touch the card edges -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <!-- Event header image (fills top of card) -->
+                        <ImageView
+                            android:id="@+id/ivEventHeader"
+                            android:layout_width="match_parent"
+                            android:layout_height="190dp"
+                            android:scaleType="centerCrop"
+                            android:background="@color/pawty_teal"
+                            android:contentDescription="@string/select_event_image" />
+
+                        <!-- Interested / Going row -->
+                        <LinearLayout
+                            android:id="@+id/rowInterestActions"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="end|center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="0dp">
+
+                            <ImageView
+                                android:id="@+id/ivInterestedIcon"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_star"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:foreground="?attr/selectableItemBackgroundBorderless"
+                                app:tint="@color/pawty_text_secondary" />
+
+                            <Space
+                                android:layout_width="8dp"
+                                android:layout_height="wrap_content" />
+
+                            <TextView
+                                android:id="@+id/tvInterestedLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/marcellus"
+                                android:text="@string/interested"
+                                android:textColor="@color/pawty_text_secondary"
+                                android:textSize="12sp" />
+
+                            <Space
+                                android:layout_width="12dp"
+                                android:layout_height="wrap_content" />
+
+                            <CheckBox
+                                android:id="@+id/cbGoing"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:buttonTint="@color/pawty_blue_dark"
+                                android:fontFamily="@font/marcellus"
+                                android:text="@string/going"
+                                android:textColor="@color/pawty_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <!-- All text content sits inside this padded block -->
+                        <LinearLayout
+                            android:id="@+id/layoutTextBlock"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingStart="16dp"
+                            android:paddingTop="8dp"
+                            android:paddingEnd="16dp"
+                            android:paddingBottom="16dp">
+
+                            <TextView
+                                android:id="@+id/tvDetailDateTime"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="4dp"
+                                android:fontFamily="@font/marcellus"
+                                android:text="12/28/2025 4:00 PM"
+                                android:textColor="@color/pawty_text_secondary"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/tvDetailTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="2dp"
+                                android:fontFamily="@font/marcellus"
+                                android:text="Yappy Hour"
+                                android:textColor="@color/pawty_text_secondary"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvDetailVenueName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="2dp"
+                                android:fontFamily="@font/marcellus"
+                                android:text="Tampa Bay Brewing Co"
+                                android:textColor="@color/pawty_text_secondary"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/tvDetailVenueAddress"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:fontFamily="@font/marcellus"
+                                android:text="1600 E 8th Ave, Tampa, FL 33605"
+                                android:textColor="@color/pawty_text_secondary"
+                                android:textSize="14sp" />
+
+                            <LinearLayout
+                                android:id="@+id/rowCounts"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingTop="8dp"
+                                android:paddingBottom="12dp">
+
+                                <TextView
+                                    android:id="@+id/tvDetailInterested"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="24dp"
+                                    android:fontFamily="@font/marcellus"
+                                    android:text="Interested: 0"
+                                    android:textColor="@color/pawty_text_secondary"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/tvDetailGoing"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/marcellus"
+                                    android:text="Going: 0"
+                                    android:textColor="@color/pawty_text_secondary"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tvDetailPrivacy"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:layout_marginBottom="12dp"
+                                android:fontFamily="@font/marcellus"
+                                android:text="Privacy: Public"
+                                android:textColor="@color/pawty_text_secondary"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/tvPawtyDetailsHeader"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:layout_marginBottom="2dp"
+                                android:fontFamily="@font/marcellus"
+                                android:text="Pawty Details"
+                                android:textColor="@color/pawty_text_secondary"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/tvDetailDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/marcellus"
+                                android:text="Description"
+                                android:textColor="@color/pawty_text_secondary"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/tvHostHeader"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:layout_marginBottom="2dp"
+                                android:fontFamily="@font/marcellus"
+                                android:text="Host"
+                                android:textColor="@color/pawty_text_secondary"
+                                android:textSize="18sp" />
+
+                            <LinearLayout
+                                android:id="@+id/layoutHost"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center_horizontal"
+                                android:orientation="vertical">
+
+                                <ImageButton
+                                    android:id="@+id/ivHostAvatar"
+                                    android:layout_width="150dp"
+                                    android:layout_height="150dp"
+                                    android:background="@android:color/transparent"
+                                    android:clickable="true"
+                                    android:contentDescription="@string/cd_profile"
+                                    android:focusable="true"
+                                    android:padding="4dp"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/ic_profile" />
+
+                                <TextView
+                                    android:id="@+id/tvHostName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:fontFamily="@font/marcellus"
+                                    android:text=" "
+                                    android:textColor="@color/pawty_text_secondary"
+                                    android:textSize="16sp" />
+
+                                <RatingBar
+                                    android:id="@+id/rbHostRating"
+                                    style="?android:attr/ratingBarStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:isIndicator="true"
+                                    android:numStars="5"
+                                    android:rating="4.5"
+                                    android:stepSize="0.5" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

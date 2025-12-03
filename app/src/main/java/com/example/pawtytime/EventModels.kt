@@ -15,7 +15,10 @@ data class EventDto(
     val imageUrl: String? = null,
     val createdByUid: String? = null,
     val goingCount: Long = 0,
-    val interestedCount: Long = 0
+    val interestedCount: Long = 0,
+    val venueName: String = "",
+    val isPublic: Boolean = true,
+
 ) {
     fun toUi(id: String) = EventUi(
         id = id,
@@ -30,7 +33,10 @@ data class EventDto(
         lng = lng ?: 0.0,
         imageUrl = imageUrl,
         goingCount = goingCount,
-        interestedCount = interestedCount
+        interestedCount = interestedCount,
+        venueName = venueName,
+        isPublic = isPublic,
+        createdByUid = createdByUid
     )
 }
 
@@ -47,5 +53,8 @@ data class EventUi(
     val lng: Double = 0.0,
     val imageUrl: String? = null,
     val goingCount: Long = 0L,
-    val interestedCount: Long = 0L
+    val interestedCount: Long = 0L,
+    val venueName: String = "",
+    val isPublic: Boolean = true,
+    val createdByUid: String?
 )
