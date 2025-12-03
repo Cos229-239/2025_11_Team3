@@ -4,7 +4,9 @@ import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.CheckBox
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -14,8 +16,8 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.SimpleDateFormat
 import java.util.Locale
-import android.widget.CheckBox
 
 class CreateEventActivity : AppCompatActivity() {
 
@@ -41,8 +43,14 @@ class CreateEventActivity : AppCompatActivity() {
     private lateinit var etDescription: TextInputEditText
     private lateinit var btnSave: MaterialButton
     private lateinit var btnBack: MaterialButton
+    private lateinit var tvHeaderTitle: TextView
 
     private var selectedImageUri: Uri? = null
+
+    // edit mode flags
+    private var isEditMode: Boolean = false
+    private var eventId: String? = null
+    private var existingImageUrl: String? = null
 
     private val pickEventImage =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -52,10 +60,40 @@ class CreateEventActivity : AppCompatActivity() {
             }
         }
 
+    // use a sane format
+    private val formatter = SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.getDefault())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_event)
 
+        bindViews()
+        setupVisibilityToggles()
+
+        // default: creating
+        cbPublic.isChecked = true
+        cbPrivate.isChecked = false
+
+        val tapToPick = View.OnClickListener {
+            pickEventImage.launch("image/*")
+        }
+        zoneEventImage.setOnClickListener(tapToPick)
+        ivEventImagePreview.setOnClickListener(tapToPick)
+
+        btnBack.setOnClickListener { finish() }
+        btnSave.setOnClickListener { saveEvent() }
+
+        // check if we are editing an existing event
+        eventId = intent.getStringExtra("eventId")
+        if (!eventId.isNullOrBlank()) {
+            isEditMode = true
+            tvHeaderTitle.text = "Edit Event"
+            btnSave.text = "Save Changes"
+            loadEventForEdit(eventId!!)
+        }
+    }
+
+    private fun bindViews() {
         zoneEventImage = findViewById(R.id.zoneEventImage)
         ivEventImagePreview = findViewById(R.id.ivEventImagePreview)
 
@@ -74,15 +112,10 @@ class CreateEventActivity : AppCompatActivity() {
         btnSave = findViewById(R.id.btnSaveEvent)
         btnBack = findViewById(R.id.btnCancelEvent)
 
-        val tapToPick = View.OnClickListener {
-            pickEventImage.launch("image/*")
-        }
-        zoneEventImage.setOnClickListener(tapToPick)
-        ivEventImagePreview.setOnClickListener(tapToPick)
+        tvHeaderTitle = findViewById(R.id.tvCreateEventTitle)
+    }
 
-        cbPublic.isChecked = true
-        cbPrivate.isChecked = false
-
+    private fun setupVisibilityToggles() {
         cbPublic.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 cbPrivate.isChecked = false
@@ -98,9 +131,72 @@ class CreateEventActivity : AppCompatActivity() {
                 cbPrivate.isChecked = true
             }
         }
+    }
 
-        btnSave.setOnClickListener { saveEvent() }
-        btnBack.setOnClickListener { finish() }
+    private fun loadEventForEdit(id: String) {
+        db.collection("events")
+            .document(id)
+            .get()
+            .addOnSuccessListener { doc ->
+                val dto = doc.toObject(EventDto::class.java)
+                if (dto == null) {
+                    Toast.makeText(this, "Event not found", Toast.LENGTH_SHORT).show()
+                    finish()
+                    return@addOnSuccessListener
+                }
+
+                val ui = dto.toUi(doc.id)
+
+                // only host can edit
+                val currentUid = auth.currentUser?.uid
+                if (currentUid == null || currentUid != ui.createdByUid) {
+                    Toast.makeText(this, "You can only edit your own events", Toast.LENGTH_SHORT)
+                        .show()
+                    finish()
+                    return@addOnSuccessListener
+                }
+
+                existingImageUrl = ui.imageUrl
+
+                etTitle.setText(ui.title)
+
+                val date = ui.dateTime.toDate()
+                val formatted = formatter.format(date)        // "12/25/2025 07:30 PM"
+                val parts = formatted.split(" ")
+                if (parts.size >= 3) {
+                    etDate.setText(parts[0])
+                    etTime.setText(parts[1])
+                    etAmPm.setText(parts[2])
+                }
+
+                etVenue.setText(ui.venueName)
+                etAddress.setText(ui.addressLine)
+                etCity.setText(ui.city)
+                etState.setText(ui.state)
+                etZip.setText(ui.zip)
+                etDescription.setText(ui.description)
+
+                if (ui.isPublic) {
+                    cbPublic.isChecked = true
+                    cbPrivate.isChecked = false
+                } else {
+                    cbPublic.isChecked = false
+                    cbPrivate.isChecked = true
+                }
+
+                if (!ui.imageUrl.isNullOrBlank()) {
+                    com.bumptech.glide.Glide.with(this)
+                        .load(ui.imageUrl)
+                        .centerCrop()
+                        .into(ivEventImagePreview)
+                } else {
+                    ivEventImagePreview.setImageResource(android.R.drawable.ic_menu_camera)
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to load event", Toast.LENGTH_SHORT).show()
+                finish()
+            }
     }
 
     private fun saveEvent() {
@@ -123,15 +219,12 @@ class CreateEventActivity : AppCompatActivity() {
         }
 
         val dateTimeStr = "$dateStr $timeStr $ampm"
-        val formatter = java.text.SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.getDefault())
-
         val parsedDate = try {
             formatter.parse(dateTimeStr)
         } catch (_: Exception) {
             Toast.makeText(this, "Invalid date or time format", Toast.LENGTH_SHORT).show()
             return
         }
-
         val timestamp = Timestamp(parsedDate!!)
 
         val fullAddress = "$addr, $city, $state $zip"
@@ -149,13 +242,11 @@ class CreateEventActivity : AppCompatActivity() {
 
         val lat = results[0].latitude
         val lng = results[0].longitude
-        val currentUid = auth.currentUser?.uid ?: "anonymous"
 
         if (!cbPublic.isChecked && !cbPrivate.isChecked) {
             Toast.makeText(this, "Please choose Public or Private", Toast.LENGTH_SHORT).show()
             return
         }
-
         val visibility = if (cbPrivate.isChecked) "private" else "public"
 
         btnSave.isEnabled = false
@@ -168,44 +259,79 @@ class CreateEventActivity : AppCompatActivity() {
                         btnSave.isEnabled = true
                         Toast.makeText(this, "Failed to upload image", Toast.LENGTH_SHORT).show()
                     } else {
-                        saveEventDocument(
-                            imageUrl = url,
-                            title = title,
-                            desc = desc,
-                            timestamp = timestamp,
-                            venueName = venue,
-                            addr = addr,
-                            city = city,
-                            state = state,
-                            zip = zip,
-                            lat = lat,
-                            lng = lng,
-                            createdByUid = currentUid,
-                            visibility = visibility
-                        )
+                        if (isEditMode && !eventId.isNullOrBlank()) {
+                            updateEventDocument(
+                                eventId = eventId!!,
+                                imageUrl = url,
+                                title = title,
+                                desc = desc,
+                                timestamp = timestamp,
+                                venueName = venue,
+                                addr = addr,
+                                city = city,
+                                state = state,
+                                zip = zip,
+                                lat = lat,
+                                lng = lng,
+                                visibility = visibility
+                            )
+                        } else {
+                            createEventDocument(
+                                imageUrl = url,
+                                title = title,
+                                desc = desc,
+                                timestamp = timestamp,
+                                venueName = venue,
+                                addr = addr,
+                                city = city,
+                                state = state,
+                                zip = zip,
+                                lat = lat,
+                                lng = lng,
+                                visibility = visibility
+                            )
+                        }
                     }
                 }
             }
         } else {
-            saveEventDocument(
-                imageUrl = null,
-                title = title,
-                desc = desc,
-                timestamp = timestamp,
-                venueName = venue,
-                addr = addr,
-                city = city,
-                state = state,
-                zip = zip,
-                lat = lat,
-                lng = lng,
-                createdByUid = currentUid,
-                visibility = visibility
-            )
+            if (isEditMode && !eventId.isNullOrBlank()) {
+                updateEventDocument(
+                    eventId = eventId!!,
+                    imageUrl = existingImageUrl,
+                    title = title,
+                    desc = desc,
+                    timestamp = timestamp,
+                    venueName = venue,
+                    addr = addr,
+                    city = city,
+                    state = state,
+                    zip = zip,
+                    lat = lat,
+                    lng = lng,
+                    visibility = visibility
+                )
+            } else {
+                createEventDocument(
+                    imageUrl = null,
+                    title = title,
+                    desc = desc,
+                    timestamp = timestamp,
+                    venueName = venue,
+                    addr = addr,
+                    city = city,
+                    state = state,
+                    zip = zip,
+                    lat = lat,
+                    lng = lng,
+                    visibility = visibility
+                )
+            }
         }
     }
 
-    private fun saveEventDocument(
+    // used when creating a brand new event
+    private fun createEventDocument(
         imageUrl: String?,
         title: String,
         desc: String,
@@ -217,9 +343,10 @@ class CreateEventActivity : AppCompatActivity() {
         zip: String,
         lat: Double,
         lng: Double,
-        createdByUid: String,
         visibility: String
     ) {
+        val createdByUid = auth.currentUser?.uid ?: "anonymous"
+
         val eventData = hashMapOf(
             "title" to title,
             "description" to desc,
@@ -243,6 +370,54 @@ class CreateEventActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 btnSave.isEnabled = true
                 Toast.makeText(this, "Event created!", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+            .addOnFailureListener { e ->
+                btnSave.isEnabled = true
+                Toast.makeText(this, "Failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    // used when editing an existing event document
+    private fun updateEventDocument(
+        eventId: String,
+        imageUrl: String?,
+        title: String,
+        desc: String,
+        timestamp: Timestamp,
+        venueName: String,
+        addr: String,
+        city: String,
+        state: String,
+        zip: String,
+        lat: Double,
+        lng: Double,
+        visibility: String
+    ) {
+        val updates = hashMapOf<String, Any>(
+            "title" to title,
+            "description" to desc,
+            "dateTime" to timestamp,
+            "venueName" to venueName,
+            "addressLine" to addr,
+            "city" to city,
+            "state" to state,
+            "zip" to zip,
+            "lat" to lat,
+            "lng" to lng,
+            "visibility" to visibility
+        )
+
+        if (imageUrl != null) {
+            updates["imageUrl"] = imageUrl
+        }
+
+        db.collection("events")
+            .document(eventId)
+            .update(updates)
+            .addOnSuccessListener {
+                btnSave.isEnabled = true
+                Toast.makeText(this, "Event updated!", Toast.LENGTH_SHORT).show()
                 finish()
             }
             .addOnFailureListener { e ->
