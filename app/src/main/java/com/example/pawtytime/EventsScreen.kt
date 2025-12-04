@@ -55,7 +55,9 @@ class EventsScreen : Fragment(R.layout.fragment_events_screen) {
                     dto?.toUi(doc.id)
                 }
 
-                adapter.replaceAll(list)
+                items.clear()
+                items.addAll(list)
+                adapter.notifyDataSetChanged()
             }
             .addOnFailureListener { e ->
                 Log.e("EventsScreen", "Failed to load events", e)

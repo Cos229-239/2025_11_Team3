@@ -105,7 +105,8 @@ class EventDetailActivity : AppCompatActivity() {
                     ivHeader.setImageResource(R.drawable.sample_dog)
                 }
 
-                currentEvent = ui
+                EventRsvpState.loadForEvent(this, ui.id)
+
 
                 val isInterested = EventRsvpState.interestedIds.contains(ui.id)
                 val isGoing = EventRsvpState.goingIds.contains(ui.id)
@@ -129,6 +130,8 @@ class EventDetailActivity : AppCompatActivity() {
                     }
 
                     bindStarIcon(ivInterestedIcon, newInterested)
+
+                    EventRsvpState.saveForEvent(this, ui.id)
                 }
 
                 cbGoing.setOnCheckedChangeListener { _, checked ->
@@ -142,6 +145,8 @@ class EventDetailActivity : AppCompatActivity() {
                 }
 
                 loadHost(ui.createdByUid)
+
+                EventRsvpState.saveForEvent(this, ui.id)
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Failed to load event", Toast.LENGTH_SHORT).show()

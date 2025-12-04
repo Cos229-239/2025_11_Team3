@@ -89,6 +89,8 @@ class EventsAdapter(
             }
         }
 
+        EventRsvpState.loadForEvent(holder.itemView.context, item.id)
+
         val isInterested = EventRsvpState.interestedIds.contains(item.id)
         val isGoing = EventRsvpState.goingIds.contains(item.id)
 
@@ -110,6 +112,8 @@ class EventsAdapter(
             }
 
             bindStarIcon(holder.ivInterestedIcon, newInterested)
+
+            EventRsvpState.saveForEvent(holder.itemView.context, item.id)
         }
 
         holder.cbGoing.setOnCheckedChangeListener { _, checked ->
@@ -120,17 +124,12 @@ class EventsAdapter(
             } else {
                 EventRsvpState.goingIds.remove(item.id)
             }
+
+            EventRsvpState.saveForEvent(holder.itemView.context, item.id)
         }
 
         holder.itemView.setOnClickListener {
             onEventClicked(item)
         }
-    }
-
-
-    fun replaceAll(newItems: List<EventUi>) {
-        items.clear()
-        items.addAll(newItems)
-        notifyDataSetChanged()
     }
 }
