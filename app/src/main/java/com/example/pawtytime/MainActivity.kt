@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
             popupWindow.showAsDropDown(profileBtn, 0, 10)
 
             dropdownView.findViewById<LinearLayout>(R.id.settingsBtn).setOnClickListener{
-                loadFragment(accountSettings())
+                loadFragment(AccountSettings())
                 popupWindow.dismiss()
             }
 
