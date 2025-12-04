@@ -5,28 +5,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [accountSettings.newInstance] factory method to
- * create an instance of this fragment.
- */
-class accountSettings : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+class AccountSettings : Fragment() {
+    private val auth by lazy { FirebaseAuth.getInstance() }
+
+    private val db by lazy { FirebaseFirestore.getInstance() }
+
+    var user = auth.currentUser
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(
@@ -37,23 +32,43 @@ class accountSettings : Fragment() {
         return inflater.inflate(R.layout.fragment_account_settings, container, false)
     }
 
+
+    // re-authenticate the users email and password to delete account
+
+    private fun reauthenticateUser( password: String, _complete: (Boolean) -> Unit) {
+        if (user != null && user!!.email != null) {
+
+            val credential = EmailAuthProvider
+                .getCredential(user!!.email!!, password)
+
+            user!!.reauthenticate(credential)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        _complete(true)
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Re-authentication Failed, check password and try again",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        _complete(false)
+                    }
+                }
+            } else {
+                Toast.makeText(context, "User not found or email is missing", Toast.LENGTH_SHORT).show()
+                _complete(false)
+        }
+    }
+
+        // delete the actual data from firebase
+        private fun deleteAccountData(){
+
+        }
+
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment accountSettings.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            accountSettings().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+            AccountSettings().apply {
             }
     }
 }

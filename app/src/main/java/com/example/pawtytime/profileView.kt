@@ -69,6 +69,12 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
         val followersBtn = view.findViewById<Button>(R.id.profile_Followers_btn)
         val followingBtn = view.findViewById<Button>(R.id.profile_Following_btn)
 
+
+        // I want these to only show up if its another profile:
+        settingsBtn.visibility = View.GONE
+        backBtn.visibility = View.GONE
+
+
         // define each tab
         val postsTab = view.findViewById<Button>(R.id.view_profile_posts_tab)
         postPetSpinner = view.findViewById<Spinner>(R.id.pet_posts_spinner)
@@ -176,6 +182,7 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
         // profile buttons click listeners
 
         settingsBtn.setOnClickListener {
+
 
         }
         followersBtn.setOnClickListener {
