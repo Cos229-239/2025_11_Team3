@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Notifications"
     android:background="@color/pawty_yellow">
 
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:text="@string/view_profile_screen"
-        android:textSize="30sp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -57,21 +52,31 @@
             <LinearLayout
                 android:id="@+id/profile_info_bar"
                 android:layout_width="400dp"
-                android:layout_height="133dp"
-                android:layout_below="@+id/profile_settings_bar">
+                android:layout_height="95dp"
+                android:layout_below="@+id/profile_settings_bar"
+                android:layout_marginLeft="5dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:background="@drawable/round_corners"
                     android:orientation="horizontal">
 
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        app:cardCornerRadius="300dp"
+                        app:cardElevation="0dp"
+                        android:backgroundTint="@color/pawty_teal">
                     <ImageView
                         android:id="@+id/profile_view_picture"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
+                        android:scaleType="centerCrop"
                         android:contentDescription="@string/profile_view_pic"
                         android:padding="10dp"
                         android:src="@drawable/ic_profile" />
+                    </androidx.cardview.widget.CardView>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -90,31 +95,33 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
+                                android:layout_weight="1"
                                 android:paddingLeft="40dp"
                                 android:paddingRight="40dp"
-                                android:textColor="@color/pt_black"
                                 android:text="@string/initial_value"
-                                android:layout_weight="1"
+                                android:textColor="@color/pt_black"
                                 android:textSize="15sp" />
+
                             <Button
                                 android:id="@+id/profile_posts_btn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
                                 android:layout_weight="1"
                                 android:background="?attr/selectableItemBackgroundBorderless"
                                 android:clickable="false"
-                                android:layout_gravity="center_horizontal"
                                 android:text="@string/posts"
                                 android:textColor="@color/pt_black"
                                 android:textSize="13sp" />
-                            </LinearLayout>
+                        </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/followers_view"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:paddingTop="20dp"
-                            android:id="@+id/followers_view">
+                            android:paddingTop="20dp">
+
                             <TextView
                                 android:id="@+id/number_of_followers"
                                 android:layout_width="wrap_content"
@@ -122,43 +129,46 @@
                                 android:paddingLeft="50dp"
                                 android:paddingRight="40dp"
                                 android:text="@string/initial_value"
-                                android:textSize="15sp"
-                                android:textColor="@color/pt_black"/>
-                             <Button
-                            android:id="@+id/profile_Followers_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="48dp"
-                            android:layout_weight="1"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:text="@string/pt_followers"
-                            android:textColor="@color/pt_black"
-                            android:textSize="13sp" />
+                                android:textColor="@color/pt_black"
+                                android:textSize="15sp" />
+
+                            <Button
+                                android:id="@+id/profile_Followers_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="48dp"
+                                android:layout_weight="1"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:text="@string/pt_followers"
+                                android:textColor="@color/pt_black"
+                                android:textSize="13sp" />
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/following_view"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:paddingTop="20dp"
-                            android:id="@+id/following_view">
+                            android:paddingTop="20dp">
+
                             <TextView
                                 android:id="@+id/number_following"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:paddingStart="40dp"
                                 android:paddingEnd="0dp"
-                                android:textColor="@color/pt_black"
                                 android:text="@string/initial_value"
+                                android:textColor="@color/pt_black"
                                 android:textSize="15sp" />
+
                             <Button
-                            android:id="@+id/profile_Following_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="48dp"
-                            android:layout_weight="1"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:text="@string/pt_following"
-                            android:textColor="@color/pt_black"
-                            android:textSize="13sp"/>
+                                android:id="@+id/profile_Following_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="48dp"
+                                android:layout_weight="1"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:text="@string/pt_following"
+                                android:textColor="@color/pt_black"
+                                android:textSize="13sp" />
                         </LinearLayout>
 
 
@@ -171,7 +181,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_below="@+id/profile_info_bar">
+                android:layout_below="@+id/profile_info_bar"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp">
 
                 <TextView
                     android:id="@+id/view_profile_name_text"
@@ -179,13 +191,13 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:text=""
+                    android:text="First and Last Name"
                     android:textSize="20sp" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/profile_bio_more"
-                    android:text=""
+                    android:text="Profile Bio"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:textSize="15sp"
@@ -199,7 +211,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/view_profile_text_info"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/round_corners">
 
             <Button
                 android:id="@+id/view_profile_posts_tab"
@@ -209,14 +223,13 @@
                 android:text="@string/posts"
                 android:textColor="@color/pt_black"
                 android:layout_weight="1"/>
-            <Button
-                android:id="@+id/view_profile_reposts_tab"
+            <Spinner
+                android:id="@+id/pet_posts_spinner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:text="@string/pt_reposts"
-                android:layout_weight="1"
-                android:textColor="@color/pt_black"/>
+                android:textAlignment="center"
+                android:layout_weight="1"/>
 
             <Button
                 android:id="@+id/view_profile_tagged_tab"
@@ -227,25 +240,19 @@
                 android:text="@string/tagged"
                 android:textColor="@color/pt_black" />
         </LinearLayout>
-            <ScrollView
-                android:id="@+id/profile_tabs"
-                android:contentDescription="@string/profile_posts_scroll"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/view_profile_tabs"
-                android:fillViewport="true">
 
-                <FrameLayout
-                    android:id="@+id/profile_tabs_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    />
-            </ScrollView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/postsRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:scrollbars="vertical"
+                android:nestedScrollingEnabled="false"
+                android:paddingTop="4dp"
+                android:paddingBottom="15dp"
+                android:layout_below="@id/view_profile_tabs"
+                tools:listitem="@layout/view_post"/>
+
         </RelativeLayout>
 
-
-    </androidx.core.widget.NestedScrollView>
-
-
-
-</FrameLayout>
+</ScrollView>

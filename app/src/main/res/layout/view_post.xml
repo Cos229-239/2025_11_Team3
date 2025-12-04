@@ -46,21 +46,10 @@
                 android:ellipsize="end"
                 tools:text="@string/post_author_placeholder"
                 app:layout_constraintStart_toEndOf="@id/imgAvatar"
-                app:layout_constraintEnd_toStartOf="@id/chipFollow"
                 app:layout_constraintTop_toTopOf="@id/imgAvatar"
                 app:layout_constraintBottom_toBottomOf="@id/imgAvatar" />
 
-            <!-- Follow chip -->
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipFollow"
-                style="@style/PawtyFilterChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/follow"
-                android:textColor="@color/pawty_text_secondary"
-                app:layout_constraintEnd_toStartOf="@id/btnShare"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+
 
             <!-- Share button moved to header -->
             <ImageButton
@@ -198,17 +187,6 @@
                 android:src="@drawable/ic_expand_more"
                 android:contentDescription="@string/cd_expand_comments" />
         </LinearLayout>
-
-        <!-- Comments list (collapsed by default) -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvComments"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="12dp"
-            android:visibility="gone"
-            tools:listitem="@layout/item_comment" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

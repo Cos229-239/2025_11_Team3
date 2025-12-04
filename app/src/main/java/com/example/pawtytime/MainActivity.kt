@@ -150,7 +150,7 @@ class MainActivity : AppCompatActivity() {
                 popupWindow.dismiss()
             }
             dropdownView.findViewById<LinearLayout>(R.id.go_to_edit_profile).setOnClickListener{
-                loadFragment(profileEdit())
+                loadFragment(ProfileEdit())
                 popupWindow.dismiss()
             }
             dropdownView.findViewById<LinearLayout>(R.id.go_to_view_pet_profile).setOnClickListener{
