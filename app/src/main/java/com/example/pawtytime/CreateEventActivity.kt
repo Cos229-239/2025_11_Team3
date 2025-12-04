@@ -44,13 +44,22 @@ class CreateEventActivity : AppCompatActivity() {
     private lateinit var btnSave: MaterialButton
     private lateinit var btnBack: MaterialButton
     private lateinit var tvHeaderTitle: TextView
+    private lateinit var cbAllAges: CheckBox
+    private lateinit var cb18Plus: CheckBox
+    private lateinit var cb21Plus: CheckBox
+    private lateinit var cbIndoor: CheckBox
+    private lateinit var cbOutdoor: CheckBox
+    private lateinit var cbFood: CheckBox
+    private lateinit var cbBeverage: CheckBox
+    private lateinit var cbPetTreats: CheckBox
+    private lateinit var cbGames: CheckBox
+    private lateinit var cbLiveMusic: CheckBox
 
     private var selectedImageUri: Uri? = null
-
-    // edit mode flags
     private var isEditMode: Boolean = false
     private var eventId: String? = null
     private var existingImageUrl: String? = null
+    private var isUpdatingAgeGroup = false
 
     private val pickEventImage =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -60,7 +69,6 @@ class CreateEventActivity : AppCompatActivity() {
             }
         }
 
-    // use a sane format
     private val formatter = SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.getDefault())
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,10 +77,11 @@ class CreateEventActivity : AppCompatActivity() {
 
         bindViews()
         setupVisibilityToggles()
+        setupAgeGroupToggles()
 
-        // default: creating
         cbPublic.isChecked = true
         cbPrivate.isChecked = false
+        cbAllAges.isChecked = true
 
         val tapToPick = View.OnClickListener {
             pickEventImage.launch("image/*")
@@ -83,7 +92,6 @@ class CreateEventActivity : AppCompatActivity() {
         btnBack.setOnClickListener { finish() }
         btnSave.setOnClickListener { saveEvent() }
 
-        // check if we are editing an existing event
         eventId = intent.getStringExtra("eventId")
         if (!eventId.isNullOrBlank()) {
             isEditMode = true
@@ -108,6 +116,16 @@ class CreateEventActivity : AppCompatActivity() {
         etZip = findViewById(R.id.etZip)
         cbPublic = findViewById(R.id.cbPublic)
         cbPrivate = findViewById(R.id.cbPrivate)
+        cbAllAges = findViewById(R.id.cbAllAges)
+        cb18Plus = findViewById(R.id.cb18Plus)
+        cb21Plus = findViewById(R.id.cb21Plus)
+        cbIndoor = findViewById(R.id.cbIndoor)
+        cbOutdoor = findViewById(R.id.cbOutdoor)
+        cbFood = findViewById(R.id.cbFood)
+        cbBeverage = findViewById(R.id.cbBeverage)
+        cbPetTreats = findViewById(R.id.cbPetTreats)
+        cbGames = findViewById(R.id.cbGames)
+        cbLiveMusic = findViewById(R.id.cbLiveMusic)
         etDescription = findViewById(R.id.etDescription)
         btnSave = findViewById(R.id.btnSaveEvent)
         btnBack = findViewById(R.id.btnCancelEvent)
@@ -147,7 +165,6 @@ class CreateEventActivity : AppCompatActivity() {
 
                 val ui = dto.toUi(doc.id)
 
-                // only host can edit
                 val currentUid = auth.currentUser?.uid
                 if (currentUid == null || currentUid != ui.createdByUid) {
                     Toast.makeText(this, "You can only edit your own events", Toast.LENGTH_SHORT)
@@ -161,7 +178,7 @@ class CreateEventActivity : AppCompatActivity() {
                 etTitle.setText(ui.title)
 
                 val date = ui.dateTime.toDate()
-                val formatted = formatter.format(date)        // "12/25/2025 07:30 PM"
+                val formatted = formatter.format(date)
                 val parts = formatted.split(" ")
                 if (parts.size >= 3) {
                     etDate.setText(parts[0])
@@ -197,6 +214,44 @@ class CreateEventActivity : AppCompatActivity() {
                 Toast.makeText(this, "Failed to load event", Toast.LENGTH_SHORT).show()
                 finish()
             }
+    }
+
+    private fun setupAgeGroupToggles() {
+        cbAllAges.setOnCheckedChangeListener { _, isChecked ->
+            if (isUpdatingAgeGroup) return@setOnCheckedChangeListener
+            isUpdatingAgeGroup = true
+            if (isChecked) {
+                cb18Plus.isChecked = false
+                cb21Plus.isChecked = false
+            } else if (!cb18Plus.isChecked && !cb21Plus.isChecked) {
+                cbAllAges.isChecked = true
+            }
+            isUpdatingAgeGroup = false
+        }
+
+        cb18Plus.setOnCheckedChangeListener { _, isChecked ->
+            if (isUpdatingAgeGroup) return@setOnCheckedChangeListener
+            isUpdatingAgeGroup = true
+            if (isChecked) {
+                cbAllAges.isChecked = false
+                cb21Plus.isChecked = false
+            } else if (!cbAllAges.isChecked && !cb21Plus.isChecked) {
+                cb18Plus.isChecked = true
+            }
+            isUpdatingAgeGroup = false
+        }
+
+        cb21Plus.setOnCheckedChangeListener { _, isChecked ->
+            if (isUpdatingAgeGroup) return@setOnCheckedChangeListener
+            isUpdatingAgeGroup = true
+            if (isChecked) {
+                cbAllAges.isChecked = false
+                cb18Plus.isChecked = false
+            } else if (!cbAllAges.isChecked && !cb18Plus.isChecked) {
+                cb21Plus.isChecked = true
+            }
+            isUpdatingAgeGroup = false
+        }
     }
 
     private fun saveEvent() {
@@ -249,6 +304,22 @@ class CreateEventActivity : AppCompatActivity() {
         }
         val visibility = if (cbPrivate.isChecked) "private" else "public"
 
+        val ageGroup = when {
+            cbAllAges.isChecked -> "all_ages"
+            cb18Plus.isChecked -> "18_plus"
+            cb21Plus.isChecked -> "21_plus"
+            else -> "all_ages"
+        }
+
+        val isIndoor = cbIndoor.isChecked
+        val isOutdoor = cbOutdoor.isChecked
+
+        val hasFood = cbFood.isChecked
+        val hasBeverage = cbBeverage.isChecked
+        val hasPetTreats = cbPetTreats.isChecked
+        val hasGames = cbGames.isChecked
+        val hasLiveMusic = cbLiveMusic.isChecked
+
         btnSave.isEnabled = false
 
         val imageUri = selectedImageUri
@@ -273,7 +344,15 @@ class CreateEventActivity : AppCompatActivity() {
                                 zip = zip,
                                 lat = lat,
                                 lng = lng,
-                                visibility = visibility
+                                visibility = visibility,
+                                ageGroup = ageGroup,
+                                isIndoor = isIndoor,
+                                isOutdoor = isOutdoor,
+                                hasFood = hasFood,
+                                hasBeverage = hasBeverage,
+                                hasPetTreats = hasPetTreats,
+                                hasGames = hasGames,
+                                hasLiveMusic = hasLiveMusic
                             )
                         } else {
                             createEventDocument(
@@ -288,7 +367,15 @@ class CreateEventActivity : AppCompatActivity() {
                                 zip = zip,
                                 lat = lat,
                                 lng = lng,
-                                visibility = visibility
+                                visibility = visibility,
+                                ageGroup = ageGroup,
+                                isIndoor = isIndoor,
+                                isOutdoor = isOutdoor,
+                                hasFood = hasFood,
+                                hasBeverage = hasBeverage,
+                                hasPetTreats = hasPetTreats,
+                                hasGames = hasGames,
+                                hasLiveMusic = hasLiveMusic
                             )
                         }
                     }
@@ -309,7 +396,15 @@ class CreateEventActivity : AppCompatActivity() {
                     zip = zip,
                     lat = lat,
                     lng = lng,
-                    visibility = visibility
+                    visibility = visibility,
+                    ageGroup = ageGroup,
+                    isIndoor = isIndoor,
+                    isOutdoor = isOutdoor,
+                    hasFood = hasFood,
+                    hasBeverage = hasBeverage,
+                    hasPetTreats = hasPetTreats,
+                    hasGames = hasGames,
+                    hasLiveMusic = hasLiveMusic
                 )
             } else {
                 createEventDocument(
@@ -324,13 +419,20 @@ class CreateEventActivity : AppCompatActivity() {
                     zip = zip,
                     lat = lat,
                     lng = lng,
-                    visibility = visibility
+                    visibility = visibility,
+                    ageGroup = ageGroup,
+                    isIndoor = isIndoor,
+                    isOutdoor = isOutdoor,
+                    hasFood = hasFood,
+                    hasBeverage = hasBeverage,
+                    hasPetTreats = hasPetTreats,
+                    hasGames = hasGames,
+                    hasLiveMusic = hasLiveMusic
                 )
             }
         }
     }
 
-    // used when creating a brand new event
     private fun createEventDocument(
         imageUrl: String?,
         title: String,
@@ -343,7 +445,15 @@ class CreateEventActivity : AppCompatActivity() {
         zip: String,
         lat: Double,
         lng: Double,
-        visibility: String
+        visibility: String,
+        ageGroup: String,
+        isIndoor: Boolean,
+        isOutdoor: Boolean,
+        hasFood: Boolean,
+        hasBeverage: Boolean,
+        hasPetTreats: Boolean,
+        hasGames: Boolean,
+        hasLiveMusic: Boolean
     ) {
         val createdByUid = auth.currentUser?.uid ?: "anonymous"
 
@@ -362,7 +472,15 @@ class CreateEventActivity : AppCompatActivity() {
             "createdByUid" to createdByUid,
             "goingCount" to 0L,
             "interestedCount" to 0L,
-            "visibility" to visibility
+            "visibility" to visibility,
+            "ageGroup" to ageGroup,
+            "indoor" to isIndoor,
+            "outdoor" to isOutdoor,
+            "hasFood" to hasFood,
+            "hasBeverage" to hasBeverage,
+            "hasPetTreats" to hasPetTreats,
+            "hasGames" to hasGames,
+            "hasLiveMusic" to hasLiveMusic
         )
 
         db.collection("events")
@@ -378,7 +496,6 @@ class CreateEventActivity : AppCompatActivity() {
             }
     }
 
-    // used when editing an existing event document
     private fun updateEventDocument(
         eventId: String,
         imageUrl: String?,
@@ -392,7 +509,15 @@ class CreateEventActivity : AppCompatActivity() {
         zip: String,
         lat: Double,
         lng: Double,
-        visibility: String
+        visibility: String,
+        ageGroup: String,
+        isIndoor: Boolean,
+        isOutdoor: Boolean,
+        hasFood: Boolean,
+        hasBeverage: Boolean,
+        hasPetTreats: Boolean,
+        hasGames: Boolean,
+        hasLiveMusic: Boolean
     ) {
         val updates = hashMapOf<String, Any>(
             "title" to title,
@@ -405,7 +530,15 @@ class CreateEventActivity : AppCompatActivity() {
             "zip" to zip,
             "lat" to lat,
             "lng" to lng,
-            "visibility" to visibility
+            "visibility" to visibility,
+            "ageGroup" to ageGroup,
+            "indoor" to isIndoor,
+            "outdoor" to isOutdoor,
+            "hasFood" to hasFood,
+            "hasBeverage" to hasBeverage,
+            "hasPetTreats" to hasPetTreats,
+            "hasGames" to hasGames,
+            "hasLiveMusic" to hasLiveMusic
         )
 
         if (imageUrl != null) {
