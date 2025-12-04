@@ -154,6 +154,9 @@ class ProfileView : Fragment() {
 
         }
 
+        backBtn.setOnClickListener{
+
+        }
         // Inflate the layout for this fragment
         return view
     }
