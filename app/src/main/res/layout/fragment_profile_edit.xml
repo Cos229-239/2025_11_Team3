@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:padding="25dp"
-        android:background="@drawable/round_corners"
+        android:background="@drawable/round_corners_yellow"
         android:orientation="vertical"
         >
 

@@ -63,11 +63,11 @@
                     android:orientation="horizontal">
 
                     <androidx.cardview.widget.CardView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
                         app:cardCornerRadius="300dp"
                         app:cardElevation="0dp"
-                        android:backgroundTint="@color/pawty_light_yellow">
+                        android:backgroundTint="@color/pawty_teal">
                     <ImageView
                         android:id="@+id/profile_view_picture"
                         android:layout_width="100dp"

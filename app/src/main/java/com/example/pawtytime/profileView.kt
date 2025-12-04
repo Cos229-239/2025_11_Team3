@@ -235,7 +235,8 @@ private fun loadProfilePosts(adapter: HomeScreen.FeedAdapter){
                         caption = post.caption,
                         likeCount = post.likeCount,
                         liked = false,
-                        following = false
+                        following = false,
+                        authorUid = post.authorUid
                     )
                 )
             }
