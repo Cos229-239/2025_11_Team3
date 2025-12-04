@@ -162,6 +162,8 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
                 id: Long
             ) {
 
+                val selectedPetName = parent.getItemAtPosition(position) as String
+                loadPetPosts(adapter, selectedPetName)
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
@@ -200,14 +202,13 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
         }
     }
 
-private fun loadProfilePosts(adapter: HomeScreen.FeedAdapter){
+private fun loadProfilePosts(adapter: HomeScreen.FeedAdapter) {
     FirebaseFirestore.getInstance()
         .collection("posts")
         .whereEqualTo("authorUid", currentUserId)
         .orderBy("createdAt", Query.Direction.DESCENDING)
         .get()
-        .addOnSuccessListener {
-                snap ->
+        .addOnSuccessListener { snap ->
             postsList.clear()
 
             snap.documents.forEach { doc ->
@@ -245,18 +246,60 @@ private fun loadProfilePosts(adapter: HomeScreen.FeedAdapter){
             adapter.notifyDataSetChanged()
 
         }
-        .addOnFailureListener{
-                e ->
+        .addOnFailureListener { e ->
             Toast.makeText(
                 requireContext(),
                 "Failed to load posts: ${e.message}",
                 Toast.LENGTH_SHORT
             ).show()
         }
-
-
-
 }
+    private fun loadPetPosts(adapter: HomeScreen.FeedAdapter, petName: String){
+        FirebaseFirestore.getInstance()
+            .collection("posts")
+            .whereEqualTo("authorUid", currentUserId)
+            .whereEqualTo("petName", petName)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener{
+                snap ->
+                postsList.clear()
+                snap.documents.forEach {
+                        doc ->
+                    val post = doc.toObject(Post::class.java) ?: return@forEach
+                    val displayName = when {
+                        post.petName.isNotBlank() -> post.petName
+                        post.authorUsername.isNotBlank() -> post.authorUsername
+                        post.authorName.isNotBlank() -> post.authorName
+                        else -> "Pawty Friend"
+                    }
+                    val headerAvatarUrl = post.petPhotoUrl ?: post.authorAvatarUrl
+
+                    postsList.add(
+                        PostUi(
+                            id = post.id,
+                            author = displayName,
+                            avatarUrl = headerAvatarUrl,
+                            avatarRes = R.drawable.ic_avatar_circle,
+                            photoUrl = post.photoUrl,
+                            photoRes = R.drawable.sample_dog,
+                            caption = post.caption,
+                            likeCount = post.likeCount,
+                            liked = false,
+                            following = false,
+                            authorUid = post.authorUid
+                        )
+                    )
+                }
+                adapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener {
+                e ->
+                Toast.makeText(requireContext(), "Failed to load posts: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
 
 
 
