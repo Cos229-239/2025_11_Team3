@@ -165,7 +165,7 @@ class PawtyPeopleActivity : AppCompatActivity() {
                     "location"  to (person.location ?: ""),
                     "phone"     to (person.phone ?: ""),
                     "bio"       to (person.bio ?: ""),
-                    "followers" to emptyMap<String, Boolean>(),   // empty map for followers (will be implemented)
+                    "followers" to emptyMap<String, Boolean>(),   // empty map for followers
                     "following" to emptyMap<String, Boolean>(),     // empty map for people you're following
                     "postsCount" to 0
                 )

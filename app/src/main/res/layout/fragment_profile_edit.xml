@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:padding="25dp"
-        android:background="@drawable/round_corners"
+        android:background="@drawable/round_corners_yellow"
         android:orientation="vertical"
         >
 
@@ -119,7 +119,7 @@
 
             <EditText
                 android:id="@+id/profile_edit_bio"
-                android:layout_width="wrap_content"
+                android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:inputType="text"
                 android:text="bio"
@@ -142,7 +142,7 @@
                 android:layout_weight="1"
                 />
             <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:id="@+id/profile_edit_email"
                 android:text="@string/edit_email"
@@ -200,6 +200,16 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/go_to_pet_edit_from_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/pawty_yellow"
+            android:text="Update Your Pet Profile(s)"
+            android:textColor="@color/pawty_grey"
+            />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -222,10 +232,11 @@
                 android:text="Change Password"
                 android:textAlignment="viewEnd"
                 android:backgroundTint="@color/pawty_yellow"
-
                 android:textColor="@color/pawty_grey"
                 android:textSize="15sp" />
         </LinearLayout>
+
+
 
         <Button
             android:id="@+id/edit_profile_save_changes"

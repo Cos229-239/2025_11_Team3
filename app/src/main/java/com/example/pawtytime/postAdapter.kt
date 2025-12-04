@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.pawtytime.PostAdapter.PostViewHolder
 
- class PostAdapter (private val posts: List<Post>,
+ class PostAdapter (private val posts: MutableList<Post>,
                             private val click: (Post) -> Unit) :
-RecyclerView.Adapter<PostViewHolder>(){
+RecyclerView.Adapter<PostAdapter.PostViewHolder>(){
 
     class PostViewHolder(view: View) : RecyclerView.ViewHolder(view){
         val imageButton: ImageButton = view.findViewById(R.id.recyclerImageButton)
@@ -32,7 +32,11 @@ RecyclerView.Adapter<PostViewHolder>(){
         Log.d("PostAdapter", "Binding post: ${post.caption}")
     }
 
-
-
      override fun getItemCount(): Int = posts.size
+
+     fun setPosts(newPosts: List<Post>){
+         posts.clear()
+         posts.addAll(newPosts)
+         notifyDataSetChanged()
+     }
 }

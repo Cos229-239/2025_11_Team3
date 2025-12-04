@@ -74,6 +74,10 @@
             android:name=".CreateEventActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".SchedulePlaydateActivity"/>
+
+
     </application>
 
 </manifest>
