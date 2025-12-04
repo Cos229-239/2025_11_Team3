@@ -1,17 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Notifications"
     android:background="@color/pawty_yellow">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit Pet Profile Screen"
-        android:textSize="30dp"
-        android:layout_gravity="center" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/logo3"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="24dp"
+            android:contentDescription="@string/app_name"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_pawty_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/pawty_cream"
+            android:orientation="vertical"
+            android:padding="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/logo3">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/marcellus"
+                android:gravity="center"
+                android:paddingBottom="12dp"
+                android:text="@string/age"
+                android:textAlignment="center"
+                android:textColor="@color/pawty_text_primary"
+                android:textSize="20sp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/breed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/marcellus"
+                    android:gravity="center"
+                    android:paddingBottom="12dp"
+                    android:text="@string/breed"
+                    android:textAlignment="center"
+                    android:textColor="@color/pawty_text_primary"
+                    android:textSize="20sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <EditText
+                android:id="@+id/likes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/marcellus"
+                android:gravity="center"
+                android:paddingBottom="12dp"
+                android:text="@string/likes"
+                android:textAlignment="center"
+                android:textColor="@color/pawty_text_primary"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/dislikes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/marcellus"
+                android:gravity="center"
+                android:paddingBottom="12dp"
+                android:text="@string/dislikes"
+                android:textAlignment="center"
+                android:textColor="@color/pawty_text_primary"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/allergies"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/marcellus"
+                android:gravity="center"
+                android:paddingBottom="12dp"
+                android:text="Allergies"
+                android:textAlignment="center"
+                android:textColor="@color/pawty_text_primary"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/Bio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/marcellus"
+                android:gravity="center"
+                android:paddingBottom="12dp"
+                android:text="Bio"
+                android:textAlignment="center"
+                android:textColor="@color/pawty_text_primary"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

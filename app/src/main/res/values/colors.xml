@@ -20,5 +20,7 @@
     <color name="pawty_text_third">#AF3E01</color>
     <color name="pawty_blue_light">#7DB5CF</color>
     <color name="pawty_blue_dark">#0B4365</color>
+    <color name="text_btn_color">#7D7878</color>
+    <color name="pawty_grey">#7D7878</color>
 
 </resources>

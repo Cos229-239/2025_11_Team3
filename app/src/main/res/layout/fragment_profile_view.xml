@@ -3,15 +3,256 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Notifications"
     android:background="@color/pawty_yellow">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="View Profile Screen"
-        android:textSize="30dp"
-        android:layout_gravity="center" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/profile_settings_bar">
+                <ImageButton
+                    android:id="@+id/profile_view_back_Btn"
+                    android:contentDescription="@string/back_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/backarrow"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_marginEnd="10dp"/>
+                <TextView
+                    android:id="@+id/profile_view_back_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="20sp"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/text_btn_color"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+                <ImageButton
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/more_options_btn"
+                    android:id="@+id/profile_settings"
+                    android:src="@drawable/profile_settings"
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/profile_info_bar"
+                android:layout_width="400dp"
+                android:layout_height="95dp"
+                android:layout_below="@+id/profile_settings_bar"
+                android:layout_marginLeft="5dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/round_corners"
+                    android:orientation="horizontal">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="300dp"
+                        app:cardElevation="0dp"
+                        android:backgroundTint="@color/pawty_light_yellow">
+                    <ImageView
+                        android:id="@+id/profile_view_picture"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:scaleType="centerCrop"
+                        android:contentDescription="@string/profile_view_pic"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_profile" />
+                    </androidx.cardview.widget.CardView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/info_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingTop="20dp">
+
+                            <TextView
+                                android:id="@+id/number_of_posts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_weight="1"
+                                android:paddingLeft="40dp"
+                                android:paddingRight="40dp"
+                                android:text="@string/initial_value"
+                                android:textColor="@color/pt_black"
+                                android:textSize="15sp" />
+
+                            <Button
+                                android:id="@+id/profile_posts_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_weight="1"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:clickable="false"
+                                android:text="@string/posts"
+                                android:textColor="@color/pt_black"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/followers_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingTop="20dp">
+
+                            <TextView
+                                android:id="@+id/number_of_followers"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingLeft="50dp"
+                                android:paddingRight="40dp"
+                                android:text="@string/initial_value"
+                                android:textColor="@color/pt_black"
+                                android:textSize="15sp" />
+
+                            <Button
+                                android:id="@+id/profile_Followers_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="48dp"
+                                android:layout_weight="1"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:text="@string/pt_followers"
+                                android:textColor="@color/pt_black"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/following_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingTop="20dp">
+
+                            <TextView
+                                android:id="@+id/number_following"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingStart="40dp"
+                                android:paddingEnd="0dp"
+                                android:text="@string/initial_value"
+                                android:textColor="@color/pt_black"
+                                android:textSize="15sp" />
+
+                            <Button
+                                android:id="@+id/profile_Following_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="48dp"
+                                android:layout_weight="1"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:text="@string/pt_following"
+                                android:textColor="@color/pt_black"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/view_profile_text_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@+id/profile_info_bar"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:id="@+id/view_profile_name_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="First and Last Name"
+                    android:textSize="20sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/profile_bio_more"
+                    android:text="Profile Bio"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textSize="15sp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="5dp"/>
+            </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/view_profile_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view_profile_text_info"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/round_corners">
+
+            <Button
+                android:id="@+id/view_profile_posts_tab"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:text="@string/posts"
+                android:textColor="@color/pt_black"
+                android:layout_weight="1"/>
+            <Spinner
+                android:id="@+id/pet_posts_spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:textAlignment="center"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/view_profile_tagged_tab"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:text="@string/tagged"
+                android:textColor="@color/pt_black" />
+        </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/postsRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:scrollbars="vertical"
+                android:nestedScrollingEnabled="false"
+                android:paddingTop="4dp"
+                android:paddingBottom="15dp"
+                android:layout_below="@id/view_profile_tabs"
+                tools:listitem="@layout/view_post"/>
+
+        </RelativeLayout>
 
 </FrameLayout>

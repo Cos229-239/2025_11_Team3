@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         val inboxBtn = findViewById<ImageButton>(R.id.inbox_btn)
         val logoBtn = findViewById<ImageButton>(R.id.app_logo)
 
+
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
             FirebaseFirestore.getInstance()
@@ -145,11 +146,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             dropdownView.findViewById<LinearLayout>(R.id.go_to_view_profile).setOnClickListener{
-                loadFragment(profileView())
+                loadFragment(ProfileView())
                 popupWindow.dismiss()
             }
             dropdownView.findViewById<LinearLayout>(R.id.go_to_edit_profile).setOnClickListener{
-                loadFragment(profileEdit())
+                loadFragment(ProfileEdit())
                 popupWindow.dismiss()
             }
             dropdownView.findViewById<LinearLayout>(R.id.go_to_view_pet_profile).setOnClickListener{
@@ -194,9 +195,10 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-    private  fun loadFragment(fragment: Fragment){
+    fun loadFragment(fragment: Fragment){
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.container,fragment)
+            .addToBackStack(null)
         transaction.commit()
     }
 }

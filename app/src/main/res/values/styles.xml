@@ -56,6 +56,11 @@
         <item name="strokeWidth">2dp</item>
     </style>
 
+    <style name="CircularImageStyle">
+        <item name ="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
     <style name="TextAppearance.Pawty.Body" parent="TextAppearance.MaterialComponents.Body1">
         <item name="android:fontFamily">@font/marcellus</item>
         <item name="android:textColor">@color/pawty_text_secondary</item>

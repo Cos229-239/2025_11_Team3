@@ -133,8 +133,8 @@
 
                                 <ImageButton
                                     android:id="@+id/btnPeopleMore"
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
+                                    android:layout_width="48dp"
+                                    android:layout_height="48dp"
                                     android:background="@android:color/transparent"
                                     android:contentDescription="@string/cd_more"
                                     android:padding="4dp"

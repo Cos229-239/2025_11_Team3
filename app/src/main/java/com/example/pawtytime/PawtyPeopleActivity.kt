@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -31,6 +32,7 @@ class PawtyPeopleActivity : AppCompatActivity() {
     private var profileUrl: String? = null
     private var idFrontUrl: String? = null
     private var idBackUrl: String? = null
+
 
     private val uploader by lazy { CloudinaryUploader(this) }
 
@@ -109,6 +111,8 @@ class PawtyPeopleActivity : AppCompatActivity() {
         val password  = findViewById<TextInputEditText>(R.id.etPassword)?.text?.toString()?.trim().orEmpty()
         val phone     = findViewById<TextInputEditText>(R.id.etPhone)?.text?.toString()?.trim()
         val location  = findViewById<TextInputEditText>(R.id.etLocation)?.text?.toString()?.trim()
+        val bio = findViewById<EditText>(R.id.profile_edit_bio)?.text?.toString()?.trim()
+
 
         if (firstName.isEmpty() || lastName.isEmpty() || username.isEmpty() ||
             email.isEmpty() || password.isEmpty()) {
@@ -126,7 +130,8 @@ class PawtyPeopleActivity : AppCompatActivity() {
             location = location,
             profileUrl = profileUrl,
             idFrontUrl = idFrontUrl,
-            idBackUrl = idBackUrl
+            idBackUrl = idBackUrl,
+            bio = bio
         )
     }
 
@@ -158,7 +163,11 @@ class PawtyPeopleActivity : AppCompatActivity() {
                     "firstName" to person.firstName,
                     "lastName"  to person.lastName,
                     "location"  to (person.location ?: ""),
-                    "phone"     to (person.phone ?: "")
+                    "phone"     to (person.phone ?: ""),
+                    "bio"       to (person.bio ?: ""),
+                    "followers" to emptyMap<String, Boolean>(),   // empty map for followers (will be implemented)
+                    "following" to emptyMap<String, Boolean>(),     // empty map for people you're following
+                    "postsCount" to 0
                 )
 
                 person.profileUrl?.let { url ->

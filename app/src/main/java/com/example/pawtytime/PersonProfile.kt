@@ -12,5 +12,6 @@ data class PersonProfile(
     val location: String?,
     val profileUrl: String?,
     val idFrontUrl: String?,
-    val idBackUrl: String?
+    val idBackUrl: String?,
+    val bio: String?
 ) : Serializable
