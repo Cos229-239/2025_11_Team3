@@ -1,6 +1,8 @@
 package com.example.pawtytime
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -27,8 +29,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Locale
-import android.graphics.Bitmap
-import android.graphics.Canvas
 
 enum class PinType { EVENT, PRODUCT, SERVICE }
 
@@ -71,56 +71,7 @@ class MapScreen : Fragment(), OnMapReadyCallback {
         loadUserLocationAndCenterMap()
 
         allItems.clear()
-        allItems += listOf(
-            MapItem(
-                id = "event1",
-                type = PinType.EVENT,
-                position = LatLng(27.96, -82.45),
-                title = "Pawtumn Festival",
-                zip = "33606"
-            ),
-            MapItem(
-                id = "product1",
-                type = PinType.PRODUCT,
-                position = LatLng(27.94, -82.46),
-                title = "Local Pet Shop",
-                zip = "33607"
-            ),
-            MapItem(
-                id = "service1",
-                type = PinType.SERVICE,
-                position = LatLng(27.93, -82.44),
-                title = "Grooming Service",
-                zip = "33609"
-            ),
-            MapItem(
-                id = "event2",
-                type = PinType.EVENT,
-                position = LatLng(27.8428, -82.6995), // Pinellas Park
-                title = "Dog Costume Parade",
-                zip = "33781"
-            ),
-            MapItem(
-                id = "product2",
-                type = PinType.PRODUCT,
-                position = LatLng(28.5383, -81.3792), // Downtown Orlando
-                title = "Orlando Barkery",
-                zip = "32801"
-            ),
-            MapItem(
-                id = "service2",
-                type = PinType.SERVICE,
-                position = LatLng(28.4132, -81.5812), // Near Disney
-                title = "Magical Grooming",
-                zip = "32830"
-            )
-            )
-
-        applyMapFilters(
-            activeTypes = emptySet(),
-            maxDistanceMiles = null,
-            searchZip = null
-        )
+        loadEventPinsFromFirestore()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -131,16 +82,19 @@ class MapScreen : Fragment(), OnMapReadyCallback {
         val filterBtn = view.findViewById<FloatingActionButton>(R.id.btnFilter)
 
         zoomIn.setOnClickListener {
-            googleMap?.animateCamera(
-                CameraUpdateFactory.zoomIn())
+            googleMap?.animateCamera(CameraUpdateFactory.zoomIn())
         }
 
         zoomOut.setOnClickListener {
-            googleMap?.animateCamera(
-                CameraUpdateFactory.zoomOut())
+            googleMap?.animateCamera(CameraUpdateFactory.zoomOut())
         }
 
         filterBtn.setOnClickListener {
+            showFilterPopup(filterBtn)
+        }
+    }
+
+    private fun showFilterPopup(anchor: View) {
             val dropdownView = layoutInflater.inflate(R.layout.filter_dropdown, null)
             val popupWindow = PopupWindow(
                 dropdownView,
@@ -149,7 +103,7 @@ class MapScreen : Fragment(), OnMapReadyCallback {
                 true
             )
             popupWindow.elevation = 10f
-            popupWindow.showAsDropDown(filterBtn, -dropdownView.width / 2, 16)
+            popupWindow.showAsDropDown(anchor, -dropdownView.width / 2, 16)
 
             val typeRow = dropdownView.findViewById<LinearLayout>(R.id.type_options)
             val typeHidden = dropdownView.findViewById<LinearLayout>(R.id.hidden_type)
@@ -249,7 +203,6 @@ class MapScreen : Fragment(), OnMapReadyCallback {
             etCustomMiles.addTextChangedListener { recomputeFilters() }
             etZipCode.addTextChangedListener { recomputeFilters() }
         }
-    }
 
     private fun loadUserLocationAndCenterMap() {
         val uid = auth.currentUser?.uid ?: return
@@ -378,6 +331,35 @@ class MapScreen : Fragment(), OnMapReadyCallback {
             centerOnZip(searchZip)
         }
     }
+
+private fun loadEventPinsFromFirestore() {
+    db.collection("events")
+        .get()
+        .addOnSuccessListener { snap ->
+            allItems.clear()
+
+            snap.documents.forEach { doc ->
+                val dto = doc.toObject(EventDto::class.java) ?: return@forEach
+                val ui = dto.toUi(doc.id)
+
+                allItems.add(
+                    MapItem(
+                        id = ui.id,
+                        type = PinType.EVENT,
+                        position = LatLng(ui.lat, ui.lng),
+                        title = ui.title,
+                        zip = ui.zip
+                    )
+                )
+            }
+
+            applyMapFilters(
+                activeTypes = emptySet(),
+                maxDistanceMiles = null,
+                searchZip = null
+            )
+        }
+}
 
     override fun onResume() {
         super.onResume()

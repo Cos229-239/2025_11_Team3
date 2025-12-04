@@ -160,4 +160,5 @@
     <string name="going">Going</string>
     <string name="save_event">Save Event</string>
     <string name="select_event_image">Select Event Image</string>
+    <string name="edit_event">Edit Event</string>
 </resources>

@@ -15,7 +15,17 @@ data class EventDto(
     val imageUrl: String? = null,
     val createdByUid: String? = null,
     val goingCount: Long = 0,
-    val interestedCount: Long = 0
+    val interestedCount: Long = 0,
+    val venueName: String = "",
+    val isPublic: Boolean = true,
+    val ageGroup: String = "all_ages",
+    val indoor: Boolean = false,
+    val outdoor: Boolean = false,
+    val hasFood: Boolean = false,
+    val hasBeverage: Boolean = false,
+    val hasPetTreats: Boolean = false,
+    val hasGames: Boolean = false,
+    val hasLiveMusic: Boolean = false
 ) {
     fun toUi(id: String) = EventUi(
         id = id,
@@ -30,7 +40,18 @@ data class EventDto(
         lng = lng ?: 0.0,
         imageUrl = imageUrl,
         goingCount = goingCount,
-        interestedCount = interestedCount
+        interestedCount = interestedCount,
+        venueName = venueName,
+        isPublic = isPublic,
+        createdByUid = createdByUid,
+        ageGroup = ageGroup,
+        indoor = indoor,
+        outdoor = outdoor,
+        hasFood = hasFood,
+        hasBeverage = hasBeverage,
+        hasPetTreats = hasPetTreats,
+        hasGames = hasGames,
+        hasLiveMusic = hasLiveMusic
     )
 }
 
@@ -47,5 +68,16 @@ data class EventUi(
     val lng: Double = 0.0,
     val imageUrl: String? = null,
     val goingCount: Long = 0L,
-    val interestedCount: Long = 0L
+    val interestedCount: Long = 0L,
+    val venueName: String = "",
+    val isPublic: Boolean = true,
+    val createdByUid: String?,
+    val ageGroup: String = "all_ages",
+    val indoor: Boolean = false,
+    val outdoor: Boolean = false,
+    val hasFood: Boolean = false,
+    val hasBeverage: Boolean = false,
+    val hasPetTreats: Boolean = false,
+    val hasGames: Boolean = false,
+    val hasLiveMusic: Boolean = false
 )

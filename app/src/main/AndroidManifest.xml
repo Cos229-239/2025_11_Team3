@@ -77,6 +77,11 @@
         <activity
             android:name=".SchedulePlaydateActivity"/>
 
+        <activity
+            android:name=".EventDetailActivity"
+            android:exported="false" />
+
+
 
     </application>
 
