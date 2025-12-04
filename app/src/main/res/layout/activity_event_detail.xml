@@ -38,13 +38,11 @@
                     app:cardBackgroundColor="@color/pawty_teal"
                     app:strokeWidth="0dp">
 
-                    <!-- This layout has NO padding so the image can touch the card edges -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <!-- Event header image (fills top of card) -->
                         <ImageView
                             android:id="@+id/ivEventHeader"
                             android:layout_width="match_parent"
@@ -53,7 +51,6 @@
                             android:background="@color/pawty_teal"
                             android:contentDescription="@string/select_event_image" />
 
-                        <!-- Interested / Going row -->
                         <LinearLayout
                             android:id="@+id/rowInterestActions"
                             android:layout_width="match_parent"
@@ -103,7 +100,6 @@
                                 android:textSize="12sp" />
                         </LinearLayout>
 
-                        <!-- All text content sits inside this padded block -->
                         <LinearLayout
                             android:id="@+id/layoutTextBlock"
                             android:layout_width="match_parent"
@@ -204,7 +200,8 @@
                                 android:fontFamily="@font/marcellus"
                                 android:text="Pawty Details"
                                 android:textColor="@color/pawty_text_secondary"
-                                android:textSize="18sp" />
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/tvDetailDescription"
@@ -224,7 +221,8 @@
                                 android:fontFamily="@font/marcellus"
                                 android:text="Host"
                                 android:textColor="@color/pawty_text_secondary"
-                                android:textSize="18sp" />
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
 
                             <LinearLayout
                                 android:id="@+id/layoutHost"
@@ -266,6 +264,49 @@
                                     android:rating="4.5"
                                     android:stepSize="0.5" />
                             </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tvVenueDetailsHeader"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:layout_marginBottom="2dp"
+                                android:fontFamily="@font/marcellus"
+                                android:text="Venue Details"
+                                android:textColor="@color/pawty_text_secondary"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvDetailAgeGroup"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:fontFamily="@font/marcellus"
+                                android:text="Age Group: All Ages"
+                                android:textColor="@color/pawty_text_secondary"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/tvDetailVenueType"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:fontFamily="@font/marcellus"
+                                android:text="Venue Type: Indoor"
+                                android:textColor="@color/pawty_text_secondary"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/tvDetailOfferings"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginBottom="8dp"
+                                android:fontFamily="@font/marcellus"
+                                android:text="Offerings: Food · Beverage"
+                                android:textColor="@color/pawty_text_secondary"
+                                android:textSize="14sp" />
 
                         </LinearLayout>
                     </LinearLayout>

@@ -34,6 +34,9 @@ class EventDetailActivity : AppCompatActivity() {
     private lateinit var rbHostRating: RatingBar
     private lateinit var ivInterestedIcon: ImageView
     private lateinit var cbGoing: CheckBox
+    private lateinit var tvDetailAgeGroup: TextView
+    private lateinit var tvDetailVenueType: TextView
+    private lateinit var tvDetailOfferings: TextView
 
     private var currentEvent: EventUi? = null
 
@@ -57,6 +60,9 @@ class EventDetailActivity : AppCompatActivity() {
         ivHostAvatar = findViewById(R.id.ivHostAvatar)
         tvHostName = findViewById(R.id.tvHostName)
         rbHostRating = findViewById(R.id.rbHostRating)
+        tvDetailAgeGroup = findViewById(R.id.tvDetailAgeGroup)
+        tvDetailVenueType = findViewById(R.id.tvDetailVenueType)
+        tvDetailOfferings = findViewById(R.id.tvDetailOfferings)
 
         ivInterestedIcon = findViewById(R.id.ivInterestedIcon)
         cbGoing = findViewById(R.id.cbGoing)
@@ -94,6 +100,35 @@ class EventDetailActivity : AppCompatActivity() {
                 tvInterested.text = "Interested: ${ui.interestedCount}"
                 tvGoing.text = "Going: ${ui.goingCount}"
                 tvDetailPrivacy.text = if (ui.isPublic) "Privacy: Public" else "Privacy: Private"
+                val ageLabel = when (ui.ageGroup) {
+                    "18_plus" -> "18+"
+                    "21_plus" -> "21+"
+                    else -> "All Ages"
+                }
+                tvDetailAgeGroup.text = "Age Group: $ageLabel"
+
+                val typeParts = mutableListOf<String>()
+                if (ui.indoor) typeParts.add("Indoor")
+                if (ui.outdoor) typeParts.add("Outdoor")
+
+                tvDetailVenueType.text = if (typeParts.isEmpty()) {
+                    "Venue Type: Not specified"
+                } else {
+                    "Venue Type: " + typeParts.joinToString(" · ")
+                }
+
+                val offeringParts = mutableListOf<String>()
+                if (ui.hasFood) offeringParts.add("Food")
+                if (ui.hasBeverage) offeringParts.add("Beverage")
+                if (ui.hasPetTreats) offeringParts.add("Pet treats")
+                if (ui.hasGames) offeringParts.add("Games")
+                if (ui.hasLiveMusic) offeringParts.add("Live music")
+
+                tvDetailOfferings.text = if (offeringParts.isEmpty()) {
+                    "Offerings: None listed"
+                } else {
+                    "Offerings: " + offeringParts.joinToString(" · ")
+                }
                 tvDetailDescription.text = ui.description
 
                 if (!ui.imageUrl.isNullOrBlank()) {
