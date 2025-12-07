@@ -1,5 +1,6 @@
 package com.example.pawtytime
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -108,9 +109,26 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
 
 
         // separate method to populate spinner with names
-        fun populateSpinner(List: List<String>){
-            val listAdapter = ArrayAdapter(requireContext(), R.layout.pets_default_spinner, List)
+        fun populateSpinner(list: List<String>){
+            val listAdapter = object : ArrayAdapter<String>(
+                requireContext(),
+                R.layout.pets_default_spinner, list)
+            {
 
+                override fun isEnabled(position: Int): Boolean {
+                    return position != 0
+                }
+
+                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup):View {
+                   val view = super.getDropDownView(position, convertView, parent) as TextView
+                    if(position == 0){
+                        view.setTextColor(Color.GRAY)
+                    } else {
+                        view.setTextColor(Color.BLACK)
+                    }
+                    return view
+                }
+            }
             listAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             postPetSpinner.adapter = listAdapter
         }
@@ -125,7 +143,7 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
                 .get()
                 .addOnSuccessListener {
                     querySnapshot ->
-                    val petList = mutableListOf<String>()
+                    val petList = mutableListOf("Pet Posts")
                     for(document in querySnapshot.documents){
                         document.getString("name")?.let{
                             petName ->
@@ -156,7 +174,7 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
 
 
 
-        //tab switching
+
         postsTab.setOnClickListener {
             loadProfilePosts(adapter)
         }
@@ -168,6 +186,7 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
                 id: Long
             ) {
 
+                if( position == 0) return
                 val selectedPetName = parent.getItemAtPosition(position) as String
                 loadPetPosts(adapter, selectedPetName)
             }
