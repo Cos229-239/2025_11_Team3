@@ -13,114 +13,44 @@
         android:layout_height="match_parent"
         android:background="@color/pawty_yellow">
 
-        <ImageView
-            android:id="@+id/logo2"
-            android:layout_width="0dp"
-            android:layout_height="120dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:contentDescription="@string/app_name"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_pawty_logo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+
 
         <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/pawty_cream"
-            android:orientation="vertical"
-            android:padding="20dp"
-            app:layout_constraintTop_toBottomOf="@+id/logo2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            android:orientation="horizontal"
+            tools:ignore="MissingConstraints">
 
-            <TextView
-                android:id="@+id/age"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/marcellus"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:text="@string/age"
-                android:textAlignment="center"
-                android:textColor="@color/pawty_text_primary"
-                android:textSize="20sp" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp">
 
-            <TextView
-                android:id="@+id/breed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/marcellus"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:text="@string/breed"
-                android:textAlignment="center"
-                android:textColor="@color/pawty_text_primary"
-                android:textSize="20sp" />
+                <ImageView
+                    android:id="@+id/pet_view_prof_pic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/rufus_profile_foreground" />
 
-            <TextView
-                android:id="@+id/likes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/marcellus"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:text="@string/likes"
-                android:textAlignment="center"
-                android:textColor="@color/pawty_text_primary"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/dislikes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/marcellus"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:text="@string/dislikes"
-                android:textAlignment="center"
-                android:textColor="@color/pawty_text_primary"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/allergies"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/marcellus"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:text="Allergies"
-                android:textAlignment="center"
-                android:textColor="@color/pawty_text_primary"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/Bio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/marcellus"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:text="Bio"
-                android:textAlignment="center"
-                android:textColor="@color/pawty_text_primary"
-                android:textSize="20sp" />
-
-        </LinearLayout>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View Photos"
+                    android:backgroundTint="@color/pawty_pill_blue"
+                    android:layout_gravity="center"
+                    android:id="@+id/pet_view_photosBtn"/>
 
         <!-- Schedule playdate button under profile info -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSchedulePlaydate"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:layout_marginTop="16dp"
-            android:text="Schedule Playdate"
+            android:text="Schedule\n Playdate"
             android:textColor="@android:color/white"
             android:fontFamily="@font/marcellus"
             app:cornerRadius="24dp"
@@ -129,23 +59,79 @@
             app:iconPadding="8dp"
             app:iconGravity="textStart"
             app:backgroundTint="@color/pawty_pill_blue"
-            app:layout_constraintTop_toBottomOf="@id/linearLayout2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <!-- Invite to Pawty button below schedule, anchored to bottom -->
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="24dp"
-            android:text="INVITE TO PAWTY!"
-            android:fontFamily="@font/marcellus"
-            app:layout_constraintTop_toBottomOf="@id/btnSchedulePlaydate"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            tools:ignore="MissingConstraints" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="60dp">
+
+                    <TextView
+                        android:id="@+id/pet_view_pet_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rufus Smith"
+                        android:textSize="25sp"/>
+                    <TextView
+                        android:id="@+id/pet_view_pet_age"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" (3 Yrs)"
+                        android:textSize="25sp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/fivestars"
+                    />
+
+                <TextView
+                    android:id="@+id/pet_view_reviews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="See Reviews"
+                    android:layout_marginLeft="40dp"
+                    android:textColor="@color/pawty_dark_blue"
+                    android:clickable="true"
+                    android:onClick="ReviewsTextView"
+                    />
+                </LinearLayout>
+
+
+                //
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="50dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
