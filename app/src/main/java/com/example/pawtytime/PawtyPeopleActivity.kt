@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -113,11 +114,29 @@ class PawtyPeopleActivity : AppCompatActivity() {
         val location  = findViewById<TextInputEditText>(R.id.etLocation)?.text?.toString()?.trim()
         val bio = findViewById<EditText>(R.id.profile_edit_bio)?.text?.toString()?.trim()
 
-
         if (firstName.isEmpty() || lastName.isEmpty() || username.isEmpty() ||
             email.isEmpty() || password.isEmpty()) {
             snack("Please complete all required fields (*)")
             return null
+        }
+
+        val typeGoer = findViewById<CheckBox>(R.id.cbGoer).isChecked
+        val typeHost = findViewById<CheckBox>(R.id.cbHost).isChecked
+        val typeService = findViewById<CheckBox>(R.id.cbService).isChecked
+        val typeShop = findViewById<CheckBox>(R.id.cbShop).isChecked
+
+        val profileTypes = mutableListOf<String>()
+        if (findViewById<CheckBox>(R.id.cbGoer).isChecked) {
+            profileTypes.add("Pawty Goer")
+        }
+        if (findViewById<CheckBox>(R.id.cbHost).isChecked) {
+            profileTypes.add("Pawty Host")
+        }
+        if (findViewById<CheckBox>(R.id.cbService).isChecked) {
+            profileTypes.add("Pawty Service Provider")
+        }
+        if (findViewById<CheckBox>(R.id.cbShop).isChecked) {
+            profileTypes.add("Pawty Shop Owner")
         }
 
         return PersonProfile(
@@ -131,7 +150,8 @@ class PawtyPeopleActivity : AppCompatActivity() {
             profileUrl = profileUrl,
             idFrontUrl = idFrontUrl,
             idBackUrl = idBackUrl,
-            bio = bio
+            bio = bio,
+            profileTypes = profileTypes
         )
     }
 
@@ -169,6 +189,10 @@ class PawtyPeopleActivity : AppCompatActivity() {
                     "following" to emptyMap<String, Boolean>(),     // empty map for people you're following
                     "postsCount" to 0
                 )
+
+                if (person.profileTypes.isNotEmpty()) {
+                    updates["profileTypes"] = person.profileTypes
+                }
 
                 person.profileUrl?.let { url ->
                     if (url.isNotBlank()) updates["profileUrl"] = url
