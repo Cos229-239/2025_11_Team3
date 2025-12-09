@@ -3,7 +3,6 @@ package com.example.pawtytime
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.OpenableColumns
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
@@ -120,11 +119,6 @@ class PawtyPeopleActivity : AppCompatActivity() {
             return null
         }
 
-        val typeGoer = findViewById<CheckBox>(R.id.cbGoer).isChecked
-        val typeHost = findViewById<CheckBox>(R.id.cbHost).isChecked
-        val typeService = findViewById<CheckBox>(R.id.cbService).isChecked
-        val typeShop = findViewById<CheckBox>(R.id.cbShop).isChecked
-
         val profileTypes = mutableListOf<String>()
         if (findViewById<CheckBox>(R.id.cbGoer).isChecked) {
             profileTypes.add("Pawty Goer")
@@ -177,7 +171,7 @@ class PawtyPeopleActivity : AppCompatActivity() {
                         .joinToString(" ")
                 }.ifBlank { "Pawty Friend" }
 
-                val updates = mutableMapOf<String, Any>(
+                val updates = mutableMapOf(
                     "username"  to person.username,
                     "name"      to niceName,
                     "firstName" to person.firstName,
@@ -185,8 +179,8 @@ class PawtyPeopleActivity : AppCompatActivity() {
                     "location"  to (person.location ?: ""),
                     "phone"     to (person.phone ?: ""),
                     "bio"       to (person.bio ?: ""),
-                    "followers" to emptyMap<String, Boolean>(),   // empty map for followers
-                    "following" to emptyMap<String, Boolean>(),     // empty map for people you're following
+                    "followers" to emptyMap<String, Boolean>(),
+                    "following" to emptyMap<String, Boolean>(),
                     "postsCount" to 0
                 )
 
@@ -212,9 +206,5 @@ class PawtyPeopleActivity : AppCompatActivity() {
     private fun snack(msg: String) =
         Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show()
 
-    private fun getFileName(uri: Uri): String? =
-        contentResolver.query(uri, null, null, null, null)?.use { c ->
-            val idx = c.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-            if (idx >= 0 && c.moveToFirst()) c.getString(idx) else null
-        }
+
 }

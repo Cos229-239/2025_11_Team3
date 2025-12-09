@@ -89,6 +89,7 @@ class ProfileEdit : Fragment() {
         val locationField = view.findViewById<EditText>(R.id.profile_edit_location)
         val bioField = view.findViewById<EditText>(R.id.profile_edit_bio)
         editProfImage = view.findViewById(R.id.profile_edit_pic_btn)
+        val btnBack = view.findViewById<Button>(R.id.btn_edit_profile_back)
         val saveChanges = view.findViewById<Button>(R.id.edit_profile_save_changes)
 
         val petEditBtn = view.findViewById<Button>(R.id.go_to_pet_edit_from_profile)
@@ -163,6 +164,11 @@ class ProfileEdit : Fragment() {
         editProfImage.setOnClickListener {
             editImage.launch("image/*")
         }
+
+        //back button
+        btnBack.setOnClickListener {
+            (activity as? MainActivity)?.loadFragment(HomeScreen())
+        }
         //save button
         saveChanges.setOnClickListener {
             val newUsername = usernameField.text.toString()
@@ -215,6 +221,7 @@ class ProfileEdit : Fragment() {
                 .update(profUpdates)
                 .addOnSuccessListener{
                     Toast.makeText(requireContext(), "Profile Updated", Toast.LENGTH_SHORT).show()
+                    (activity as? MainActivity)?.loadFragment(HomeScreen())
                 }
                 .addOnFailureListener{
                     Toast.makeText(requireContext(), "Update failed, try again later", Toast.LENGTH_SHORT).show()
