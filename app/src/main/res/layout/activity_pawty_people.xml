@@ -234,6 +234,71 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
+                    android:id="@+id/tvProfileTypeHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Profile Type(s)"
+                    android:textColor="@color/pawty_text_secondary"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/marcellus"
+                    android:layout_marginTop="16dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/profileTypeCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:cardBackgroundColor="@color/pawty_teal"
+                    app:cardCornerRadius="14dp"
+                    app:strokeWidth="0dp"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <CheckBox
+                            android:id="@+id/cbGoer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pawty Goer"
+                            android:textColor="@color/pawty_text_fourth"
+                            android:textSize="16sp"
+                            android:fontFamily="@font/marcellus" />
+
+                        <CheckBox
+                            android:id="@+id/cbHost"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pawty Host"
+                            android:textColor="@color/pawty_text_fourth"
+                            android:textSize="16sp"
+                            android:fontFamily="@font/marcellus" />
+
+                        <CheckBox
+                            android:id="@+id/cbService"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pawty Service Provider"
+                            android:textColor="@color/pawty_text_fourth"
+                            android:textSize="16sp"
+                            android:fontFamily="@font/marcellus" />
+
+                        <CheckBox
+                            android:id="@+id/cbShop"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pawty Shop Owner"
+                            android:textColor="@color/pawty_text_fourth"
+                            android:textSize="16sp"
+                            android:fontFamily="@font/marcellus" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/btn_upload_profile"

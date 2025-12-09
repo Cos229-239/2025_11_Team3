@@ -23,5 +23,6 @@
     <color name="text_btn_color">#7D7878</color>
     <color name="pawty_grey">#7D7878</color>
     <color name="pawty_pill_blue">#7DB5CF</color>
+    <color name="pawty_text_fourth">#475467</color>
 
 </resources>

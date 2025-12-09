@@ -3,7 +3,7 @@ package com.example.pawtytime
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.OpenableColumns
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -113,11 +113,24 @@ class PawtyPeopleActivity : AppCompatActivity() {
         val location  = findViewById<TextInputEditText>(R.id.etLocation)?.text?.toString()?.trim()
         val bio = findViewById<EditText>(R.id.profile_edit_bio)?.text?.toString()?.trim()
 
-
         if (firstName.isEmpty() || lastName.isEmpty() || username.isEmpty() ||
             email.isEmpty() || password.isEmpty()) {
             snack("Please complete all required fields (*)")
             return null
+        }
+
+        val profileTypes = mutableListOf<String>()
+        if (findViewById<CheckBox>(R.id.cbGoer).isChecked) {
+            profileTypes.add("Pawty Goer")
+        }
+        if (findViewById<CheckBox>(R.id.cbHost).isChecked) {
+            profileTypes.add("Pawty Host")
+        }
+        if (findViewById<CheckBox>(R.id.cbService).isChecked) {
+            profileTypes.add("Pawty Service Provider")
+        }
+        if (findViewById<CheckBox>(R.id.cbShop).isChecked) {
+            profileTypes.add("Pawty Shop Owner")
         }
 
         return PersonProfile(
@@ -131,7 +144,8 @@ class PawtyPeopleActivity : AppCompatActivity() {
             profileUrl = profileUrl,
             idFrontUrl = idFrontUrl,
             idBackUrl = idBackUrl,
-            bio = bio
+            bio = bio,
+            profileTypes = profileTypes
         )
     }
 
@@ -157,7 +171,7 @@ class PawtyPeopleActivity : AppCompatActivity() {
                         .joinToString(" ")
                 }.ifBlank { "Pawty Friend" }
 
-                val updates = mutableMapOf<String, Any>(
+                val updates = mutableMapOf(
                     "username"  to person.username,
                     "name"      to niceName,
                     "firstName" to person.firstName,
@@ -165,10 +179,14 @@ class PawtyPeopleActivity : AppCompatActivity() {
                     "location"  to (person.location ?: ""),
                     "phone"     to (person.phone ?: ""),
                     "bio"       to (person.bio ?: ""),
-                    "followers" to emptyMap<String, Boolean>(),   // empty map for followers
-                    "following" to emptyMap<String, Boolean>(),     // empty map for people you're following
+                    "followers" to emptyMap<String, Boolean>(),
+                    "following" to emptyMap<String, Boolean>(),
                     "postsCount" to 0
                 )
+
+                if (person.profileTypes.isNotEmpty()) {
+                    updates["profileTypes"] = person.profileTypes
+                }
 
                 person.profileUrl?.let { url ->
                     if (url.isNotBlank()) updates["profileUrl"] = url
@@ -188,9 +206,5 @@ class PawtyPeopleActivity : AppCompatActivity() {
     private fun snack(msg: String) =
         Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show()
 
-    private fun getFileName(uri: Uri): String? =
-        contentResolver.query(uri, null, null, null, null)?.use { c ->
-            val idx = c.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-            if (idx >= 0 && c.moveToFirst()) c.getString(idx) else null
-        }
+
 }
