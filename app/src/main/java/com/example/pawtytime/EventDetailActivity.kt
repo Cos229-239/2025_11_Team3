@@ -38,7 +38,7 @@ class EventDetailActivity : AppCompatActivity() {
     private lateinit var tvDetailVenueType: TextView
     private lateinit var tvDetailOfferings: TextView
 
-    private var currentEvent: EventUi? = null
+    private var isUpdatingRsvpUi = false
 
     private val dateFormat =
         SimpleDateFormat("MM/dd/yyyy h:mm a", Locale.getDefault())
@@ -91,14 +91,17 @@ class EventDetailActivity : AppCompatActivity() {
 
                 val ui = dto.toUi(doc.id)
 
+                var interestedCount = ui.interestedCount.coerceAtLeast(0)
+                var goingCount = ui.goingCount.coerceAtLeast(0)
+
                 tvTitle.text = ui.title
                 tvDateTime.text = dateFormat.format(ui.dateTime.toDate())
                 tvVenueName.text = ui.venueName.ifBlank { "" }
                 tvVenueAddress.text =
                     "${ui.addressLine}, ${ui.city}, ${ui.state} ${ui.zip}"
 
-                tvInterested.text = "Interested: ${ui.interestedCount}"
-                tvGoing.text = "Going: ${ui.goingCount}"
+                tvInterested.text = "Interested: $interestedCount"
+                tvGoing.text = "Going: $goingCount"
                 tvDetailPrivacy.text = if (ui.isPublic) "Privacy: Public" else "Privacy: Private"
                 val ageLabel = when (ui.ageGroup) {
                     "18_plus" -> "18+"
@@ -152,24 +155,38 @@ class EventDetailActivity : AppCompatActivity() {
                 cbGoing.isChecked = isGoing
 
                 ivInterestedIcon.setOnClickListener {
-                    val currentlyInterested =
-                        EventRsvpState.interestedIds.contains(ui.id)
+                    val oldStatus = EventRsvpPrefs.getStatus(this, ui.id)
+
+                    val currentlyInterested = EventRsvpState.interestedIds.contains(ui.id)
                     val newInterested = !currentlyInterested
 
                     if (newInterested) {
                         EventRsvpState.interestedIds.add(ui.id)
                         EventRsvpState.goingIds.remove(ui.id)
+                        isUpdatingRsvpUi = true
                         cbGoing.isChecked = false
+                        isUpdatingRsvpUi = false
                     } else {
                         EventRsvpState.interestedIds.remove(ui.id)
                     }
 
                     bindStarIcon(ivInterestedIcon, newInterested)
-
                     EventRsvpState.saveForEvent(this, ui.id)
+
+                    val newStatus = EventRsvpPrefs.getStatus(this, ui.id)
+
+                    EventCountsUpdater.updateCounts(ui.id, oldStatus, newStatus) { dInt, dGo ->
+                        interestedCount = (interestedCount + dInt).coerceAtLeast(0)
+                        goingCount     = (goingCount + dGo).coerceAtLeast(0)
+                        tvInterested.text = "Interested: $interestedCount"
+                        tvGoing.text = "Going: $goingCount"
+                    }
                 }
 
                 cbGoing.setOnCheckedChangeListener { _, checked ->
+                    if (isUpdatingRsvpUi) return@setOnCheckedChangeListener
+                    val oldStatus = EventRsvpPrefs.getStatus(this, ui.id)
+
                     if (checked) {
                         EventRsvpState.goingIds.add(ui.id)
                         EventRsvpState.interestedIds.remove(ui.id)
@@ -177,11 +194,19 @@ class EventDetailActivity : AppCompatActivity() {
                     } else {
                         EventRsvpState.goingIds.remove(ui.id)
                     }
+
+                    EventRsvpState.saveForEvent(this, ui.id)
+                    val newStatus = EventRsvpPrefs.getStatus(this, ui.id)
+
+                    EventCountsUpdater.updateCounts(ui.id, oldStatus, newStatus) { dInt, dGo ->
+                        interestedCount = (interestedCount + dInt).coerceAtLeast(0)
+                        goingCount     = (goingCount + dGo).coerceAtLeast(0)
+                        tvInterested.text = "Interested: $interestedCount"
+                        tvGoing.text = "Going: $goingCount"
+                    }
                 }
 
                 loadHost(ui.createdByUid)
-
-                EventRsvpState.saveForEvent(this, ui.id)
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Failed to load event", Toast.LENGTH_SHORT).show()

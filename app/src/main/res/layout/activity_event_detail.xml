@@ -232,7 +232,7 @@
                                 android:gravity="center_horizontal"
                                 android:orientation="vertical">
 
-                                <ImageButton
+                                <ImageView
                                     android:id="@+id/ivHostAvatar"
                                     android:layout_width="150dp"
                                     android:layout_height="150dp"

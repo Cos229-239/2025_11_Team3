@@ -312,7 +312,6 @@
                     android:textSize="16sp"
                     android:fontFamily="@font/marcellus"/>
 
-                <!-- Age group (pick one) -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -380,7 +379,6 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Indoor / Outdoor / Food -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -459,7 +457,6 @@
                             android:fontFamily="@font/marcellus"
                             android:layout_marginBottom="6dp"/>
 
-                        <!-- Row 1 -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -488,7 +485,6 @@
                                 android:textSize="14sp"/>
                         </LinearLayout>
 
-                        <!-- Row 2 -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -518,7 +514,6 @@
                                 android:textSize="14sp"/>
                         </LinearLayout>
 
-                        <!-- Row 3 -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -590,7 +585,6 @@
                         android:src="@android:drawable/ic_menu_camera"/>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Buttons row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

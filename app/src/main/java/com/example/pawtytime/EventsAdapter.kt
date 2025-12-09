@@ -100,6 +100,10 @@ class EventsAdapter(
         holder.cbGoing.isChecked = isGoing
 
         holder.ivInterestedIcon.setOnClickListener {
+            val ctx = holder.itemView.context
+
+            val oldStatus = EventRsvpPrefs.getStatus(ctx, item.id)
+
             val currentlyInterested = EventRsvpState.interestedIds.contains(item.id)
             val newInterested = !currentlyInterested
 
@@ -113,10 +117,16 @@ class EventsAdapter(
 
             bindStarIcon(holder.ivInterestedIcon, newInterested)
 
-            EventRsvpState.saveForEvent(holder.itemView.context, item.id)
+            EventRsvpState.saveForEvent(ctx, item.id)
+            val newStatus = EventRsvpPrefs.getStatus(ctx, item.id)
+
+            EventCountsUpdater.updateCounts(item.id, oldStatus, newStatus)
         }
 
         holder.cbGoing.setOnCheckedChangeListener { _, checked ->
+            val ctx = holder.itemView.context
+            val oldStatus = EventRsvpPrefs.getStatus(ctx, item.id)
+
             if (checked) {
                 EventRsvpState.goingIds.add(item.id)
                 EventRsvpState.interestedIds.remove(item.id)
@@ -125,7 +135,10 @@ class EventsAdapter(
                 EventRsvpState.goingIds.remove(item.id)
             }
 
-            EventRsvpState.saveForEvent(holder.itemView.context, item.id)
+            EventRsvpState.saveForEvent(ctx, item.id)
+            val newStatus = EventRsvpPrefs.getStatus(ctx, item.id)
+
+            EventCountsUpdater.updateCounts(item.id, oldStatus, newStatus)
         }
 
         holder.itemView.setOnClickListener {
