@@ -1,39 +1,36 @@
 package com.example.pawtytime
 
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContentProviderCompat.requireContext
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ProfileEdit.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ProfileEdit : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
     private lateinit var editProfImage: ImageButton
+
+    private lateinit var cbGoer: CheckBox
+    private lateinit var cbHost: CheckBox
+    private lateinit var cbService: CheckBox
+    private lateinit var cbShop: CheckBox
+
+    private lateinit var ivIdFrontPreview: ImageButton
+    private lateinit var ivIdBackPreview: ImageButton
+
+    private var idFrontUrl: String? = null
+    private var idBackUrl: String? = null
 
     private val uploader by lazy { CloudinaryUploader(requireContext()) }
 
@@ -41,11 +38,6 @@ class ProfileEdit : Fragment() {
     fun snack(msg: String) =
         view?.let { Snackbar.make(it, msg, Snackbar.LENGTH_SHORT) }?.show()
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     private val editImage = registerForActivityResult(ActivityResultContracts.GetContent()){
         uri: Uri? ->
@@ -60,6 +52,25 @@ class ProfileEdit : Fragment() {
         }
     }
 
+    private val pickIdFront = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri ?: return@registerForActivityResult
+        ivIdFrontPreview.setImageURI(uri)
+        snack("Uploading front ID...")
+        uploader.upload(uri) { url ->
+            idFrontUrl = url
+            snack(if (url != null) "Front ID uploaded" else "Front ID upload failed")
+        }
+    }
+
+    private val pickIdBack = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri ?: return@registerForActivityResult
+        ivIdBackPreview.setImageURI(uri)
+        snack("Uploading back ID...")
+        uploader.upload(uri) { url ->
+            idBackUrl = url
+            snack(if (url != null) "Back ID uploaded" else "Back ID upload failed")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,7 +88,7 @@ class ProfileEdit : Fragment() {
         val phoneField = view.findViewById<EditText>(R.id.profile_edit_phone_number)
         val locationField = view.findViewById<EditText>(R.id.profile_edit_location)
         val bioField = view.findViewById<EditText>(R.id.profile_edit_bio)
-        editProfImage = view.findViewById<ImageButton>(R.id.profile_edit_pic_btn)
+        editProfImage = view.findViewById(R.id.profile_edit_pic_btn)
         val saveChanges = view.findViewById<Button>(R.id.edit_profile_save_changes)
 
         val petEditBtn = view.findViewById<Button>(R.id.go_to_pet_edit_from_profile)
@@ -85,6 +96,21 @@ class ProfileEdit : Fragment() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         val db = FirebaseFirestore.getInstance()
 
+        cbGoer = view.findViewById(R.id.cbEditGoer)
+        cbHost = view.findViewById(R.id.cbEditHost)
+        cbService = view.findViewById(R.id.cbEditService)
+        cbShop = view.findViewById(R.id.cbEditShop)
+
+        ivIdFrontPreview = view.findViewById(R.id.btnEditIdFront)
+        ivIdBackPreview = view.findViewById(R.id.btnEditIdBack)
+
+        ivIdFrontPreview.setOnClickListener {
+            pickIdFront.launch("image/*")
+        }
+
+        ivIdBackPreview.setOnClickListener {
+            pickIdBack.launch("image/*")
+        }
 
 
         // loading current user (which should be the only one that will be edited)
@@ -98,7 +124,7 @@ class ProfileEdit : Fragment() {
                 emailField.setText(document.getString("email"))
                 phoneField.setText(document.getString("phone"))
                 locationField.setText(document.getString("location"))
-                bioField.setText(document.getString("Bio"))
+                bioField.setText(document.getString("bio"))
 
 
                 val photoUrlPic = document.getString("profileUrl")
@@ -108,7 +134,32 @@ class ProfileEdit : Fragment() {
                         .load(photoUrlPic)
                         .into(editProfImage)
                 }
+
+                val rawTypes = document.get("profileTypes") as? List<*>
+                val types = rawTypes?.filterIsInstance<String>() ?: emptyList()
+
+                cbGoer.isChecked    = "Pawty Goer" in types
+                cbHost.isChecked    = "Pawty Host" in types
+                cbService.isChecked = "Pawty Service Provider" in types
+                cbShop.isChecked    = "Pawty Shop Owner" in types
+
+
+                idFrontUrl = document.getString("idFrontUrl")
+                idBackUrl  = document.getString("idBackUrl")
+
+                if (!idFrontUrl.isNullOrEmpty()) {
+                    Glide.with(this)
+                        .load(idFrontUrl)
+                        .into(ivIdFrontPreview)
+                }
+
+                if (!idBackUrl.isNullOrEmpty()) {
+                    Glide.with(this)
+                        .load(idBackUrl)
+                        .into(ivIdBackPreview)
+                }
             }
+
         editProfImage.setOnClickListener {
             editImage.launch("image/*")
         }
@@ -122,7 +173,27 @@ class ProfileEdit : Fragment() {
             val newLocation = locationField.text.toString()
             val newBio = bioField.text.toString()
 
-            val profUpdates = mapOf(
+            val profileTypes = mutableListOf<String>()
+            if (cbGoer.isChecked)    profileTypes.add("Pawty Goer")
+            if (cbHost.isChecked)    profileTypes.add("Pawty Host")
+            if (cbService.isChecked) profileTypes.add("Pawty Service Provider")
+            if (cbShop.isChecked)    profileTypes.add("Pawty Shop Owner")
+
+            val requiresVerification =
+                cbHost.isChecked || cbService.isChecked || cbShop.isChecked
+
+            if (requiresVerification) {
+                if (idFrontUrl.isNullOrEmpty() || idBackUrl.isNullOrEmpty()) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Verification ID (front and back) is required for Hosts, Service Providers, or Shop Owners.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return@setOnClickListener
+                }
+            }
+
+            val profUpdates = mutableMapOf<String, Any>(
                 "username"  to newUsername,
                 "firstName" to newFirstName,
                 "lastName"  to newLastName,
@@ -130,8 +201,15 @@ class ProfileEdit : Fragment() {
                 "phone"     to newPhone,
                 "location"  to newLocation,
                 "bio"       to newBio,
-                "profileUrl" to photoUrl
             )
+
+            photoUrl?.let { url ->
+                profUpdates["profileUrl"] = url
+            }
+
+            profUpdates["profileTypes"] = profileTypes
+            idFrontUrl?.let { profUpdates["idFrontUrl"] = it }
+            idBackUrl?.let { profUpdates["idBackUrl"] = it }
 
             db.collection("users").document(userId ?: "")
                 .update(profUpdates)
@@ -155,23 +233,5 @@ class ProfileEdit : Fragment() {
             (activity as? MainActivity)?.loadFragment(petProfileEdit())
         }
         return view
-    }
-
-
-
-
-    private fun updateProfImageUrl(url: String) {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        FirebaseFirestore.getInstance().collection("users")
-            .document(userId)
-            .update("photoUrl", url)
-            .addOnSuccessListener {
-                Glide.with(this)
-                    .load(url)
-                    .into(editProfImage)
-            }
-            .addOnFailureListener {
-                snack("Failed to update profile image in Firestore")
-            }
     }
 }

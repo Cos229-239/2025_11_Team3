@@ -200,6 +200,130 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/tvEditProfileTypeHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Profile Type(s)"
+            android:textColor="@color/pawty_orange"
+            android:textSize="16sp" />
+
+
+        <LinearLayout
+            android:id="@+id/layout_edit_profile_types"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="16dp">
+
+            <CheckBox
+                android:id="@+id/cbEditGoer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pawty Goer"
+                android:textColor="@color/pawty_grey"
+                android:buttonTint="@color/pawty_orange" />
+
+            <CheckBox
+                android:id="@+id/cbEditHost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pawty Host"
+                android:textColor="@color/pawty_grey"
+                android:buttonTint="@color/pawty_orange" />
+
+            <CheckBox
+                android:id="@+id/cbEditService"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Service Provider"
+                android:textColor="@color/pawty_grey"
+                android:buttonTint="@color/pawty_orange" />
+
+            <CheckBox
+                android:id="@+id/cbEditShop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shop Owner"
+                android:textColor="@color/pawty_grey"
+                android:buttonTint="@color/pawty_orange" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvEditIdHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Verification ID"
+            android:textColor="@color/pawty_orange"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/layout_edit_id_upload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:gravity="center">
+
+            <LinearLayout
+                android:id="@+id/zoneUploadIdFront"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnEditIdFront"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:background="@drawable/round_corners"
+                    android:scaleType="centerInside"
+                    android:padding="8dp"
+                    android:src="@android:drawable/ic_menu_camera"
+                    android:contentDescription="Upload front of ID" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Front"
+                    android:textColor="@color/pawty_orange"
+                    android:layout_marginTop="6dp"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/zoneUploadIdBack"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnEditIdBack"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:background="@drawable/round_corners"
+                    android:scaleType="centerInside"
+                    android:padding="8dp"
+                    android:src="@android:drawable/ic_menu_camera"
+                    android:contentDescription="Upload back of ID" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Back"
+                    android:textColor="@color/pawty_orange"
+                    android:layout_marginTop="6dp"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
         <Button
             android:id="@+id/go_to_pet_edit_from_profile"
             android:layout_width="wrap_content"
