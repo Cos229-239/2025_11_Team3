@@ -11,7 +11,7 @@
 
     <!-- UI hints & labels -->
     <string name="hint_search">Search</string>
-    <string name="hint_search_zip">Search Zip</string>
+    <string name="hint_search_zip">Search Zip Code</string>
     <string name="tip_profile_settings">Tap your photo to open Profile &amp; Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="home_tab">Home</string>
@@ -162,4 +162,5 @@
     <string name="save_event">Save Event</string>
     <string name="select_event_image">Select Event Image</string>
     <string name="edit_event">Edit Event</string>
+    <string name="no_events">Ruh-roh! There are no scheduled events near you. Check back soon! 🐾</string>
 </resources>

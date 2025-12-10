@@ -58,26 +58,59 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             app:cardCornerRadius="20dp"
-                            app:cardBackgroundColor="@color/pawty_teal">
+                            app:cardBackgroundColor="@color/pawty_teal"
+                            app:cardUseCompatPadding="true">
 
-                            <TextView
-                                android:id="@+id/tvSearchZip"
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:drawablePadding="2dp"
+                                android:orientation="horizontal"
                                 android:gravity="center_vertical"
-                                android:paddingStart="4dp"
-                                android:paddingTop="8dp"
+                                android:paddingStart="8dp"
                                 android:paddingEnd="8dp"
-                                android:paddingBottom="8dp"
-                                android:singleLine="true"
-                                android:text="@string/hint_search_zip"
-                                android:textColor="@color/pawty_text_secondary"
-                                android:fontFamily="@font/marcellus"
-                                android:textSize="16sp"
-                                app:drawableStartCompat="@drawable/ic_search"/>
+                                android:paddingTop="6dp"
+                                android:paddingBottom="6dp">
+
+                                <ImageView
+                                    android:id="@+id/ivSearchZipIcon"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:contentDescription="@string/hint_search_zip"
+                                    android:src="@drawable/ic_search_two"
+                                    android:tint="@color/pawty_text_secondary" />
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etSearchZip"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@android:color/transparent"
+                                    android:hint="@string/hint_search_zip"
+                                    android:singleLine="true"
+                                    android:gravity="center"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/pawty_text_secondary"
+                                    android:textColorHint="@color/pawty_text_secondary"
+                                    android:fontFamily="@font/marcellus"
+                                    android:textSize="14sp"
+                                    android:imeOptions="actionSearch"
+                                    android:inputType="number" />
+                            </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
                     </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvNoEvents"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="20dp"
+                        android:text="@string/no_events"
+                        android:textAlignment="center"
+                        android:textColor="@color/pawty_text_secondary"
+                        android:fontFamily="@font/marcellus"
+                        android:textSize="16sp"
+                        android:visibility="gone"/>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvEvents"
