@@ -29,6 +29,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Locale
+import android.content.Intent
 
 enum class PinType { EVENT, PRODUCT, SERVICE }
 
@@ -95,6 +96,18 @@ class MapScreen : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+
+        googleMap?.setOnInfoWindowClickListener { marker ->
+            val item = marker.tag as? MapItem ?: return@setOnInfoWindowClickListener
+
+            if (item.type == PinType.EVENT) {
+                val ctx = requireContext()
+                val intent = Intent(ctx, EventDetailActivity::class.java).apply {
+                    putExtra("eventId", item.id)
+                }
+                startActivity(intent)
+            }
+        }
 
         val centerFromArgs = getCenterFromArgs()
         if (centerFromArgs != null) {
@@ -363,6 +376,7 @@ class MapScreen : Fragment(), OnMapReadyCallback {
                     .title(item.title)
                     .icon(bitmapFromVector(requireContext(), iconRes))
             )
+            marker?.tag = item
             item.marker = marker
         }
 
