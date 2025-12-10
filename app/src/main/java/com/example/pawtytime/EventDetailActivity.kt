@@ -14,6 +14,8 @@ import java.util.Locale
 import coil.load
 import coil.size.Scale
 import coil.transform.CircleCropTransformation
+import android.content.Intent
+import com.google.android.material.button.MaterialButton
 
 class EventDetailActivity : AppCompatActivity() {
 
@@ -37,8 +39,10 @@ class EventDetailActivity : AppCompatActivity() {
     private lateinit var tvDetailAgeGroup: TextView
     private lateinit var tvDetailVenueType: TextView
     private lateinit var tvDetailOfferings: TextView
+    private lateinit var btnShowOnMap: MaterialButton
 
     private var isUpdatingRsvpUi = false
+    private var currentEvent: EventUi? = null
 
     private val dateFormat =
         SimpleDateFormat("MM/dd/yyyy h:mm a", Locale.getDefault())
@@ -63,6 +67,7 @@ class EventDetailActivity : AppCompatActivity() {
         tvDetailAgeGroup = findViewById(R.id.tvDetailAgeGroup)
         tvDetailVenueType = findViewById(R.id.tvDetailVenueType)
         tvDetailOfferings = findViewById(R.id.tvDetailOfferings)
+        btnShowOnMap = findViewById(R.id.btnShowOnMap)
 
         ivInterestedIcon = findViewById(R.id.ivInterestedIcon)
         cbGoing = findViewById(R.id.cbGoing)
@@ -72,6 +77,22 @@ class EventDetailActivity : AppCompatActivity() {
             Toast.makeText(this, "Missing event id", Toast.LENGTH_SHORT).show()
             finish()
             return
+        }
+
+        btnShowOnMap.setOnClickListener {
+            val event = currentEvent ?: return@setOnClickListener
+
+            if (event.lat == 0.0 && event.lng == 0.0) {
+                Toast.makeText(this, "No map location available for this event", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val intent = Intent(this, MainActivity::class.java).apply {
+                putExtra("open_tab", "map")
+                putExtra("center_lat", event.lat)
+                putExtra("center_lng", event.lng)
+            }
+            startActivity(intent)
         }
 
         loadEvent(eventId)
@@ -90,6 +111,7 @@ class EventDetailActivity : AppCompatActivity() {
                 }
 
                 val ui = dto.toUi(doc.id)
+                currentEvent = ui
 
                 var interestedCount = ui.interestedCount.coerceAtLeast(0)
                 var goingCount = ui.goingCount.coerceAtLeast(0)

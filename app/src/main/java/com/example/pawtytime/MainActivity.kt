@@ -20,7 +20,7 @@ import coil.size.Scale
 
 
 class MainActivity : AppCompatActivity() {
-
+    private var suppressNavCallback = false
     lateinit var bottomNav : MaterialButtonToggleGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,11 +56,12 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        loadFragment(HomeScreen())
+
         bottomNav = findViewById(R.id.bottomNav)
         bottomNav.check(R.id.nav_home)
         bottomNav.addOnButtonCheckedListener { group, checkedId, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
+            if (suppressNavCallback) return@addOnButtonCheckedListener
 
             when (checkedId) {
                 R.id.nav_home -> loadFragment(HomeScreen())
@@ -166,7 +167,7 @@ class MainActivity : AppCompatActivity() {
                 loadFragment(calendarScreen())
                 popupWindow.dismiss()
             }
-            // Added Logout to MainActivity
+
             dropdownView.findViewById<LinearLayout>(R.id.logoutBtn).setOnClickListener {
                 FirebaseAuth.getInstance().signOut()
 
@@ -192,14 +193,46 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-
-
+        handleIntent(intent)
     }
     fun loadFragment(fragment: Fragment){
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.container,fragment)
             .addToBackStack(null)
         transaction.commit()
+    }
+
+    private fun handleIntent(intent: Intent?) {
+        val openTab = intent?.getStringExtra("open_tab")
+
+        if (openTab == "map") {
+            val centerLat = intent.getDoubleExtra("center_lat", Double.NaN)
+            val centerLng = intent.getDoubleExtra("center_lng", Double.NaN)
+
+            val mapFragment = if (!centerLat.isNaN() && !centerLng.isNaN()) {
+                MapScreen.newCentered(centerLat, centerLng)
+            } else {
+                MapScreen()
+            }
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.container, mapFragment)
+                .commit()
+
+            suppressNavCallback = true
+            bottomNav.check(R.id.nav_map)
+            suppressNavCallback = false
+            return
+        } else {
+            bottomNav.check(R.id.nav_home)
+            loadFragment(HomeScreen())
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleIntent(intent)
     }
 }
 

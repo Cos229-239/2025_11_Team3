@@ -43,8 +43,35 @@ class MapScreen : Fragment(), OnMapReadyCallback {
         var marker: com.google.android.gms.maps.model.Marker? = null
     )
 
+
+    companion object {
+        private const val ARG_CENTER_LAT = "center_lat"
+        private const val ARG_CENTER_LNG = "center_lng"
+
+        fun newCentered(lat: Double, lng: Double): MapScreen {
+            return MapScreen().apply {
+                arguments = Bundle().apply {
+                    putDouble(ARG_CENTER_LAT, lat)
+                    putDouble(ARG_CENTER_LNG, lng)
+                }
+            }
+        }
+    }
+
+    private fun getCenterFromArgs(): LatLng? {
+        val lat = arguments?.getDouble(ARG_CENTER_LAT, Double.NaN) ?: Double.NaN
+        val lng = arguments?.getDouble(ARG_CENTER_LNG, Double.NaN) ?: Double.NaN
+
+        return if (!lat.isNaN() && !lng.isNaN()) {
+            LatLng(lat, lng)
+        } else {
+            null
+        }
+    }
+
     private val allItems = mutableListOf<MapItem>()
     private var userHomeLatLng: LatLng? = null
+    private var centerLatLng: LatLng? = null
 
     private lateinit var mapView: MapView
     private var googleMap: GoogleMap? = null
@@ -68,7 +95,15 @@ class MapScreen : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
-        loadUserLocationAndCenterMap()
+
+        val centerFromArgs = getCenterFromArgs()
+        if (centerFromArgs != null) {
+            googleMap?.moveCamera(
+                CameraUpdateFactory.newLatLngZoom(centerFromArgs, 14f)
+            )
+        } else {
+            loadUserLocationAndCenterMap()
+        }
 
         allItems.clear()
         loadEventPinsFromFirestore()
@@ -76,6 +111,10 @@ class MapScreen : Fragment(), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val lat = arguments?.getDouble(ARG_CENTER_LAT, Double.NaN) ?: Double.NaN
+        val lng = arguments?.getDouble(ARG_CENTER_LNG, Double.NaN) ?: Double.NaN
+        centerLatLng = if (!lat.isNaN() && !lng.isNaN()) LatLng(lat, lng) else null
 
         val zoomIn = view.findViewById<ImageButton>(R.id.btnZoomIn)
         val zoomOut = view.findViewById<ImageButton>(R.id.btnZoomOut)
