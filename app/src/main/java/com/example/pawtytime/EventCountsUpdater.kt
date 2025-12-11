@@ -29,6 +29,7 @@ object EventCountsUpdater {
                 deltaInterested = -1
                 deltaGoing = 1
             }
+
             "going" to "interested" -> {
                 deltaInterested = 1
                 deltaGoing = -1
@@ -39,15 +40,13 @@ object EventCountsUpdater {
 
         onLocalDelta?.invoke(deltaInterested, deltaGoing)
 
-        val updates = mutableMapOf<String, Any>()
-
-        updates["interestedCount"] = FieldValue.increment(deltaInterested)
-        updates["goingCount"] = FieldValue.increment(deltaGoing)
+        val updates = mapOf(
+            "interestedCount" to FieldValue.increment(deltaInterested),
+            "goingCount" to FieldValue.increment(deltaGoing)
+        )
 
         db.collection("events")
             .document(eventId)
             .update(updates)
-            .addOnFailureListener {
-            }
     }
 }

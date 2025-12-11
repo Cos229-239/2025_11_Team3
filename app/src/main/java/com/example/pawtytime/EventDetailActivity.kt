@@ -120,17 +120,21 @@ class EventDetailActivity : AppCompatActivity() {
                 tvDateTime.text = dateFormat.format(ui.dateTime.toDate())
                 tvVenueName.text = ui.venueName.ifBlank { "" }
                 tvVenueAddress.text =
-                    "${ui.addressLine}, ${ui.city}, ${ui.state} ${ui.zip}"
+                    getString(R.string.event_address, ui.addressLine, ui.city, ui.state, ui.zip)
 
-                tvInterested.text = "Interested: $interestedCount"
-                tvGoing.text = "Going: $goingCount"
-                tvDetailPrivacy.text = if (ui.isPublic) "Privacy: Public" else "Privacy: Private"
+                tvInterested.text = getString(R.string.interested_count, interestedCount)
+                tvGoing.text = getString(R.string.going_count, goingCount)
+                tvDetailPrivacy.text = if (ui.isPublic)
+                    getString(R.string.privacy_public)
+                else
+                    getString(R.string.privacy_private)
                 val ageLabel = when (ui.ageGroup) {
                     "18_plus" -> "18+"
                     "21_plus" -> "21+"
                     else -> "All Ages"
                 }
-                tvDetailAgeGroup.text = "Age Group: $ageLabel"
+                tvDetailAgeGroup.text =
+                    getString(R.string.age_group_label, ageLabel)
 
                 val typeParts = mutableListOf<String>()
                 if (ui.indoor) typeParts.add("Indoor")
@@ -163,6 +167,11 @@ class EventDetailActivity : AppCompatActivity() {
                         .into(ivHeader)
                 } else {
                     ivHeader.setImageResource(R.drawable.sample_dog)
+                }
+                if (interestedCount == 0L && goingCount == 0L) {
+                    EventRsvpState.interestedIds.remove(ui.id)
+                    EventRsvpState.goingIds.remove(ui.id)
+                    EventRsvpState.saveForEvent(this, ui.id)
                 }
 
                 EventRsvpState.loadForEvent(this, ui.id)
@@ -200,8 +209,8 @@ class EventDetailActivity : AppCompatActivity() {
                     EventCountsUpdater.updateCounts(ui.id, oldStatus, newStatus) { dInt, dGo ->
                         interestedCount = (interestedCount + dInt).coerceAtLeast(0)
                         goingCount     = (goingCount + dGo).coerceAtLeast(0)
-                        tvInterested.text = "Interested: $interestedCount"
-                        tvGoing.text = "Going: $goingCount"
+                        tvInterested.text = getString(R.string.interested_count, interestedCount)
+                        tvGoing.text = getString(R.string.going_count, goingCount)
                     }
                 }
 
@@ -223,8 +232,8 @@ class EventDetailActivity : AppCompatActivity() {
                     EventCountsUpdater.updateCounts(ui.id, oldStatus, newStatus) { dInt, dGo ->
                         interestedCount = (interestedCount + dInt).coerceAtLeast(0)
                         goingCount     = (goingCount + dGo).coerceAtLeast(0)
-                        tvInterested.text = "Interested: $interestedCount"
-                        tvGoing.text = "Going: $goingCount"
+                        tvInterested.text = getString(R.string.interested_count, interestedCount)
+                        tvGoing.text = getString(R.string.going_count, goingCount)
                     }
                 }
 
@@ -238,7 +247,7 @@ class EventDetailActivity : AppCompatActivity() {
 
     private fun loadHost(hostUid: String?) {
         if (hostUid.isNullOrBlank()) {
-            tvHostName.text = "Host"
+            tvHostName.text = getString(R.string.default_host_name)
             rbHostRating.rating = 0f
             ivHostAvatar.setImageResource(R.drawable.ic_profile)
             return
@@ -250,7 +259,7 @@ class EventDetailActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener { doc ->
                 if (!doc.exists()) {
-                    tvHostName.text = "Host"
+                    tvHostName.text = getString(R.string.default_host_name)
                     rbHostRating.rating = 0f
                     ivHostAvatar.setImageResource(R.drawable.ic_profile)
                     return@addOnSuccessListener

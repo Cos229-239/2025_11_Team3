@@ -163,4 +163,14 @@
     <string name="select_event_image">Select Event Image</string>
     <string name="edit_event">Edit Event</string>
     <string name="no_events">Ruh-roh! There are no scheduled events near you. Check back soon! 🐾</string>
+    <string name="event_address">%1$s, %2$s, %3$s %4$s</string>
+    <string name="interested_count">Interested: %1$d</string>
+    <string name="going_count">Going: %1$d</string>
+    <string name="privacy_public">Privacy: Public</string>
+    <string name="privacy_private">Privacy: Private</string>
+    <string name="age_group_label">Age Group: %1$s</string>
+    <string name="venue_type_label">Venue Type: %1$s</string>
+    <string name="offerings_label">Offerings: %1$s</string>
+    <string name="details_label">Pawty Details</string>
+    <string name="default_host_name">Host</string>
 </resources>
