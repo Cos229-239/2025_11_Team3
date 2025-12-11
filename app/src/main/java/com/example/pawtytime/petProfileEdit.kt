@@ -1,59 +1,234 @@
 package com.example.pawtytime
 
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.Spinner
+import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
+import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [petProfileEdit.newInstance] factory method to
- * create an instance of this fragment.
- */
-class petProfileEdit : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+class PetProfileEdit : Fragment() {
+
+    private val auth by lazy { FirebaseAuth.getInstance() }
+
+    private val db by lazy { FirebaseFirestore.getInstance() }
+
+   private val uploader by lazy { CloudinaryUploader(requireContext()) }
+
+    private lateinit var editPetPhoto: ImageButton
+
+    private lateinit var editPetVaccinations: ImageButton
+    private var petPhotoUrl: String? = null
+
+    private var petVaccinationsUrl: String? = null
+
+    val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+
+    private lateinit var petEditSpinner: Spinner
+
+    fun snack(msg: String) =
+
+        view?.let { Snackbar.make(it, msg, Snackbar.LENGTH_SHORT) }?.show()
+
+
+    private val editPetImage = registerForActivityResult(ActivityResultContracts.GetContent()){
+            uri: Uri? ->
+        uri ?: return@registerForActivityResult
+        editPetPhoto.setImageURI(uri)
+        snack("Image is uploading...")
+
+        uploader.upload(uri){
+                url ->
+            petPhotoUrl = url
+            snack(if (url != null) "Photo uploaded!" else "Upload has failed")
         }
     }
+
+
+
+    private val editPetVax = registerForActivityResult(ActivityResultContracts.GetContent()){
+            uri: Uri? ->
+        uri ?: return@registerForActivityResult
+        editPetVaccinations.setImageURI(uri)
+        snack("Image is uploading...")
+
+        uploader.upload(uri){
+                url ->
+            petVaccinationsUrl = url
+            snack(if (url != null) "Photo uploaded!" else "Upload has failed")
+        }
+    }
+
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_pet_profile_edit, container, false)
-    }
+        val view = inflater.inflate(R.layout.fragment_pet_profile_edit, container, false)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment petProfileEdit.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            petProfileEdit().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+        // spinner for pet filter
+        petEditSpinner = view.findViewById<Spinner>(R.id.pet_profile_edit_filter_pet)
+
+        // editable fields
+        val petNameField = view.findViewById<EditText>(R.id.pet_profile_edit_petname)
+        val petBreed = view.findViewById<EditText>(R.id.pet_profile_edit_pet_breed)
+        val petBirthdate = view.findViewById<EditText>(R.id.pet_profile_edit_birthdate)
+        val petGender = view.findViewById<EditText>(R.id.pet_profile_edit_sex)
+        val petSpecies = view.findViewById<EditText>(R.id.pet_profile_edit_species)
+        val petWeight = view.findViewById<EditText>(R.id.pet_profile_edit_weight)
+        val petDislikes = view.findViewById<EditText>(R.id.pet_profile_edit_dislikes)
+        val petLikes = view.findViewById<EditText>(R.id.pet_profile_edit_likes)
+        val petMedicalConditions = view.findViewById<EditText>(R.id.pet_profile_edit_medical_conditions)
+        val petMedications = view.findViewById<EditText>(R.id.pet_profile_edit_medications)
+        val petVaccinations = view.findViewById<EditText>(R.id.pet_profile_edit_vaccinations)
+        val petSpayedNeutered = view.findViewById<EditText>(R.id.pet_profile_edit_spayed_neutered)
+
+        // Buttons
+        val addMorePets = view.findViewById<Button>(R.id.pet_profile_edit_add_pet)
+        val backBtn = view.findViewById<Button>(R.id.btn_edit_pet_profile_back)
+        val saveChanges = view.findViewById<Button>(R.id.edit_pet_profile_save_changes)
+
+        // Change images buttons
+        editPetPhoto = view.findViewById(R.id.pet_profile_edit_pic_btn)
+        editPetVaccinations = view.findViewById(R.id.pet_profile_edit_vax_upload)
+
+
+
+        // this function populates the spinner for the pet filter:
+        fun populateSpinner(list: List<String>){
+            val listAdapter = object : ArrayAdapter<String>(
+                requireContext(),
+                R.layout.pets_default_spinner, list)
+            {
+
+                override fun isEnabled(position: Int): Boolean {
+                    return position != 0
+                }
+
+                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup):View {
+                    val view = super.getDropDownView(position, convertView, parent) as TextView
+                    if(position == 0){
+                        view.setTextColor(Color.GRAY)
+                    } else {
+                        view.setTextColor(Color.BLACK)
+                    }
+                    return view
                 }
             }
+            listAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            petEditSpinner.adapter = listAdapter
+        }
+
+
+        // populate the spinner:
+        currentUserId?.let{
+                uid ->
+            db.collection("users")
+                .document(uid)
+                .collection("pets")
+                .get()
+                .addOnSuccessListener {
+                        querySnapshot ->
+                    val petList = mutableListOf("Filter Pet")
+                    for(document in querySnapshot.documents){
+                        document.getString("name")?.let{
+                                petName ->
+                            petList.add(petName)
+                        }
+                    }
+                    populateSpinner(petList)
+                }
+
+        }
+
+
+        // This method will show the information for a specific pet:
+        fun updatePetsInfo(petName: String){
+            db.collection("users").document(currentUserId ?: "")
+                .collection("pets")
+                .whereEqualTo("name",petName)
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    for (document in querySnapshot.documents) {
+                        petNameField.setText(document.getString("name"))
+                        petBreed.setText(document.getString("breed"))
+                        petBirthdate.setText(document.getString("birthdate"))
+                        petGender.setText(document.getString("sex"))
+                        petSpecies.setText(document.getString("species"))
+                        petWeight.setText(document.getString("weightLbs"))
+                        petDislikes.setText(document.getString("dislikes"))
+                        petLikes.setText(document.getString("likes"))
+                        petMedicalConditions.setText(document.getString("medicalConditions"))
+                        petMedications.setText(document.getString("medications"))
+                        petVaccinations.setText(document.getString("vaccinations"))
+                        petSpayedNeutered.setText(document.getString("spayedNeutered"))
+
+                        petVaccinationsUrl = document.getString("vaxRecordUrl")
+                        petPhotoUrl = document.getString("photoUrl")
+
+                        if(!petPhotoUrl.isNullOrEmpty()) {
+                            Glide.with(this)
+                                .load(petPhotoUrl)
+                                .into(editPetPhoto)
+                        }
+
+                        if(!petVaccinationsUrl.isNullOrEmpty()) {
+                            Glide.with(this)
+                                .load(petVaccinationsUrl)
+                                .into(editPetVaccinations)
+                        }
+                    }
+                }
+        }
+
+        petEditSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+
+                if (position == 0) return
+                val selectedPetName = parent.getItemAtPosition(position) as String
+                updatePetsInfo(selectedPetName)
+
+                editPetPhoto.setOnClickListener {
+                    editPetImage.launch("image/*")
+                }
+                editPetVaccinations.setOnClickListener {
+                    editPetVax.launch("image/*")
+                }
+
+
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+        }
+
+        return view
     }
+
+
 }

@@ -7,7 +7,7 @@
     tools:context=".Notifications"
     android:background="@color/pawty_yellow">
 
-
+//
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -22,16 +22,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [profileView.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ProfileView : Fragment(R.layout.fragment_profile_view) {
    private lateinit var recyclerView: RecyclerView
 
@@ -178,6 +169,8 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
         postsTab.setOnClickListener {
             loadProfilePosts(adapter)
         }
+
+        // determine what happens when a spinner item is clicked:
         postPetSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
@@ -204,12 +197,15 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
 
 
         }
+
+        // followers and following button will go to a different page
         followersBtn.setOnClickListener {
 
         }
         followingBtn.setOnClickListener {
 
         }
+
 
         backBtn.setOnClickListener(){
 

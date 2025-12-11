@@ -175,9 +175,14 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/view_profile_text_info"
+    android:layout_below="@id/profile_info_bar"
+    android:orientation="horizontal">
             <LinearLayout
-                android:id="@+id/view_profile_text_info"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -205,7 +210,13 @@
                     android:paddingRight="10dp"
                     android:paddingTop="5dp"/>
             </LinearLayout>
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/profile_view_type"
+        android:text="Profile Type"
+        android:layout_gravity="right"/>
+</LinearLayout>
         <LinearLayout
             android:id="@+id/view_profile_tabs"
             android:layout_width="match_parent"
