@@ -13,10 +13,14 @@ import androidx.appcompat.content.res.AppCompatResources
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
-import java.util.Calendar
 import androidx.core.content.ContextCompat
 import android.content.res.ColorStateList
-
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.bumptech.glide.Glide
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class SchedulePlaydateActivity : AppCompatActivity() {
 
@@ -25,6 +29,15 @@ class SchedulePlaydateActivity : AppCompatActivity() {
         const val EXTRA_PET_NAME = "extra_pet_name"
         const val EXTRA_PET_AGE = "extra_pet_age"
     }
+
+    // Firebase
+    private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
+
+    // Pet info to reuse later
+    private var petId: String? = null
+    private var petName: String? = null
+    private var petAgeYears: Int = -1
 
     // Top info
     private lateinit var ivPetPhoto: ImageView
@@ -74,10 +87,14 @@ class SchedulePlaydateActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_schedule_playdate)
 
+        // --- Firebase init ---
+        auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
+
         // --- Get pet info from Intent ---
-        val petId = intent.getStringExtra(EXTRA_PET_ID)
-        val petName = intent.getStringExtra(EXTRA_PET_NAME) ?: "Your Pet"
-        val petAge = intent.getIntExtra(EXTRA_PET_AGE, -1)
+        petId = intent.getStringExtra(EXTRA_PET_ID)
+        petName = intent.getStringExtra(EXTRA_PET_NAME)
+        petAgeYears = intent.getIntExtra(EXTRA_PET_AGE, -1)
 
         // --- Bind views ---
         ivPetPhoto = findViewById(R.id.ivPetPhoto)
@@ -119,9 +136,18 @@ class SchedulePlaydateActivity : AppCompatActivity() {
         btnCreatePlaydate = findViewById(R.id.btnCreatePlaydate)
 
         // --- Fill top section with pet info ---
-        tvPetNameAge.text = if (petAge > 0) "$petName ($petAge yrs)" else petName
-        tvScheduleWith.text = "Schedule with $petName"
-        // TODO: later load real photo into ivPetPhoto
+        val initialName = petName ?: "Loading..."
+        tvPetNameAge.text = initialName
+        tvScheduleWith.text = "Schedule with $initialName"
+
+        // Try to load  actual pet
+        if (petId != null) {
+            // We were given a specific petId
+            loadPetDetailsFromFirestore(petId!!)
+        } else {
+            // Fallback
+            loadFirstPetForCurrentUser()
+        }
 
         // --- Privacy ---
         updatePrivacyViews()
@@ -150,7 +176,7 @@ class SchedulePlaydateActivity : AppCompatActivity() {
 
         // --- Create Playdate ---
         btnCreatePlaydate.setOnClickListener {
-            savePlaydate(petId, petName)
+            savePlaydate(petId, petName ?: "Your Pet")
         }
     }
 
@@ -347,7 +373,11 @@ class SchedulePlaydateActivity : AppCompatActivity() {
         val selectedTextColor = ContextCompat.getColor(this, R.color.pawty_cream)
         val unselectedTextColor = ContextCompat.getColor(this, R.color.pawty_dark_blue)
 
-        fun wireActivity(button: MaterialButton, baseLabel: String, onToggle: ((Boolean) -> Unit)? = null) {
+        fun wireActivity(
+            button: MaterialButton,
+            baseLabel: String,
+            onToggle: ((Boolean) -> Unit)? = null
+        ) {
             button.text = baseLabel
             button.tag = false
             button.backgroundTintList = unselectedBg
@@ -383,6 +413,127 @@ class SchedulePlaydateActivity : AppCompatActivity() {
         layoutActivityOther.visibility = View.GONE
     }
 
+    // ---------- LOAD PET FROM FIRESTORE ----------
+
+    private fun loadPetDetailsFromFirestore(petId: String) {
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            Toast.makeText(this, "Not signed in, can't load pet", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        db.collection("users")
+            .document(currentUser.uid)
+            .collection("pets")
+            .document(petId)
+            .get()
+            .addOnSuccessListener { doc ->
+                if (doc != null && doc.exists()) {
+                    val nameFromDb = doc.getString("name") ?: petName ?: "Your Pet"
+                    val birthdate = doc.getString("birthdate") // stored like "10/15/20"
+                    val photoUrl = doc.getString("photoUrl")   // matches your Firestore field
+
+                    petName = nameFromDb
+                    petAgeYears = calculateAgeYears(birthdate)
+
+                    // Update UI with real name + age
+                    if (petAgeYears > 0) {
+                        tvPetNameAge.text = "$nameFromDb ($petAgeYears yrs)"
+                    } else {
+                        tvPetNameAge.text = nameFromDb
+                    }
+                    tvScheduleWith.text = "Schedule with $nameFromDb"
+
+                    // Load photo via Glide if available
+                    if (!photoUrl.isNullOrEmpty()) {
+                        Glide.with(this)
+                            .load(photoUrl)
+                            .into(ivPetPhoto)
+                    }
+                } else {
+                    Toast.makeText(this, "Pet not found", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(
+                    this,
+                    "Failed to load pet: ${e.localizedMessage}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+    }
+
+    private fun loadFirstPetForCurrentUser() {
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            Toast.makeText(this, "Not signed in, can't load pets", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        db.collection("users")
+            .document(currentUser.uid)
+            .collection("pets")
+            .limit(1)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val doc = snapshot.documents.firstOrNull()
+                if (doc != null) {
+                    val id = doc.id
+                    petId = id
+
+                    val nameFromDb = doc.getString("name") ?: "Your Pet"
+                    val birthdate = doc.getString("birthdate")
+                    val photoUrl = doc.getString("photoUrl")   // <-- matches your field
+
+                    petName = nameFromDb
+                    petAgeYears = calculateAgeYears(birthdate)
+
+                    if (petAgeYears > 0) {
+                        tvPetNameAge.text = "$nameFromDb ($petAgeYears yrs)"
+                    } else {
+                        tvPetNameAge.text = nameFromDb
+                    }
+                    tvScheduleWith.text = "Schedule with $nameFromDb"
+
+                    if (!photoUrl.isNullOrEmpty()) {
+                        Glide.with(this)
+                            .load(photoUrl)
+                            .into(ivPetPhoto)
+                    }
+                } else {
+                    Toast.makeText(this, "No pets found for this user", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(
+                    this,
+                    "Failed to load pets: ${e.localizedMessage}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+    }
+
+
+    private fun calculateAgeYears(birthdateStr: String?): Int {
+        if (birthdateStr.isNullOrBlank()) return -1
+
+        return try {
+            // Firestore value is like "10/15/20"
+            val sdf = SimpleDateFormat("MM/dd/yy", Locale.US)
+            val birthDate = sdf.parse(birthdateStr) ?: return -1
+
+            val now = Calendar.getInstance()
+            val dob = Calendar.getInstance().apply { time = birthDate }
+
+            var age = now.get(Calendar.YEAR) - dob.get(Calendar.YEAR)
+            if (now.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+                age--
+            }
+            age
+        } catch (e: Exception) {
+            -1
+        }
+    }
 
     // ---------- SAVE / SUMMARY ----------
 
@@ -395,7 +546,6 @@ class SchedulePlaydateActivity : AppCompatActivity() {
                 selectedDays.add(index)
             }
         }
-
 
         // Collect activities
         val activities = mutableListOf<String>()
@@ -414,8 +564,6 @@ class SchedulePlaydateActivity : AppCompatActivity() {
                 activities.add("Other")
             }
         }
-
-
 
         val timeRange = btnTimeRange.text.toString()
         val dateStr = selectedDateDisplay ?: "No date chosen"
