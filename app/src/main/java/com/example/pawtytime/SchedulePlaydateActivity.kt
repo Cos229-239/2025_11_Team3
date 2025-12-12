@@ -233,6 +233,7 @@ class SchedulePlaydateActivity : AppCompatActivity() {
             layoutDaysRow.visibility = View.GONE
 
             // Mark all days selected visually + in tag
+            //
             dayButtons.forEach { dayBtn ->
                 dayBtn.tag = true
                 dayBtn.backgroundTintList = selectedBg
