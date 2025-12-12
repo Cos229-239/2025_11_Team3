@@ -7,7 +7,6 @@
     tools:context=".Notifications"
     android:background="@color/pawty_yellow">
 
-//
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -40,14 +39,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"/>
-            <ImageButton
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center_vertical"
-                android:contentDescription="@string/more_options_btn"
-                android:id="@+id/profile_settings"
-                android:src="@drawable/profile_settings"
-                android:background="?attr/selectableItemBackgroundBorderless"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -208,10 +200,47 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/dif_profile_unique_btns"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_below="@id/view_profile_text_info">
+
+            <Button
+                android:id="@+id/different_profiles_follow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/pawty_pill_blue"
+                android:text="Follow"
+                android:textSize="18sp"
+                android:layout_marginEnd="30dp"/>
+
+            <Button
+                android:id="@+id/different_profiles_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/pawty_pill_blue"
+                android:text="Message"
+                android:textSize="18sp"
+                android:layout_marginEnd="30dp"/>
+
+            <ImageButton
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/more_options_btn"
+                android:id="@+id/profile_settings"
+                android:src="@drawable/profile_settings"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/view_profile_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/view_profile_text_info"
+            android:layout_below="@id/dif_profile_unique_btns"
             android:orientation="horizontal"
             android:layout_marginTop="10dp"
             android:background="@drawable/round_corners">

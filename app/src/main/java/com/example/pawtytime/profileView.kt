@@ -54,6 +54,7 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
         val nameText = view.findViewById<TextView>(R.id.view_profile_name_text)
         val bioText = view.findViewById<TextView>(R.id.profile_bio_more)
         val profPhoto = view.findViewById<ImageView>(R.id.profile_view_picture)
+        val profTypeText = view.findViewById<TextView>(R.id.profile_view_type)
 
         // define each button
         val backBtn = view.findViewById<ImageButton>(R.id.profile_view_back_Btn)
@@ -95,6 +96,10 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
                     Glide.with(this)
                         .load(profileUrl)
                         .into(profPhoto)
+
+                    val profileType = doc.get("profileTypes") as? List<String> ?: emptyList()
+
+                    profTypeText.text = profileType.joinToString("\n")
                 }
         }
 

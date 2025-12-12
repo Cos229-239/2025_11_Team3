@@ -599,7 +599,11 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
 
             h.chipFollow?.setOnClickListener {
                 item.following = !item.following
+                if(item.authorUid != currentUid) {
+                    followUser(item.authorUid, item.following)
+                }
                 notifyItemChanged(h.bindingAdapterPosition, PAYLOAD_FOLLOW)
+
             }
         }
 
@@ -997,6 +1001,34 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                 .show()
         }
 
+        private fun followUser(targetUserId: String, followState: Boolean) {
+
+            val followData = hashMapOf("timestamp" to com.google.firebase.firestore.FieldValue.serverTimestamp())
+            val currentId: String = auth.currentUser?.uid.toString()
+
+            db.runTransaction { transaction ->
+                val currUserFollowingRef = db.collection("users").document(currentId)
+                    .collection("following").document(targetUserId)
+                val targetUserFollowRef = db.collection("users").document(targetUserId)
+                    .collection("followers").document(currentId)
+
+
+                if (followState){
+                    transaction.set(currUserFollowingRef, followData)
+                    transaction.set(targetUserFollowRef, followData)
+                } else {
+
+                    transaction.delete(currUserFollowingRef)
+                    transaction.delete(targetUserFollowRef)
+
+                }
+                null
+            }
+
+        }
+
+
+
         /* ---------------- RecyclerView plumbing ---------------- */
 
         override fun onBindViewHolder(holder: VH, position: Int, payloads: MutableList<Any>) {
@@ -1047,6 +1079,8 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                 chip.isChecked = false
             }
         }
+
+
 
         companion object {
             private const val PAYLOAD_LIKE = "like"

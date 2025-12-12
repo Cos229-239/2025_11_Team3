@@ -26,10 +26,10 @@ android:background="@color/pawty_yellow"
             android:layout_gravity="center"
             android:layout_marginBottom="25dp"
             android:id="@+id/pet_profile_edit_filter_pet"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="48dp"
             android:background="@drawable/round_corners"
-            />
+            android:clipToOutline="true"/>
 
 
         <ImageButton

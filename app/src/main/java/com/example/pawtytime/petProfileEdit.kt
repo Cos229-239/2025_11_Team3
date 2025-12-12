@@ -14,6 +14,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
@@ -199,6 +200,55 @@ class PetProfileEdit : Fragment() {
                 }
         }
 
+        // this method will save the changes for each pet
+        fun savePetChanges(petName: String){
+            val newPetName = petNameField.text.toString()
+            val newPetBreed = petBreed.text.toString()
+            val newPetBirthdate = petBirthdate.text.toString()
+            val newPetGender = petGender.text.toString()
+            val newPetSpecies = petSpecies.text.toString()
+            val newPetWeight = petWeight.text.toString()
+            val newPetDislikes = petDislikes.text.toString()
+            val newPetLikes = petLikes.text.toString()
+            val newPetMedicalConditions = petMedicalConditions.text.toString()
+            val newPetMedications = petMedications.text.toString()
+            val newPetSpayedNeutered = petSpayedNeutered.text.toString()
+            val newPetVaccinations = petVaccinations.text.toString()
+
+
+            val petProfUpdates = mutableMapOf<String, Any> (
+                "name" to newPetName,
+                "breed" to newPetBreed,
+                "birthdate" to newPetBirthdate,
+                "sex" to newPetGender,
+                "species" to newPetSpecies,
+                "weightLbs" to newPetWeight,
+                "dislikes" to newPetDislikes,
+                "likes" to newPetLikes,
+                "medicalConditions" to newPetMedicalConditions,
+                "medications" to newPetMedications,
+                "spayedNeutered" to newPetSpayedNeutered,
+                "vaccinations" to newPetVaccinations
+            )
+
+            petPhotoUrl?.let{ petProfUpdates["photoUrl"] = it }
+            petVaccinationsUrl?.let { petProfUpdates["vaxRecordUrl"] = it }
+
+            db.collection("users").document(currentUserId ?: "")
+                .collection("pets")
+                .whereEqualTo("name", petName)
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    for (document in querySnapshot.documents) {
+                        document.reference.update(petProfUpdates)
+                            .addOnSuccessListener {
+                                Toast.makeText(requireContext(), "${petName} has been updated!", Toast.LENGTH_SHORT).show()
+                                }
+                            .addOnFailureListener { Toast.makeText(requireContext(), "Update has Failed!", Toast.LENGTH_SHORT).show() }
+                            }
+                    }
+        }
+
         petEditSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
@@ -219,13 +269,19 @@ class PetProfileEdit : Fragment() {
                 }
 
 
-
+                saveChanges.setOnClickListener {
+                    savePetChanges(selectedPetName)
+                }
             }
+
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 TODO("Not yet implemented")
             }
         }
+
+        addMorePets.setOnClickListener { (activity as? MainActivity)?.loadFragment(Pet_edit_add_pets()) }
+
 
         return view
     }
