@@ -159,12 +159,12 @@ class MainActivity : AppCompatActivity() {
                 popupWindow.dismiss()
             }
             dropdownView.findViewById<LinearLayout>(R.id.go_to_edit_pet_profile).setOnClickListener{
-                loadFragment(petProfileEdit())
+                loadFragment(PetProfileEdit())
                 popupWindow.dismiss()
             }
 
             dropdownView.findViewById<LinearLayout>(R.id.calendarBtn).setOnClickListener {
-                loadFragment(calendarScreen())
+                loadFragment(CalendarScreen())
                 popupWindow.dismiss()
             }
 

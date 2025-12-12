@@ -1,5 +1,6 @@
 package com.example.pawtytime
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -21,16 +22,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [profileView.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ProfileView : Fragment(R.layout.fragment_profile_view) {
    private lateinit var recyclerView: RecyclerView
 
@@ -62,6 +54,7 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
         val nameText = view.findViewById<TextView>(R.id.view_profile_name_text)
         val bioText = view.findViewById<TextView>(R.id.profile_bio_more)
         val profPhoto = view.findViewById<ImageView>(R.id.profile_view_picture)
+        val profTypeText = view.findViewById<TextView>(R.id.profile_view_type)
 
         // define each button
         val backBtn = view.findViewById<ImageButton>(R.id.profile_view_back_Btn)
@@ -103,14 +96,35 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
                     Glide.with(this)
                         .load(profileUrl)
                         .into(profPhoto)
+
+                    val profileType = doc.get("profileTypes") as? List<String> ?: emptyList()
+
+                    profTypeText.text = profileType.joinToString("\n")
                 }
         }
 
 
         // separate method to populate spinner with names
-        fun populateSpinner(List: List<String>){
-            val listAdapter = ArrayAdapter(requireContext(), R.layout.pets_default_spinner, List)
+        fun populateSpinner(list: List<String>){
+            val listAdapter = object : ArrayAdapter<String>(
+                requireContext(),
+                R.layout.pets_default_spinner, list)
+            {
 
+                override fun isEnabled(position: Int): Boolean {
+                    return position != 0
+                }
+
+                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup):View {
+                   val view = super.getDropDownView(position, convertView, parent) as TextView
+                    if(position == 0){
+                        view.setTextColor(Color.GRAY)
+                    } else {
+                        view.setTextColor(Color.BLACK)
+                    }
+                    return view
+                }
+            }
             listAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             postPetSpinner.adapter = listAdapter
         }
@@ -125,7 +139,7 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
                 .get()
                 .addOnSuccessListener {
                     querySnapshot ->
-                    val petList = mutableListOf<String>()
+                    val petList = mutableListOf("Pet Posts")
                     for(document in querySnapshot.documents){
                         document.getString("name")?.let{
                             petName ->
@@ -156,10 +170,12 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
 
 
 
-        //tab switching
+
         postsTab.setOnClickListener {
             loadProfilePosts(adapter)
         }
+
+        // determine what happens when a spinner item is clicked:
         postPetSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
@@ -168,6 +184,7 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
                 id: Long
             ) {
 
+                if( position == 0) return
                 val selectedPetName = parent.getItemAtPosition(position) as String
                 loadPetPosts(adapter, selectedPetName)
             }
@@ -185,12 +202,15 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
 
 
         }
+
+        // followers and following button will go to a different page
         followersBtn.setOnClickListener {
 
         }
         followingBtn.setOnClickListener {
 
         }
+
 
         backBtn.setOnClickListener(){
 

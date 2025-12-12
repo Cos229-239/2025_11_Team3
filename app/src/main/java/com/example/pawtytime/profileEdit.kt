@@ -114,7 +114,7 @@ class ProfileEdit : Fragment() {
         }
 
 
-        // loading current user (which should be the only one that will be edited)
+        // loading current user
         db.collection("users").document(userId ?: "")
             .get()
             .addOnSuccessListener{
@@ -207,13 +207,13 @@ class ProfileEdit : Fragment() {
                 "phone"     to newPhone,
                 "location"  to newLocation,
                 "bio"       to newBio,
+                "profileTypes" to profileTypes
             )
 
             photoUrl?.let { url ->
                 profUpdates["profileUrl"] = url
             }
 
-            profUpdates["profileTypes"] = profileTypes
             idFrontUrl?.let { profUpdates["idFrontUrl"] = it }
             idBackUrl?.let { profUpdates["idBackUrl"] = it }
 
@@ -237,7 +237,7 @@ class ProfileEdit : Fragment() {
         }
 
         petEditBtn.setOnClickListener{
-            (activity as? MainActivity)?.loadFragment(petProfileEdit())
+            (activity as? MainActivity)?.loadFragment(PetProfileEdit())
         }
         return view
     }

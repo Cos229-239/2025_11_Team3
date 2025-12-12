@@ -1,130 +1,522 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".Notifications"
+android:background="@color/pawty_yellow"
+    >
+
+<ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Notifications"
+    android:fillViewport="true"
     android:background="@color/pawty_yellow">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:padding="25dp"
+        android:background="@drawable/round_corners_yellow"
+        android:orientation="vertical"
+        >
 
-        <ImageView
-            android:id="@+id/logo3"
-            android:layout_width="0dp"
-            android:layout_height="120dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="24dp"
-            android:contentDescription="@string/app_name"
+        <Spinner
+            android:layout_gravity="center"
+            android:layout_marginBottom="25dp"
+            android:id="@+id/pet_profile_edit_filter_pet"
+            android:layout_width="200dp"
+            android:layout_height="48dp"
+            android:background="@drawable/round_corners"
+            android:clipToOutline="true"/>
+
+
+        <ImageButton
+            android:id="@+id/pet_profile_edit_pic_btn"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/ic_profile"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_pawty_logo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Edit profile pic"/>
 
         <LinearLayout
-            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/pawty_cream"
-            android:orientation="vertical"
-            android:padding="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/logo3">
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/age"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/marcellus"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:text="@string/age"
-                android:textAlignment="center"
-                android:textColor="@color/pawty_text_primary"
-                android:textSize="20sp"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/breed"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/marcellus"
-                    android:gravity="center"
-                    android:paddingBottom="12dp"
-                    android:text="@string/breed"
-                    android:textAlignment="center"
-                    android:textColor="@color/pawty_text_primary"
-                    android:textSize="20sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
+                android:text="Pet Name:"
+                android:layout_weight="1"
+                android:textColor="@color/pawty_orange"/>
             <EditText
-                android:id="@+id/likes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/marcellus"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:text="@string/likes"
-                android:textAlignment="center"
-                android:textColor="@color/pawty_text_primary"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/dislikes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/marcellus"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:text="@string/dislikes"
-                android:textAlignment="center"
-                android:textColor="@color/pawty_text_primary"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/allergies"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/marcellus"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:text="Allergies"
-                android:textAlignment="center"
-                android:textColor="@color/pawty_text_primary"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/Bio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/marcellus"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:text="Bio"
-                android:textAlignment="center"
-                android:textColor="@color/pawty_text_primary"
-                android:textSize="20sp" />
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="pet name"
+                android:id="@+id/pet_profile_edit_petname"
+                android:textAlignment="viewEnd"
+                android:textSize="15sp"
+                android:layout_weight="1"
+                android:inputType="text"
+                android:background="@android:color/transparent"
+                android:textColor="@color/pawty_grey"/>
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#000000" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Breed: "
+                android:textColor="@color/pawty_orange"
+                android:layout_weight="1"
+                />
+            <EditText
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:id="@+id/pet_profile_edit_pet_breed"
+                android:text="breed"
+                android:textColor="@color/pawty_grey"
+                android:textSize="15sp"
+                android:background="@android:color/transparent"
+                android:inputType="text"
+                android:textAlignment="viewEnd"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#000000" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Birthdate:"
+                android:textColor="@color/pawty_orange"
+                android:layout_weight="1"
+                />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:id="@+id/pet_profile_edit_birthdate"
+                android:text="mm/dd"
+                android:textColor="@color/pawty_grey"
+                android:textSize="15sp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:inputType="text"
+                android:textAlignment="viewEnd"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#000000" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Sex:"
+                android:textColor="@color/pawty_orange"
+                android:layout_weight="1"
+                />
+
+            <EditText
+                android:id="@+id/pet_profile_edit_sex"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:inputType="text"
+                android:background="@android:color/transparent"
+                android:text="sex"
+                android:layout_weight="1"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/pawty_grey"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#000000" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Species:"
+                android:textColor="@color/pawty_orange"
+                android:layout_weight="1"
+                />
+            <EditText
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:id="@+id/pet_profile_edit_species"
+                android:text="species"
+                android:textSize="15sp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:inputType="text"
+                android:textColor="@color/pawty_grey"
+                android:textAlignment="viewEnd"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#000000" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Weight (lbs):"
+                android:textColor="@color/pawty_orange"
+                android:layout_weight="1"
+                />
+            <EditText
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:id="@+id/pet_profile_edit_weight"
+                android:text="weight"
+                android:background="@android:color/transparent"
+                android:textSize="15sp"
+                android:textColor="@color/pawty_grey"
+                android:textAlignment="viewEnd"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#000000" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Dislikes:"
+                android:textColor="@color/pawty_orange"
+                android:layout_weight="1"
+                />
+
+            <EditText
+                android:id="@+id/pet_profile_edit_dislikes"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:inputType="text"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:text="dislikes"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/pawty_grey"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#000000" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Likes:"
+                android:textColor="@color/pawty_orange"
+                android:layout_weight="1"
+                />
+
+            <EditText
+                android:background="@android:color/transparent"
+                android:layout_weight="1"
+                android:id="@+id/pet_profile_edit_likes"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:inputType="text"
+                android:text="likes"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/pawty_grey"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#000000" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Spayed/Neutered:"
+                android:textColor="@color/pawty_orange"
+                android:layout_weight="1"
+                />
+
+            <EditText
+                android:background="@android:color/transparent"
+                android:layout_weight="1"
+                android:id="@+id/pet_profile_edit_spayed_neutered"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:inputType="text"
+                android:text="yes"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/pawty_grey"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#000000" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Medical Conditions:"
+                android:textColor="@color/pawty_orange"
+                android:layout_weight="1"
+                />
+
+            <EditText
+                android:background="@android:color/transparent"
+                android:layout_weight="1"
+                android:id="@+id/pet_profile_edit_medical_conditions"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:inputType="text"
+                android:text="medical conditions"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/pawty_grey"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#000000" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Medications:"
+                android:textColor="@color/pawty_orange"
+                android:layout_weight="1"
+                />
+
+            <EditText
+                android:background="@android:color/transparent"
+                android:layout_weight="1"
+                android:id="@+id/pet_profile_edit_medications"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:inputType="text"
+                android:text="medications"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/pawty_grey"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#000000" />
+
+
+
+        <!--- Here: Put a check box for yes or no for spayed/neutured -->
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Vaccinations:"
+                android:textColor="@color/pawty_orange"
+                android:layout_weight="1"
+                />
+
+            <EditText
+                android:background="@android:color/transparent"
+                android:layout_weight="1"
+                android:id="@+id/pet_profile_edit_vaccinations"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:inputType="text"
+                android:text="vaccinations"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/pawty_grey"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#000000" />
+
+
+        <TextView
+            android:id="@+id/tvEditIdHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Upload Vaccination Records:"
+            android:textColor="@color/pawty_orange"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/pet_edit_vax_rec_upload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:gravity="center">
+
+            <LinearLayout
+                android:id="@+id/vax_recs"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+
+                <ImageButton
+                    android:id="@+id/pet_profile_edit_vax_upload"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:background="@drawable/round_corners"
+                    android:contentDescription="Upload pets vaccinations records"
+                    android:padding="8dp"
+                    android:scaleType="centerInside"
+                    android:src="@android:drawable/ic_menu_camera" />
+
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/pet_profile_edit_add_pet"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:backgroundTint="@color/pawty_yellow"
+            android:text="Add More Pet(s)"
+            android:textColor="@color/pawty_grey"
+            />
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="30dp">
+
+            <Button
+                android:id="@+id/btn_edit_pet_profile_back"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/pawty_yellow"
+                android:text="Back"
+                android:textColor="@color/pawty_grey" />
+
+            <View
+                android:layout_width="16dp"
+                android:layout_height="1dp" />
+
+            <Button
+                android:id="@+id/edit_pet_profile_save_changes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/pawty_yellow"
+                android:text="Save"
+                android:textColor="@color/pawty_grey" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
+
+
+
 </FrameLayout>
