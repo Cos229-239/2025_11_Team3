@@ -24,11 +24,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import java.util.Locale
+import com.google.firebase.firestore.FieldValue
+
 
 class HomeScreen : Fragment(R.layout.fragment_home_screen) {
 
@@ -66,7 +67,7 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
         peopleAdapter = PeopleAdapter(people) { p ->
-            Toast.makeText(requireContext(), "Open ${p.name}", Toast.LENGTH_SHORT).show()
+            openPetProfile(p.ownerUid, p.petId)
         }
         rvPeople.adapter = peopleAdapter
 
@@ -89,6 +90,15 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
         }
     }
 
+    private fun openPetProfile(ownerUid: String, petId: String) {
+        if (ownerUid.isBlank() || petId.isBlank()) return
+        val intent = Intent(requireContext(), ViewPetProfileActivity::class.java).apply {
+            putExtra(ViewPetProfileActivity.EXTRA_OWNER_UID, ownerUid)
+            putExtra(ViewPetProfileActivity.EXTRA_PET_ID, petId)
+        }
+        startActivity(intent)
+    }
+
     /* --------------------- Firestore loaders ---------------------- */
 
     private fun loadRecommendedProfiles() {
@@ -105,8 +115,11 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                         val pet = doc.toObject(Pet::class.java) ?: return@forEach
                         val displayName = pet.name.ifBlank { "Pawty Pup" }
 
+                        val ownerUid = doc.getString("ownerUid").orEmpty()
                         people.add(
                             PersonUi(
+                                petId = doc.id,
+                                ownerUid = ownerUid,
                                 name = displayName,
                                 avatarUrl = pet.photoUrl,
                                 avatarRes = R.drawable.ic_avatar_circle,
@@ -183,6 +196,8 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
 
                                     temp.add(
                                         PersonUi(
+                                            petId = doc.id,
+                                            ownerUid = ownerUid,
                                             name = displayName,
                                             avatarUrl = pet.photoUrl,
                                             avatarRes = R.drawable.ic_avatar_circle,
@@ -205,56 +220,82 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
     private fun loadFeedPosts(adapter: FeedAdapter) {
         val myUid = auth.currentUser?.uid
 
-        db.collection("posts")
-            .orderBy("createdAt", Query.Direction.DESCENDING)
-            .limit(50)
-            .get()
-            .addOnSuccessListener { snap ->
-                posts.clear()
+        fun loadPostsWithFollowing(followingIds: Set<String>) {
+            db.collection("posts")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .limit(50)
+                .get()
+                .addOnSuccessListener { snap ->
+                    posts.clear()
 
-                snap.documents.forEach { doc ->
-                    val post = doc.toObject(Post::class.java) ?: return@forEach
+                    snap.documents.forEach { doc ->
+                        val post = doc.toObject(Post::class.java) ?: return@forEach
 
-                    // Prefer the pet name; fall back to user info if missing
-                    val displayName = when {
-                        post.petName.isNotBlank() -> post.petName
-                        post.authorUsername.isNotBlank() -> post.authorUsername
-                        post.authorName.isNotBlank() -> post.authorName
-                        else -> "Pawty Friend"
+                        // Prefer the pet name; fall back to user info if missing
+                        val displayName = when {
+                            post.petName.isNotBlank() -> post.petName
+                            post.authorUsername.isNotBlank() -> post.authorUsername
+                            post.authorName.isNotBlank() -> post.authorName
+                            else -> "Pawty Friend"
+                        }
+
+                        // Prefer the pet’s photo; fall back to the user’s profile avatar
+                        val headerAvatarUrl = post.petPhotoUrl ?: post.authorAvatarUrl
+
+                        // liked state
+                        val likedBy = post.likedBy
+                        val isLiked = myUid != null && likedBy[myUid] == true
+
+                        // follow state (follow the OWNER account)
+                        val isFollowingAuthor = followingIds.contains(post.authorUid)
+
+                        posts.add(
+                            PostUi(
+                                id = if (post.id.isNotBlank()) post.id else doc.id,
+                                author = displayName,
+                                avatarUrl = headerAvatarUrl,
+                                avatarRes = R.drawable.ic_avatar_circle,
+                                photoUrl = post.photoUrl,
+                                photoRes = R.drawable.sample_dog,
+                                caption = post.caption,
+                                likeCount = post.likeCount,
+                                liked = isLiked,
+                                following = isFollowingAuthor,
+                                authorUid = post.authorUid,
+
+                                petOwnerUid = post.petOwnerUid,
+                                petId = post.petId
+                            )
+                        )
                     }
 
-                    // Prefer the pet’s photo; fall back to the user’s profile avatar
-                    val headerAvatarUrl = post.petPhotoUrl ?: post.authorAvatarUrl
-
-                    // figure out if *this* user liked this post
-                    val likedBy = post.likedBy
-                    val isLiked = myUid != null && likedBy[myUid] == true
-
-                    posts.add(
-                        PostUi(
-                            id = if (post.id.isNotBlank()) post.id else doc.id,
-                            author = displayName,
-                            avatarUrl = headerAvatarUrl,
-                            avatarRes = R.drawable.ic_avatar_circle,
-                            photoUrl = post.photoUrl,
-                            photoRes = R.drawable.sample_dog,
-                            caption = post.caption,
-                            likeCount = post.likeCount,
-                            liked = isLiked,
-                            following = false,
-                            authorUid = post.authorUid
-                        )
-                    )
+                    adapter.notifyDataSetChanged()
                 }
+                .addOnFailureListener { e ->
+                    Toast.makeText(
+                        requireContext(),
+                        "Failed to load posts: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+        }
 
-                adapter.notifyDataSetChanged()
+        // Not signed in? still load posts, just no following info
+        if (myUid.isNullOrBlank()) {
+            loadPostsWithFollowing(emptySet())
+            return
+        }
+
+        // ✅ Load who I'm following first, then load posts
+        db.collection("users").document(myUid)
+            .collection("following")
+            .get()
+            .addOnSuccessListener { followSnap ->
+                val followingIds = followSnap.documents.map { it.id }.toSet()
+                loadPostsWithFollowing(followingIds)
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(
-                    requireContext(),
-                    "Failed to load posts: ${e.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
+            .addOnFailureListener {
+                loadPostsWithFollowing(emptySet())
             }
     }
 
@@ -297,6 +338,8 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
     /* --------------------- Models ---------------------- */
 
     data class PersonUi(
+        val petId: String,
+        val ownerUid: String,
         val name: String,
         val avatarUrl: String?,
         @field:DrawableRes val avatarRes: Int,
@@ -314,7 +357,10 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
         var likeCount: Long = 0L,
         var liked: Boolean = false,
         var following: Boolean = false,
-        val authorUid: String
+        val authorUid: String,
+
+        val petOwnerUid: String = "",
+        val petId: String = ""
     )
 
     /* ----------------- People Adapter ------------------ */
@@ -433,6 +479,21 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                 }
             }
 
+            // ✅ ADD THIS BLOCK RIGHT HERE
+            val clickProfile = View.OnClickListener {
+                val ctx = h.itemView.context
+                if (item.petOwnerUid.isNotBlank() && item.petId.isNotBlank()) {
+                    val intent = Intent(ctx, ViewPetProfileActivity::class.java).apply {
+                        putExtra(ViewPetProfileActivity.EXTRA_OWNER_UID, item.petOwnerUid)
+                        putExtra(ViewPetProfileActivity.EXTRA_PET_ID, item.petId)
+                    }
+                    ctx.startActivity(intent)
+                }
+            }
+
+            h.imgAvatar?.setOnClickListener(clickProfile)
+            h.tvAuthor?.setOnClickListener(clickProfile)
+
             bindFollowChip(h, item)
 
             // ----- PHOTO + CAPTION -----
@@ -522,7 +583,6 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                     .addSnapshotListener { snapshot, e ->
                         if (e != null || snapshot == null) return@addSnapshotListener
 
-                        // Build a flat list of Comment with id + postId filled
                         val all = mutableListOf<Comment>()
                         for (doc in snapshot.documents) {
                             val c = doc.toObject(Comment::class.java) ?: continue
@@ -534,7 +594,6 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                             )
                         }
 
-                        // Separate top-level comments and replies
                         val topLevel = mutableListOf<Comment>()
                         val repliesMap = mutableMapOf<String, MutableList<Comment>>()
 
@@ -548,10 +607,8 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                             }
                         }
 
-                        // Sort top-level comments by createdAt
                         topLevel.sortBy { it.createdAt?.toDate()?.time ?: 0L }
 
-                        // Build ordered list: each parent followed by its replies
                         val ordered = mutableListOf<Comment>()
                         for (parent in topLevel) {
                             ordered.add(parent)
@@ -563,10 +620,8 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                             }
                         }
 
-                        // Send to adapter
                         h.commentsAdapter.submitList(ordered)
 
-                        // Text summary and count use total number of comments (including replies)
                         val totalCount = all.size
                         h.tvComments?.text = when (totalCount) {
                             0 -> "No comments yet"
@@ -582,7 +637,6 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                 h.tvCommentCount?.text = ""
             }
 
-            // toggle expand/collapse (comments stay collapsed until tapped)
             val toggleComments: (View) -> Unit = {
                 val showing = h.rvComments?.visibility == View.VISIBLE
                 h.rvComments?.visibility = if (showing) View.GONE else View.VISIBLE
@@ -592,19 +646,35 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
             h.rowComments?.setOnClickListener(toggleComments)
             h.btnCommentsExpand?.setOnClickListener(toggleComments)
 
-            // start comment flow: choose pet (if more than one), then type comment
             h.btnComment?.setOnClickListener {
                 startAddCommentFlow(h, item)
             }
 
+            // UPDATED FOLLOW CLICK (only change UI if Firestore succeeds)
             h.chipFollow?.setOnClickListener {
-                item.following = !item.following
-                if(item.authorUid != currentUid) {
-                    followUser(item.authorUid, item.following)
-                }
-                notifyItemChanged(h.bindingAdapterPosition, PAYLOAD_FOLLOW)
+                val uid = auth.currentUser?.uid ?: return@setOnClickListener
+                if (item.authorUid.isBlank()) return@setOnClickListener
+                if (item.authorUid == uid) return@setOnClickListener
 
+                val newState = !item.following
+
+                followUser(
+                    targetUserId = item.authorUid,
+                    followState = newState,
+                    onSuccess = {
+                        item.following = newState
+                        notifyItemChanged(h.bindingAdapterPosition, PAYLOAD_FOLLOW)
+                    },
+                    onFail = { e ->
+                        Toast.makeText(
+                            h.itemView.context,
+                            "Follow failed: ${e.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                )
             }
+
         }
 
         /* ---------- Comment / Reply flows (pet selection) ---------- */
@@ -630,7 +700,6 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                     }
 
                     if (pets.isEmpty()) {
-                        // No pets – fallback straight to generic name
                         showCommentTextDialog(
                             ctx = ctx,
                             h = h,
@@ -643,7 +712,6 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                         return@addOnSuccessListener
                     }
 
-                    // ALWAYS show a picker if we have at least 1 pet
                     val names = pets.map { it.name }.toTypedArray()
                     AlertDialog.Builder(ctx)
                         .setTitle("Comment as which pet?")
@@ -653,7 +721,7 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                                 ctx = ctx,
                                 h = h,
                                 post = post,
-                                displayName = pet.name,      // pet name on comment
+                                displayName = pet.name,
                                 avatarUrl = pet.photoUrl
                             )
                             dialog.dismiss()
@@ -664,7 +732,6 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                         .show()
                 }
                 .addOnFailureListener { e ->
-                    // If the pets query fails, still let them comment
                     showCommentTextDialog(
                         ctx = ctx,
                         h = h,
@@ -683,7 +750,6 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                 }
         }
 
-        // Step 2: text dialog that actually creates the comment
         private fun showCommentTextDialog(
             ctx: Context,
             h: VH,
@@ -715,12 +781,12 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                     val commentData = hashMapOf(
                         "text" to text,
                         "authorUid" to user.uid,
-                        "authorName" to displayName,           // pet name or fallback
+                        "authorName" to displayName,
                         "authorAvatarUrl" to (avatarUrl ?: ""),
                         "createdAt" to Timestamp.now(),
                         "likeCount" to 0L,
                         "likedBy" to emptyMap<String, Boolean>(),
-                        "parentId" to null                     // top-level comment
+                        "parentId" to null
                     )
 
                     db.collection("posts")
@@ -728,7 +794,6 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                         .collection("comments")
                         .add(commentData)
                         .addOnSuccessListener {
-                            // Optional: auto-expand comments
                             h.rvComments?.visibility = View.VISIBLE
                             h.btnCommentsExpand?.setImageResource(R.drawable.ic_expand_more)
                         }
@@ -970,7 +1035,7 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
             }
         }
 
-        // 🔥 Delete a single comment (or reply)
+        // Delete a single comment (or reply)
         private fun deleteComment(ctx: Context, comment: Comment) {
             val uid = auth.currentUser?.uid ?: return
             if (comment.postId.isEmpty() || comment.id.isEmpty()) return
@@ -1001,32 +1066,44 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                 .show()
         }
 
-        private fun followUser(targetUserId: String, followState: Boolean) {
+        // UPDATED followUser with callbacks
+        private fun followUser(
+            targetUserId: String,
+            followState: Boolean,
+            onSuccess: () -> Unit,
+            onFail: (Exception) -> Unit
+        ) {
+            val currentId = auth.currentUser?.uid ?: return
+            if (targetUserId.isBlank() || targetUserId == currentId) return
 
-            val followData = hashMapOf("timestamp" to com.google.firebase.firestore.FieldValue.serverTimestamp())
-            val currentId: String = auth.currentUser?.uid.toString()
+            val followData = mapOf(
+                "timestamp" to FieldValue.serverTimestamp()
+            )
 
-            db.runTransaction { transaction ->
-                val currUserFollowingRef = db.collection("users").document(currentId)
-                    .collection("following").document(targetUserId)
-                val targetUserFollowRef = db.collection("users").document(targetUserId)
-                    .collection("followers").document(currentId)
+            val followingRef = db.collection("users")
+                .document(currentId)
+                .collection("following")
+                .document(targetUserId)
 
+            val followersRef = db.collection("users")
+                .document(targetUserId)
+                .collection("followers")
+                .document(currentId)
 
-                if (followState){
-                    transaction.set(currUserFollowingRef, followData)
-                    transaction.set(targetUserFollowRef, followData)
-                } else {
+            val batch = db.batch()
 
-                    transaction.delete(currUserFollowingRef)
-                    transaction.delete(targetUserFollowRef)
-
-                }
-                null
+            if (followState) {
+                batch.set(followingRef, followData)
+                batch.set(followersRef, followData)
+            } else {
+                batch.delete(followingRef)
+                batch.delete(followersRef)
             }
 
+            batch.commit()
+                .addOnSuccessListener { onSuccess() }
+                .addOnFailureListener { e -> onFail(e) }
         }
-
 
 
         /* ---------------- RecyclerView plumbing ---------------- */
@@ -1079,8 +1156,6 @@ class HomeScreen : Fragment(R.layout.fragment_home_screen) {
                 chip.isChecked = false
             }
         }
-
-
 
         companion object {
             private const val PAYLOAD_LIKE = "like"
