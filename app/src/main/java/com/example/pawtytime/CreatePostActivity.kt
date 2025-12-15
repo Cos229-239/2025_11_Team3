@@ -29,14 +29,15 @@ class CreatePostActivity : AppCompatActivity() {
     private lateinit var etPostCaption: TextInputEditText
     private lateinit var btnPost: MaterialButton
 
-    // NEW: "Posting as" UI
+    // "Posting as" UI
     private lateinit var rowPostingAs: View
     private lateinit var tvPostingAsValue: TextView
 
     private var photoUrl: String? = null
 
-    // NEW: which pet we're posting as
+    // which pet posting as
     private data class PetChoice(
+        val petId: String,
         val name: String,
         val photoUrl: String?
     )
@@ -128,6 +129,9 @@ class CreatePostActivity : AppCompatActivity() {
                         authorName = name,
                         authorAvatarUrl = avatarUrl,
 
+                        petOwnerUid = uid,
+                        petId = chosenPet.petId,
+
                         // use chosen pet
                         petName = chosenPet.name,
                         petPhotoUrl = chosenPet.photoUrl,
@@ -165,6 +169,9 @@ class CreatePostActivity : AppCompatActivity() {
                                 authorUsername = authorUsername,
                                 authorName = name,
                                 authorAvatarUrl = avatarUrl,
+
+                                petOwnerUid = uid,
+                                petId = petDoc?.id.orEmpty(),
 
                                 // fallback pet info (may be empty if no pets)
                                 petName = pet?.name.orEmpty(),
@@ -212,7 +219,7 @@ class CreatePostActivity : AppCompatActivity() {
                 val pets = petsSnap.documents.map { doc ->
                     val name = doc.getString("name")?.takeIf { it.isNotBlank() } ?: "Pawty Pet"
                     val photoUrl = doc.getString("photoUrl")
-                    PetChoice(name, photoUrl)
+                    PetChoice(doc.id, name, photoUrl)
                 }
 
                 if (pets.isEmpty()) {

@@ -23,9 +23,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
-
 class ProfileView : Fragment(R.layout.fragment_profile_view) {
-   private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: RecyclerView
 
     private val auth by lazy { FirebaseAuth.getInstance() }
 
@@ -39,6 +38,9 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
 
     private lateinit var postPetSpinner: Spinner
 
+    private var followersListener: com.google.firebase.firestore.ListenerRegistration? = null
+    private var followingListener: com.google.firebase.firestore.ListenerRegistration? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -47,8 +49,7 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_profile_view, container,false)
-
+        val view = inflater.inflate(R.layout.fragment_profile_view, container, false)
 
         //define text views
         val usernameText = view.findViewById<TextView>(R.id.profile_view_back_text)
@@ -62,26 +63,29 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
         val settingsBtn = view.findViewById<ImageButton>(R.id.profile_settings)
         val followersBtn = view.findViewById<Button>(R.id.profile_Followers_btn)
         val followingBtn = view.findViewById<Button>(R.id.profile_Following_btn)
-
+        val followersCountText = view.findViewById<TextView>(R.id.number_of_followers)
+        val followingCountText = view.findViewById<TextView>(R.id.number_following)
 
         // I want these to only show up if its another profile:
         settingsBtn.visibility = View.GONE
-
-
 
         // define each tab
         val postsTab = view.findViewById<Button>(R.id.view_profile_posts_tab)
         postPetSpinner = view.findViewById<Spinner>(R.id.pet_posts_spinner)
         val taggedTab = view.findViewById<Button>(R.id.view_profile_tagged_tab)
 
+        // START live follower/following counts
+        currentUserId?.let { uid ->
+            bindFollowCounts(uid, followersCountText, followingCountText)
+        }
+
         // --- filling in profile information ---
-        if(currentUserId != null) {
+        if (currentUserId != null) {
             FirebaseFirestore.getInstance()
                 .collection("users")
                 .document(currentUserId)
                 .get()
-                .addOnSuccessListener{
-                        doc ->
+                .addOnSuccessListener { doc ->
                     val first = doc.getString("firstName") ?: ""
                     val last = doc.getString("lastName") ?: ""
                     val username = doc.getString("username") ?: ""
@@ -104,26 +108,28 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
                     }
 
                     val profileType = doc.get("profileTypes") as? List<String> ?: emptyList()
-
                     profTypeText.text = profileType.joinToString("\n")
                 }
         }
 
-
         // separate method to populate spinner with names
-        fun populateSpinner(list: List<String>){
+        fun populateSpinner(list: List<String>) {
             val listAdapter = object : ArrayAdapter<String>(
                 requireContext(),
-                R.layout.pets_default_spinner, list)
-            {
+                R.layout.pets_default_spinner, list
+            ) {
 
                 override fun isEnabled(position: Int): Boolean {
                     return position != 0
                 }
 
-                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup):View {
-                   val view = super.getDropDownView(position, convertView, parent) as TextView
-                    if(position == 0){
+                override fun getDropDownView(
+                    position: Int,
+                    convertView: View?,
+                    parent: ViewGroup
+                ): View {
+                    val view = super.getDropDownView(position, convertView, parent) as TextView
+                    if (position == 0) {
                         view.setTextColor(Color.GRAY)
                     } else {
                         view.setTextColor(Color.BLACK)
@@ -135,47 +141,33 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
             postPetSpinner.adapter = listAdapter
         }
 
-
         // populate the pets spinner
-        currentUserId?.let{
-            uid ->
+        currentUserId?.let { uid ->
             db.collection("users")
                 .document(uid)
                 .collection("pets")
                 .get()
-                .addOnSuccessListener {
-                    querySnapshot ->
+                .addOnSuccessListener { querySnapshot ->
                     val petList = mutableListOf("Pet Posts")
-                    for(document in querySnapshot.documents){
-                        document.getString("name")?.let{
-                            petName ->
+                    for (document in querySnapshot.documents) {
+                        document.getString("name")?.let { petName ->
                             petList.add(petName)
                         }
                     }
                     populateSpinner(petList)
                 }
-
         }
-
-
 
         recyclerView = view.findViewById(R.id.postsRecycler)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // load data into posts tab
-
         adapter = HomeScreen.FeedAdapter(postsList)
-
         recyclerView.adapter = adapter
         recyclerView.isNestedScrollingEnabled = false
 
         // loading the users posts into view - should make it default
         //loadProfilePosts(adapter)
-
-
-
-
-
 
         postsTab.setOnClickListener {
             loadProfilePosts(adapter)
@@ -189,11 +181,11 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
                 position: Int,
                 id: Long
             ) {
-
-                if( position == 0) return
+                if (position == 0) return
                 val selectedPetName = parent.getItemAtPosition(position) as String
                 loadPetPosts(adapter, selectedPetName)
             }
+
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
@@ -201,11 +193,8 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
 
         }
 
-
         // profile buttons click listeners
-
         settingsBtn.setOnClickListener {
-
 
         }
 
@@ -218,87 +207,89 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
         }
 
 
+
         backBtn.setOnClickListener(){
             (activity as? MainActivity)?.loadFragment(HomeScreen())
-        }
-
-
+}
         // Inflate the layout for this fragment
         return view
     }
 
-
-    override fun onResume() {
+ fun onResume() {
         super.onResume()
         if (::adapter.isInitialized) {
             loadProfilePosts(adapter)
         }
     }
 
-private fun loadProfilePosts(adapter: HomeScreen.FeedAdapter) {
-    FirebaseFirestore.getInstance()
-        .collection("posts")
-        .whereEqualTo("authorUid", currentUserId)
-        .orderBy("createdAt", Query.Direction.DESCENDING)
-        .get()
-        .addOnSuccessListener { snap ->
-            postsList.clear()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        followersListener?.remove()
+        followersListener = null
+        followingListener?.remove()
+        followingListener = null
+    }
+    fun loadProfilePosts(adapter: HomeScreen.FeedAdapter) {
+        FirebaseFirestore.getInstance()
+            .collection("posts")
+            .whereEqualTo("authorUid", currentUserId)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { snap ->
+                postsList.clear()
 
-            snap.documents.forEach { doc ->
-                val post = doc.toObject(Post::class.java) ?: return@forEach
+                snap.documents.forEach { doc ->
+                    val post = doc.toObject(Post::class.java) ?: return@forEach
 
-                // Prefer the pet name; fall back to user info if missing
-                val displayName = when {
-                    post.petName.isNotBlank() -> post.petName
-                    post.authorUsername.isNotBlank() -> post.authorUsername
-                    post.authorName.isNotBlank() -> post.authorName
-                    else -> "Pawty Friend"
+                    // Prefer the pet name; fall back to user info if missing
+                    val displayName = when {
+                        post.petName.isNotBlank() -> post.petName
+                        post.authorUsername.isNotBlank() -> post.authorUsername
+                        post.authorName.isNotBlank() -> post.authorName
+                        else -> "Pawty Friend"
+                    }
+
+                    // Prefer the pet’s photo; fall back to the user’s profile avatar
+                    val headerAvatarUrl = post.petPhotoUrl ?: post.authorAvatarUrl
+
+                    postsList.add(
+                        PostUi(
+                            id = post.id,
+                            author = displayName,
+                            avatarUrl = headerAvatarUrl,
+                            avatarRes = R.drawable.ic_avatar_circle,
+                            photoUrl = post.photoUrl,
+                            photoRes = R.drawable.sample_dog,
+                            caption = post.caption,
+                            likeCount = post.likeCount,
+                            liked = false,
+                            following = false,
+                            authorUid = post.authorUid
+                        )
+                    )
                 }
 
-                // Prefer the pet’s photo; fall back to the user’s profile avatar
-                val headerAvatarUrl = post.petPhotoUrl ?: post.authorAvatarUrl
-
-                postsList.add(
-                    PostUi(
-                        id = post.id,
-                        author = displayName,
-                        avatarUrl = headerAvatarUrl,
-                        avatarRes = R.drawable.ic_avatar_circle,
-                        photoUrl = post.photoUrl,
-                        photoRes = R.drawable.sample_dog,
-                        caption = post.caption,
-                        likeCount = post.likeCount,
-                        liked = false,
-                        following = false,
-                        authorUid = post.authorUid
-                    )
-                )
+                adapter.notifyDataSetChanged()
             }
+            .addOnFailureListener { e ->
+                Toast.makeText(
+                    requireContext(),
+                    "Failed to load posts: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+    }
 
-
-            adapter.notifyDataSetChanged()
-
-        }
-        .addOnFailureListener { e ->
-            Toast.makeText(
-                requireContext(),
-                "Failed to load posts: ${e.message}",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-}
-    private fun loadPetPosts(adapter: HomeScreen.FeedAdapter, petName: String){
+    private fun loadPetPosts(adapter: HomeScreen.FeedAdapter, petName: String) {
         FirebaseFirestore.getInstance()
             .collection("posts")
             .whereEqualTo("authorUid", currentUserId)
             .whereEqualTo("petName", petName)
             .orderBy("createdAt", Query.Direction.DESCENDING)
             .get()
-            .addOnSuccessListener{
-                snap ->
+            .addOnSuccessListener { snap ->
                 postsList.clear()
-                snap.documents.forEach {
-                        doc ->
+                snap.documents.forEach { doc ->
                     val post = doc.toObject(Post::class.java) ?: return@forEach
                     val displayName = when {
                         post.petName.isNotBlank() -> post.petName
@@ -326,15 +317,37 @@ private fun loadProfilePosts(adapter: HomeScreen.FeedAdapter) {
                 }
                 adapter.notifyDataSetChanged()
             }
-            .addOnFailureListener {
-                e ->
-                Toast.makeText(requireContext(), "Failed to load posts: ${e.message}", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener { e ->
+                Toast.makeText(
+                    requireContext(),
+                    "Failed to load posts: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
     }
 
+    // Follower count
+    private fun bindFollowCounts(
+        uid: String,
+        followersCountText: TextView,
+        followingCountText: TextView
+    ) {
+        followersListener?.remove()
+        followersListener = db.collection("users").document(uid)
+            .collection("followers")
+            .addSnapshotListener { snap, e ->
+                if (e != null) return@addSnapshotListener
+                val count = snap?.size() ?: 0
+                followersCountText.text = count.toString()
+            }
 
-
-
-
-
+        followingListener?.remove()
+        followingListener = db.collection("users").document(uid)
+            .collection("following")
+            .addSnapshotListener { snap, e ->
+                if (e != null) return@addSnapshotListener
+                val count = snap?.size() ?: 0
+                followingCountText.text = count.toString()
+            }
+    }
 }

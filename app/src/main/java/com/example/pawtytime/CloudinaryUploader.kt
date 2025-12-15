@@ -13,6 +13,7 @@ class CloudinaryUploader(
 ) {
     private val client = OkHttpClient()
 
+
     fun upload(uri: Uri, onDone: (String?) -> Unit) {
         val bytes = context.contentResolver.openInputStream(uri)?.readBytes()
         if (bytes == null) {

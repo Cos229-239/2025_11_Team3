@@ -7,6 +7,9 @@ data class Post(
     val authorName: String = "",
     val authorAvatarUrl: String? = null,
 
+    val petOwnerUid: String = "",
+    val petId: String = "",
+
     // Pet-focused fields
     val petName: String = "",
     val petPhotoUrl: String? = null,
