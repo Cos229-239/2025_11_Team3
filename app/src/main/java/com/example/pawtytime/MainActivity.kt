@@ -147,23 +147,28 @@ class MainActivity : AppCompatActivity() {
             }
 
             dropdownView.findViewById<LinearLayout>(R.id.go_to_view_profile).setOnClickListener{
+                bottomNav.clearChecked()
                 loadFragment(ProfileView())
                 popupWindow.dismiss()
             }
             dropdownView.findViewById<LinearLayout>(R.id.go_to_edit_profile).setOnClickListener{
+                bottomNav.clearChecked()
                 loadFragment(ProfileEdit())
                 popupWindow.dismiss()
             }
             dropdownView.findViewById<LinearLayout>(R.id.go_to_view_pet_profile).setOnClickListener{
+                bottomNav.clearChecked()
                 loadFragment(petProfileView())
                 popupWindow.dismiss()
             }
             dropdownView.findViewById<LinearLayout>(R.id.go_to_edit_pet_profile).setOnClickListener{
+                bottomNav.clearChecked()
                 loadFragment(PetProfileEdit())
                 popupWindow.dismiss()
             }
 
             dropdownView.findViewById<LinearLayout>(R.id.calendarBtn).setOnClickListener {
+                bottomNav.clearChecked()
                 loadFragment(CalendarScreen())
                 popupWindow.dismiss()
             }
@@ -181,14 +186,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         logoBtn.setOnClickListener{
+            bottomNav.clearChecked()
             loadFragment(HomeScreen())
         }
 
         notifsBtn.setOnClickListener{
+            bottomNav.clearChecked()
             loadFragment(Notifications())
         }
 
         inboxBtn.setOnClickListener{
+            bottomNav.clearChecked()
             loadFragment(Inbox())
 
         }
