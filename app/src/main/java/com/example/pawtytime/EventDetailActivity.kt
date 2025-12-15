@@ -43,6 +43,7 @@ class EventDetailActivity : AppCompatActivity() {
 
     private var isUpdatingRsvpUi = false
     private var currentEvent: EventUi? = null
+    private var hostUid: String? = null
 
     private val dateFormat =
         SimpleDateFormat("MM/dd/yyyy h:mm a", Locale.getDefault())
@@ -79,6 +80,15 @@ class EventDetailActivity : AppCompatActivity() {
             return
         }
 
+        ivHostAvatar.setOnClickListener {
+            val uid = hostUid ?: return@setOnClickListener
+
+            val intent = Intent(this, MainActivity::class.java).apply {
+                putExtra("open_profile_uid", uid)
+            }
+            startActivity(intent)
+        }
+
         btnShowOnMap.setOnClickListener {
             val event = currentEvent ?: return@setOnClickListener
 
@@ -112,6 +122,7 @@ class EventDetailActivity : AppCompatActivity() {
 
                 val ui = dto.toUi(doc.id)
                 currentEvent = ui
+                hostUid = ui.createdByUid
 
                 var interestedCount = ui.interestedCount.coerceAtLeast(0)
                 var goingCount = ui.goingCount.coerceAtLeast(0)

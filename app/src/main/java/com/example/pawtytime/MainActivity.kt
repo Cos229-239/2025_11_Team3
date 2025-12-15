@@ -205,6 +205,12 @@ class MainActivity : AppCompatActivity() {
     private fun handleIntent(intent: Intent?) {
         val openTab = intent?.getStringExtra("open_tab")
 
+        val profileUid = intent?.getStringExtra("open_profile_uid")
+        if (!profileUid.isNullOrBlank()) {
+            loadFragment(ProfileView.newInstance(profileUid))
+            return
+        }
+
         if (openTab == "map") {
             val centerLat = intent.getDoubleExtra("center_lat", Double.NaN)
             val centerLng = intent.getDoubleExtra("center_lng", Double.NaN)
