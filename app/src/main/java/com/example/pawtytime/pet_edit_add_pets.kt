@@ -9,11 +9,7 @@ import android.widget.Button
 import android.widget.ImageButton
 
 
-/**
- * A simple [Fragment] subclass.
- * Use the [pet_edit_add_pets.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 class Pet_edit_add_pets : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

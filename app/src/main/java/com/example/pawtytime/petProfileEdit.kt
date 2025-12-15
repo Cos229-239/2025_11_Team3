@@ -38,7 +38,7 @@ class PetProfileEdit : Fragment() {
 
     private var petVaccinationsUrl: String? = null
 
-    val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+    val currentUserId = auth.currentUser?.uid
 
     private lateinit var petEditSpinner: Spinner
 

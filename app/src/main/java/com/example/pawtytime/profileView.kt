@@ -16,7 +16,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import coil.load
+import coil.transform.CircleCropTransformation
 import com.example.pawtytime.HomeScreen.PostUi
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -65,7 +66,7 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
 
         // I want these to only show up if its another profile:
         settingsBtn.visibility = View.GONE
-        backBtn.visibility = View.GONE
+
 
 
         // define each tab
@@ -93,9 +94,14 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
                     nameText.text = fullName
                     bioText.text = bio
 
-                    Glide.with(this)
-                        .load(profileUrl)
-                        .into(profPhoto)
+                    if(!profileUrl.isNullOrBlank()) {
+                        profPhoto.load(profileUrl){
+                            placeholder(R.drawable.ic_profile)
+                            error(R.drawable.ic_profile)
+                            transformations(CircleCropTransformation())
+                            size(profPhoto.width, profPhoto.height)
+                        }
+                    }
 
                     val profileType = doc.get("profileTypes") as? List<String> ?: emptyList()
 
@@ -213,7 +219,7 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
 
 
         backBtn.setOnClickListener(){
-
+            (activity as? MainActivity)?.loadFragment(HomeScreen())
         }
 
 
