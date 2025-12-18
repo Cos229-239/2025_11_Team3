@@ -152,7 +152,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Birthdate: "
-                            android:textSize="18sp"/>
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/pet_view_birthdate"
@@ -271,20 +271,22 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Gets along with kids, plays
-chase, fetch, peanut butter\n"
-                            android:textSize="18sp"/>
+chase, fetch, peanut butter"
+                            android:textSize="18sp" />
 
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="10dp">
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/thumbs_down"/>
+                            android:src="@drawable/thumbs_down" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -297,7 +299,7 @@ chase, fetch, peanut butter\n"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Leaf blowers, vacuums, mail men, chases cats, male dogs"
-                            android:textSize="18sp"/>
+                            android:textSize="18sp" />
                     </LinearLayout>
 
                     <TextView
@@ -306,86 +308,92 @@ chase, fetch, peanut butter\n"
                         android:layout_marginTop="15dp"
                         android:text="Health Info: "
                         android:textColor="@color/pawty_blue_dark"
-                        android:textSize="20sp"/>
+                        android:textSize="20sp" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
+                        android:layout_marginLeft="30sp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginLeft="30sp">
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Medical Conditions: "
-                            android:textSize="16sp"/>
+                            android:textSize="16sp" />
+
                         <TextView
                             android:id="@+id/pet_view_medical_conditions"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="None"
                             android:layout_gravity="right"
-                            android:textSize="16sp"/>
+                            android:text="None"
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="30sp"
                         android:layout_marginTop="10dp"
-                        android:orientation="horizontal"
-                        android:layout_marginLeft="30sp">
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Medications: "
-                            android:textSize="16sp"/>
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/pet_view_medications"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="None"
-                            android:textSize="16sp"/>
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:layout_marginLeft="30sp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginLeft="30sp">
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Vaccinations: "/>
+                            android:text="Vaccinations: " />
+
                         <TextView
                             android:id="@+id/pet_view_vaccinations"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rabies\nDPP\nBordetella"
-                            android:textSize="16sp"/>
+                            android:textSize="16sp"
+                            android:layout_gravity="right"/>
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:layout_marginLeft="30sp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginLeft="30sp">
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Spayed/Neutered: "
-                            android:textSize="16sp"/>
+                            android:textSize="16sp" />
+
                         <TextView
                             android:id="@+id/pet_view_spayed_neutered"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Yes"
-                            android:textSize="16sp"/>
+                            android:textSize="16sp"
+                            android:layout_gravity="right"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

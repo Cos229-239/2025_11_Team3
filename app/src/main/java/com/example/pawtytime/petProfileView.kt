@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.bumptech.glide.Glide
 import org.w3c.dom.Text
+import kotlin.plus
 
 class petProfileView : Fragment(R.layout.fragment_pet_profile_view) {
 
@@ -95,6 +96,7 @@ class petProfileView : Fragment(R.layout.fragment_pet_profile_view) {
 
         // Buttons
         val viewPetPhotos = view.findViewById<Button>(R.id.pet_view_photosBtn)
+        val petViewBackBtn = view.findViewById<ImageButton>(R.id.pet_profile_view_back)
 
         // pet prof image
         var petProfPhotoUrl: String
@@ -162,8 +164,8 @@ class petProfileView : Fragment(R.layout.fragment_pet_profile_view) {
                             _petGender.text = document.getString("sex")
                             _petSpecies.text = document.getString("species")
                             _petWeight.text = document.getString("weightLbs")
-                            _petDislikes.text = document.getString("dislikes")
-                            _petLikes.text = document.getString("likes")
+                            _petDislikes.text = document.getString("dislikes") + "\n"
+                            _petLikes.text = document.getString("likes") + "\n"
                             _petMedicalConditions.text = document.getString("medicalConditions")
                             _petMedications.text = document.getString("medications")
                             if(document.getString("vaccinations").isNullOrEmpty()){
@@ -187,6 +189,11 @@ class petProfileView : Fragment(R.layout.fragment_pet_profile_view) {
                         }
                     }
             }
+
+            petViewBackBtn.setOnClickListener {
+                (activity as? MainActivity)?.loadFragment(HomeScreen())
+            }
+
         }
 
         petViewSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -215,7 +222,7 @@ class petProfileView : Fragment(R.layout.fragment_pet_profile_view) {
         super.onViewCreated(view, savedInstanceState)
 
         val btnSchedulePlaydate = view.findViewById<MaterialButton>(R.id.btnSchedulePlaydate)
-        val petViewBackBtn = view.findViewById<ImageButton>(R.id.pet_profile_view_back)
+
         val ownerUid = arguments?.getString(ARG_OWNER_UID).orEmpty()
         val petId = arguments?.getString(ARG_PET_ID).orEmpty()
 
@@ -239,8 +246,8 @@ class petProfileView : Fragment(R.layout.fragment_pet_profile_view) {
 
                     loadedPetBirthdate = snap.getString("birthdate").toString()
                     loadedPetBreed = snap.getString("breed").toString()
-                    loadedPetDislikes = snap.getString("dislikes").toString()
-                    loadedPetLikes = snap.getString("likes").toString()
+                    loadedPetDislikes = snap.getString("dislikes").toString() + "\n"
+                    loadedPetLikes = snap.getString("likes").toString() + "\n"
                     loadedPetSex = snap.getString("sex").toString()
                     loadedPetSpecies = snap.getString("species").toString()
                     loadedPetMedical = snap.getString("medicalConditions").toString()
@@ -313,9 +320,7 @@ class petProfileView : Fragment(R.layout.fragment_pet_profile_view) {
                 // putExtra("extra_owner_uid", loadedOwnerUid)
             }
 
-            petViewBackBtn.setOnClickListener {
-                (activity as? MainActivity)?.loadFragment(HomeScreen())
-            }
+
             startActivity(intent)
         }
     }

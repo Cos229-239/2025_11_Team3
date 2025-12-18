@@ -268,7 +268,8 @@
                 android:paddingTop="4dp"
                 android:paddingBottom="15dp"
                 android:layout_below="@id/view_profile_tabs"
-                tools:listitem="@layout/view_post"/>
+                tools:listitem="@layout/view_post"
+                />
 
         </RelativeLayout>
 

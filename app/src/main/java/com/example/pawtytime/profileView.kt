@@ -14,11 +14,13 @@ import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.pawtytime.HomeScreen.PostUi
+import com.example.pawtytime.petProfileView.Companion.ARG_PET_ID
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -28,11 +30,17 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
 
     private val db by lazy { FirebaseFirestore.getInstance() }
 
-    private lateinit var adapter: HomeScreen.FeedAdapter
+    private lateinit var adapterPosts: HomeScreen.FeedAdapter
 
-    val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+    private lateinit var adapterEvents: EventsAdapter
+
+    private lateinit var concatAdapt: ConcatAdapter
+    val currentUserId: String = FirebaseAuth.getInstance().currentUser?.uid.toString()
 
     var postsList = mutableListOf<HomeScreen.PostUi>()
+    private val eventsList = mutableListOf<EventUi>()
+
+
 
     var profileTypes = mutableListOf<String>()
     private lateinit var postPetSpinner: Spinner
@@ -48,6 +56,10 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
             }
         }
     }
+
+    val petId = arguments?.getString(ARG_PET_ID).orEmpty()
+    val host22Uid = arguments?.getString(ARG_UID)
+
 
     private var followersListener: com.google.firebase.firestore.ListenerRegistration? = null
     private var followingListener: com.google.firebase.firestore.ListenerRegistration? = null
@@ -75,7 +87,7 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
         val followersBtn = view.findViewById<Button>(R.id.profile_Followers_btn)
         val followingBtn = view.findViewById<Button>(R.id.profile_Following_btn)
 
-        val uid = arguments?.getString(ARG_UID)
+        val hostUid = arguments?.getString(ARG_UID)
             ?: FirebaseAuth.getInstance().currentUser?.uid
 
         val followersCountText = view.findViewById<TextView>(R.id.number_of_followers)
@@ -90,15 +102,15 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
         val taggedTab = view.findViewById<Button>(R.id.view_profile_tagged_tab)
 
         // START live follower/following counts
-        currentUserId?.let { uid ->
+        hostUid?.let { uid ->
             bindFollowCounts(uid, followersCountText, followingCountText)
         }
 
         // --- filling in profile information ---
-        if (currentUserId != null) {
+        if (hostUid != null) {
             FirebaseFirestore.getInstance()
                 .collection("users")
-                .document(currentUserId)
+                .document(hostUid)
                 .get()
                 .addOnSuccessListener { doc ->
                     val first = doc.getString("firstName") ?: ""
@@ -158,7 +170,7 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
         }
 
         // populate the pets spinner
-        currentUserId?.let { uid ->
+        hostUid?.let { uid ->
             db.collection("users")
                 .document(uid)
                 .collection("pets")
@@ -177,16 +189,31 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
         recyclerView = view.findViewById(R.id.postsRecycler)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // load data into posts tab
-        adapter = HomeScreen.FeedAdapter(postsList)
-        recyclerView.adapter = adapter
+        // initialize adapters to load data into posts and events
+        adapterPosts = HomeScreen.FeedAdapter(postsList)
+        adapterEvents = EventsAdapter(eventsList){event ->
+            val ctx = requireContext()
+            val intent = android.content.Intent(ctx, EventDetailActivity::class.java).apply {
+                putExtra("eventId", event.id)
+            }
+            startActivity(intent)
+        }
+
+        concatAdapt = ConcatAdapter(adapterPosts, adapterEvents)
+        recyclerView.adapter = concatAdapt
         recyclerView.isNestedScrollingEnabled = false
 
         // loading the users posts into view - should make it default
         //loadProfilePosts(adapter)
 
         postsTab.setOnClickListener {
-            loadProfilePosts(adapter)
+            val isPawtyHost = profileTypes.contains("Pawty Host")
+            if(!isPawtyHost) {
+                loadProfilePosts(adapterPosts)
+            } else {
+                postsTab.text = "Past Events"
+
+            }
         }
 
         // determine what happens when a spinner item is clicked:
@@ -199,7 +226,7 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
             ) {
                 if (position == 0) return
                 val selectedPetName = parent.getItemAtPosition(position) as String
-                loadPetPosts(adapter, selectedPetName)
+                loadPetPosts(adapterPosts, selectedPetName)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -233,8 +260,8 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
 
     override fun onResume() {
         super.onResume()
-        if (::adapter.isInitialized) {
-            loadProfilePosts(adapter)
+        if (::adapterPosts.isInitialized) {
+            loadProfilePosts(adapterPosts)
         }
     }
 
@@ -342,6 +369,18 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
             }
     }
 
+
+
+    private fun loadProfileEvents(){
+        db.collection("events")
+            .orderBy("dateTime", Query.Direction.ASCENDING)
+            .limit(50)
+            .get()
+            .addOnSuccessListener{ snap ->
+
+
+            }
+    }
     // Follower count
     private fun bindFollowCounts(
         uid: String,
