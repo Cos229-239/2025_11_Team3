@@ -37,6 +37,18 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
     var profileTypes = mutableListOf<String>()
     private lateinit var postPetSpinner: Spinner
 
+    companion object {
+        private const val ARG_UID = "profile_uid"
+
+        fun newInstance(uid: String): ProfileView {
+            return ProfileView().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_UID, uid)
+                }
+            }
+        }
+    }
+
     private var followersListener: com.google.firebase.firestore.ListenerRegistration? = null
     private var followingListener: com.google.firebase.firestore.ListenerRegistration? = null
 
@@ -62,6 +74,10 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
         val settingsBtn = view.findViewById<ImageButton>(R.id.profile_settings)
         val followersBtn = view.findViewById<Button>(R.id.profile_Followers_btn)
         val followingBtn = view.findViewById<Button>(R.id.profile_Following_btn)
+
+        val uid = arguments?.getString(ARG_UID)
+            ?: FirebaseAuth.getInstance().currentUser?.uid
+
         val followersCountText = view.findViewById<TextView>(R.id.number_of_followers)
         val followingCountText = view.findViewById<TextView>(R.id.number_following)
 
