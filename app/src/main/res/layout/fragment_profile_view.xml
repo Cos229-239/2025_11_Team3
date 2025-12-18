@@ -17,16 +17,18 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:id="@+id/profile_settings_bar">
+
                 <ImageButton
                     android:id="@+id/profile_view_back_Btn"
-                    android:contentDescription="@string/back_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="20dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/backarrow"
+                    android:layout_marginEnd="10dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:layout_marginEnd="10dp"/>
+                    android:contentDescription="@string/back_btn"
+                    android:padding="20dp"
+                    android:src="@drawable/backarrow" />
+
                 <TextView
                     android:id="@+id/profile_view_back_text"
                     android:layout_width="wrap_content"

@@ -3,11 +3,13 @@ package com.example.pawtytime
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
@@ -20,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.bumptech.glide.Glide
+import org.w3c.dom.Text
 
 class petProfileView : Fragment(R.layout.fragment_pet_profile_view) {
 
@@ -33,6 +36,20 @@ class petProfileView : Fragment(R.layout.fragment_pet_profile_view) {
     private var loadedPetId: String = ""
     private var loadedPetName: String = "Your Pet"
     private var loadedPetAge: Int = -1
+
+    private var loadedPetBirthdate: String = ""
+    private var loadedPetBreed: String = ""
+    private var loadedPetSpecies: String = ""
+    private var loadedPetSex: String = ""
+    private var loadedPetWeight: String = ""
+    private var loadedPetLikes: String = ""
+    private var loadedPetDislikes: String = ""
+    private var loadedPetMedical: String = ""
+    private var loadedPetMedications: String = ""
+    private var loadedPetVaccinations: String = ""
+    private var loadedPetSpayNeuter: String = ""
+
+
     private var loadedOwnerUid: String = ""
     private val db by lazy { FirebaseFirestore.getInstance() }
 
@@ -130,7 +147,7 @@ class petProfileView : Fragment(R.layout.fragment_pet_profile_view) {
 
         }
 
-        // method to update the pets information
+        // method to update the main users pets information
         fun updatePetInfo(petName: String) {
             if(currentUserId != null){
                 db.collection("users").document(currentUserId)
@@ -198,7 +215,7 @@ class petProfileView : Fragment(R.layout.fragment_pet_profile_view) {
         super.onViewCreated(view, savedInstanceState)
 
         val btnSchedulePlaydate = view.findViewById<MaterialButton>(R.id.btnSchedulePlaydate)
-
+        val petViewBackBtn = view.findViewById<ImageButton>(R.id.pet_profile_view_back)
         val ownerUid = arguments?.getString(ARG_OWNER_UID).orEmpty()
         val petId = arguments?.getString(ARG_PET_ID).orEmpty()
 
@@ -220,6 +237,17 @@ class petProfileView : Fragment(R.layout.fragment_pet_profile_view) {
 
                     loadedPetName = snap.getString("name")?.takeIf { it.isNotBlank() } ?: "Your Pet"
 
+                    loadedPetBirthdate = snap.getString("birthdate").toString()
+                    loadedPetBreed = snap.getString("breed").toString()
+                    loadedPetDislikes = snap.getString("dislikes").toString()
+                    loadedPetLikes = snap.getString("likes").toString()
+                    loadedPetSex = snap.getString("sex").toString()
+                    loadedPetSpecies = snap.getString("species").toString()
+                    loadedPetMedical = snap.getString("medicalConditions").toString()
+                    loadedPetMedications = snap.getString("medications").toString()
+                    loadedPetSpayNeuter = snap.getString("spayedNeutered").toString()
+                    loadedPetVaccinations = snap.getString("vaccinations").toString()
+
                     // age might be stored as Long, String, or missing
                     loadedPetAge = when (val ageAny = snap.get("age")) {
                         is Long -> ageAny.toInt()
@@ -234,15 +262,39 @@ class petProfileView : Fragment(R.layout.fragment_pet_profile_view) {
                     val tvName = view.findViewById<TextView>(R.id.pet_view_pet_name)
                     val tvAge = view.findViewById<TextView>(R.id.pet_view_pet_age)
                     val img = view.findViewById<ImageView>(R.id.pet_view_prof_pic)
+                    val tvBirthdate = view.findViewById<TextView>(R.id.pet_view_birthdate)
+                    val tvSpecies = view.findViewById<TextView>(R.id.pet_view_species)
+                    val tvBreed = view.findViewById<TextView>(R.id.pet_view_breed)
+                    val tvSex = view.findViewById<TextView>(R.id.pet_view_gender)
+                    val tvLikes = view.findViewById<TextView>(R.id.pet_view_pet_likes)
+                    val tvDislikes = view.findViewById<TextView>(R.id.pet_view_pet_dislikes)
+                    val tvMedical = view.findViewById<TextView>(R.id.pet_view_medical_conditions)
+                    val tvMedications = view.findViewById<TextView>(R.id.pet_view_medications)
+                    val tvSpayNeuter = view.findViewById<TextView>(R.id.pet_view_spayed_neutered)
+                    val tvVaccinations = view.findViewById<TextView>(R.id.pet_view_vaccinations)
 
                     tvName.text = loadedPetName
                     tvAge.text = if (loadedPetAge > -1) " (${loadedPetAge} Yrs)" else ""
+                    tvBirthdate.text = loadedPetBirthdate
+                    tvBreed.text = loadedPetBreed
+                    tvDislikes.text = loadedPetDislikes
+                    tvLikes.text = loadedPetLikes
+                    tvSex.text = loadedPetSex
+                    tvSpecies.text = loadedPetSpecies
+                    tvMedical.text = loadedPetMedical
+                    tvMedications.text = loadedPetMedications
+                    tvSpayNeuter.text = loadedPetSpayNeuter
+                    tvVaccinations.text = loadedPetVaccinations
+
 
                     val photoUrl = snap.getString("photoUrl")
                     if (!photoUrl.isNullOrBlank()) {
-                        Glide.with(this@petProfileView)
-                            .load(photoUrl)
-                            .into(img)
+                        img.load(photoUrl) {
+                            placeholder(R.drawable.ic_profile)
+                            error(R.drawable.ic_profile)
+                            transformations(CircleCropTransformation())
+                            size(img.width,img.height)
+                        }
                     }
                 }
                 .addOnFailureListener { e ->
@@ -259,6 +311,10 @@ class petProfileView : Fragment(R.layout.fragment_pet_profile_view) {
 
                 // If SchedulePlaydate later needs ownerUid too, add:
                 // putExtra("extra_owner_uid", loadedOwnerUid)
+            }
+
+            petViewBackBtn.setOnClickListener {
+                (activity as? MainActivity)?.loadFragment(HomeScreen())
             }
             startActivity(intent)
         }

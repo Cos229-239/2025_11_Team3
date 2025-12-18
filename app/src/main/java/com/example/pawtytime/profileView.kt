@@ -26,8 +26,6 @@ import com.google.firebase.firestore.Query
 class ProfileView : Fragment(R.layout.fragment_profile_view) {
     private lateinit var recyclerView: RecyclerView
 
-    private val auth by lazy { FirebaseAuth.getInstance() }
-
     private val db by lazy { FirebaseFirestore.getInstance() }
 
     private lateinit var adapter: HomeScreen.FeedAdapter
@@ -36,6 +34,7 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
 
     var postsList = mutableListOf<HomeScreen.PostUi>()
 
+    var profileTypes = mutableListOf<String>()
     private lateinit var postPetSpinner: Spinner
 
     private var followersListener: com.google.firebase.firestore.ListenerRegistration? = null
@@ -98,8 +97,8 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
                     nameText.text = fullName
                     bioText.text = bio
 
-                    if(!profileUrl.isNullOrBlank()) {
-                        profPhoto.load(profileUrl){
+                    if (!profileUrl.isNullOrBlank()) {
+                        profPhoto.load(profileUrl) {
                             placeholder(R.drawable.ic_profile)
                             error(R.drawable.ic_profile)
                             transformations(CircleCropTransformation())
@@ -108,6 +107,7 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
                     }
 
                     val profileType = doc.get("profileTypes") as? List<String> ?: emptyList()
+                    profileTypes = profileType as MutableList<String>
                     profTypeText.text = profileType.joinToString("\n")
                 }
         }
@@ -208,14 +208,14 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
 
 
 
-        backBtn.setOnClickListener(){
+        backBtn.setOnClickListener() {
             (activity as? MainActivity)?.loadFragment(HomeScreen())
-}
+        }
         // Inflate the layout for this fragment
         return view
     }
 
- fun onResume() {
+    override fun onResume() {
         super.onResume()
         if (::adapter.isInitialized) {
             loadProfilePosts(adapter)

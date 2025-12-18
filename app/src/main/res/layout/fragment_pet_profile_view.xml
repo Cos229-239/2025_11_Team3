@@ -26,6 +26,14 @@
                 android:layout_marginTop="20dp"
                 android:orientation="vertical">
 
+                <ImageButton
+                    android:id="@+id/pet_profile_view_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/backarrow"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_marginLeft="25dp"
+                    />
                 <ImageView
                     android:id="@+id/pet_view_prof_pic"
                     android:layout_width="wrap_content"
