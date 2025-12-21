@@ -250,6 +250,7 @@ class petProfileView : Fragment(R.layout.fragment_pet_profile_view) {
                     loadedPetLikes = snap.getString("likes").toString() + "\n"
                     loadedPetSex = snap.getString("sex").toString()
                     loadedPetSpecies = snap.getString("species").toString()
+                    loadedPetWeight = snap.getString("weightLbs").toString()
                     loadedPetMedical = snap.getString("medicalConditions").toString()
                     loadedPetMedications = snap.getString("medications").toString()
                     loadedPetSpayNeuter = snap.getString("spayedNeutered").toString()
@@ -279,6 +280,8 @@ class petProfileView : Fragment(R.layout.fragment_pet_profile_view) {
                     val tvMedications = view.findViewById<TextView>(R.id.pet_view_medications)
                     val tvSpayNeuter = view.findViewById<TextView>(R.id.pet_view_spayed_neutered)
                     val tvVaccinations = view.findViewById<TextView>(R.id.pet_view_vaccinations)
+                    val tvWeight = view.findViewById<TextView>(R.id.pet_view_weight)
+
 
                     tvName.text = loadedPetName
                     tvAge.text = if (loadedPetAge > -1) " (${loadedPetAge} Yrs)" else ""
@@ -292,7 +295,7 @@ class petProfileView : Fragment(R.layout.fragment_pet_profile_view) {
                     tvMedications.text = loadedPetMedications
                     tvSpayNeuter.text = loadedPetSpayNeuter
                     tvVaccinations.text = loadedPetVaccinations
-
+                    tvWeight.text = loadedPetWeight
 
                     val photoUrl = snap.getString("photoUrl")
                     if (!photoUrl.isNullOrBlank()) {

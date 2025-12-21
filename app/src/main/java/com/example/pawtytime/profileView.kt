@@ -58,7 +58,7 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
     }
 
     val petId = arguments?.getString(ARG_PET_ID).orEmpty()
-    val host22Uid = arguments?.getString(ARG_UID)
+    var hostUid: String? = null
 
 
     private var followersListener: com.google.firebase.firestore.ListenerRegistration? = null
@@ -87,7 +87,7 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
         val followersBtn = view.findViewById<Button>(R.id.profile_Followers_btn)
         val followingBtn = view.findViewById<Button>(R.id.profile_Following_btn)
 
-        val hostUid = arguments?.getString(ARG_UID)
+        hostUid = arguments?.getString(ARG_UID)
             ?: FirebaseAuth.getInstance().currentUser?.uid
 
         val followersCountText = view.findViewById<TextView>(R.id.number_of_followers)
@@ -107,10 +107,10 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
         }
 
         // --- filling in profile information ---
-        if (hostUid != null) {
+        hostUid?.let {
             FirebaseFirestore.getInstance()
                 .collection("users")
-                .document(hostUid)
+                .document(it)
                 .get()
                 .addOnSuccessListener { doc ->
                     val first = doc.getString("firstName") ?: ""
@@ -273,100 +273,104 @@ class ProfileView : Fragment(R.layout.fragment_profile_view) {
         followingListener = null
     }
     fun loadProfilePosts(adapter: HomeScreen.FeedAdapter) {
-        FirebaseFirestore.getInstance()
-            .collection("posts")
-            .whereEqualTo("authorUid", currentUserId)
-            .orderBy("createdAt", Query.Direction.DESCENDING)
-            .get()
-            .addOnSuccessListener { snap ->
-                postsList.clear()
+        hostUid?.let {
+            FirebaseFirestore.getInstance()
+                .collection("posts")
+                .whereEqualTo("authorUid", hostUid)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener { snap ->
+                    postsList.clear()
 
-                snap.documents.forEach { doc ->
-                    val post = doc.toObject(Post::class.java) ?: return@forEach
+                    snap.documents.forEach { doc ->
+                        val post = doc.toObject(Post::class.java) ?: return@forEach
 
-                    // Prefer the pet name; fall back to user info if missing
-                    val displayName = when {
-                        post.petName.isNotBlank() -> post.petName
-                        post.authorUsername.isNotBlank() -> post.authorUsername
-                        post.authorName.isNotBlank() -> post.authorName
-                        else -> "Pawty Friend"
+                        // Prefer the pet name; fall back to user info if missing
+                        val displayName = when {
+                            post.petName.isNotBlank() -> post.petName
+                            post.authorUsername.isNotBlank() -> post.authorUsername
+                            post.authorName.isNotBlank() -> post.authorName
+                            else -> "Pawty Friend"
+                        }
+
+                        // Prefer the pet’s photo; fall back to the user’s profile avatar
+                        val headerAvatarUrl = post.petPhotoUrl ?: post.authorAvatarUrl
+
+                        postsList.add(
+                            PostUi(
+                                id = post.id,
+                                author = displayName,
+                                avatarUrl = headerAvatarUrl,
+                                avatarRes = R.drawable.ic_avatar_circle,
+                                photoUrl = post.photoUrl,
+                                photoRes = R.drawable.sample_dog,
+                                caption = post.caption,
+                                likeCount = post.likeCount,
+                                liked = false,
+                                following = false,
+                                authorUid = post.authorUid
+                            )
+                        )
                     }
 
-                    // Prefer the pet’s photo; fall back to the user’s profile avatar
-                    val headerAvatarUrl = post.petPhotoUrl ?: post.authorAvatarUrl
-
-                    postsList.add(
-                        PostUi(
-                            id = post.id,
-                            author = displayName,
-                            avatarUrl = headerAvatarUrl,
-                            avatarRes = R.drawable.ic_avatar_circle,
-                            photoUrl = post.photoUrl,
-                            photoRes = R.drawable.sample_dog,
-                            caption = post.caption,
-                            likeCount = post.likeCount,
-                            liked = false,
-                            following = false,
-                            authorUid = post.authorUid
-                        )
-                    )
+                    adapter.notifyDataSetChanged()
                 }
-
-                adapter.notifyDataSetChanged()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(
-                    requireContext(),
-                    "Failed to load posts: ${e.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+                .addOnFailureListener { e ->
+                    Toast.makeText(
+                        requireContext(),
+                        "Failed to load posts: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+        }
     }
 
     private fun loadPetPosts(adapter: HomeScreen.FeedAdapter, petName: String) {
-        FirebaseFirestore.getInstance()
-            .collection("posts")
-            .whereEqualTo("authorUid", currentUserId)
-            .whereEqualTo("petName", petName)
-            .orderBy("createdAt", Query.Direction.DESCENDING)
-            .get()
-            .addOnSuccessListener { snap ->
-                postsList.clear()
-                snap.documents.forEach { doc ->
-                    val post = doc.toObject(Post::class.java) ?: return@forEach
-                    val displayName = when {
-                        post.petName.isNotBlank() -> post.petName
-                        post.authorUsername.isNotBlank() -> post.authorUsername
-                        post.authorName.isNotBlank() -> post.authorName
-                        else -> "Pawty Friend"
-                    }
-                    val headerAvatarUrl = post.petPhotoUrl ?: post.authorAvatarUrl
+        hostUid?.let {
+            FirebaseFirestore.getInstance()
+                .collection("posts")
+                .whereEqualTo("authorUid", it)
+                .whereEqualTo("petName", petName)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener { snap ->
+                    postsList.clear()
+                    snap.documents.forEach { doc ->
+                        val post = doc.toObject(Post::class.java) ?: return@forEach
+                        val displayName = when {
+                            post.petName.isNotBlank() -> post.petName
+                            post.authorUsername.isNotBlank() -> post.authorUsername
+                            post.authorName.isNotBlank() -> post.authorName
+                            else -> "Pawty Friend"
+                        }
+                        val headerAvatarUrl = post.petPhotoUrl ?: post.authorAvatarUrl
 
-                    postsList.add(
-                        PostUi(
-                            id = post.id,
-                            author = displayName,
-                            avatarUrl = headerAvatarUrl,
-                            avatarRes = R.drawable.ic_avatar_circle,
-                            photoUrl = post.photoUrl,
-                            photoRes = R.drawable.sample_dog,
-                            caption = post.caption,
-                            likeCount = post.likeCount,
-                            liked = false,
-                            following = false,
-                            authorUid = post.authorUid
+                        postsList.add(
+                            PostUi(
+                                id = post.id,
+                                author = displayName,
+                                avatarUrl = headerAvatarUrl,
+                                avatarRes = R.drawable.ic_avatar_circle,
+                                photoUrl = post.photoUrl,
+                                photoRes = R.drawable.sample_dog,
+                                caption = post.caption,
+                                likeCount = post.likeCount,
+                                liked = false,
+                                following = false,
+                                authorUid = post.authorUid
+                            )
                         )
-                    )
+                    }
+                    adapter.notifyDataSetChanged()
                 }
-                adapter.notifyDataSetChanged()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(
-                    requireContext(),
-                    "Failed to load posts: ${e.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+                .addOnFailureListener { e ->
+                    Toast.makeText(
+                        requireContext(),
+                        "Failed to load posts: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+        }
     }
 
 

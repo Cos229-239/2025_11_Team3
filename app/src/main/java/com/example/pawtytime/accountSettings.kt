@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -29,7 +30,19 @@ class AccountSettings : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_account_settings, container, false)
+        val view = inflater.inflate(R.layout.fragment_account_settings, container, false)
+
+        val logoutBtn = view.findViewById<Button>(R.id.logoutButton)
+        val deleteAccountBtn = view.findViewById<Button>(R.id.deleteAccount)
+
+        logoutBtn.setOnClickListener {
+
+        }
+
+        deleteAccountBtn.setOnClickListener{
+
+        }
+        return view
     }
 
 

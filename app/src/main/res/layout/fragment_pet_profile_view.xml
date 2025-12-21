@@ -28,11 +28,12 @@
 
                 <ImageButton
                     android:id="@+id/pet_profile_view_back"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:src="@drawable/backarrow"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:layout_marginLeft="25dp"
+                    android:contentDescription="back button"
                     />
                 <ImageView
                     android:id="@+id/pet_view_prof_pic"
@@ -47,6 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
                     android:backgroundTint="@color/pawty_pill_blue"
                     android:text="View Photos" />
 
@@ -70,6 +72,17 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     tools:ignore="MissingConstraints" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnGoToUserProfile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/marcellus"
+                    android:text="User Profile"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="@color/pawty_pill_blue"
+                    android:layout_gravity="center"
+                    />
             </LinearLayout>
 
             <LinearLayout
