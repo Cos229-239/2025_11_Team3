@@ -60,6 +60,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:21.4.0")
     implementation("com.facebook.android:facebook-login:18.1.3")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation(libs.androidx.recyclerview)
     testImplementation(libs.junit)
     implementation("com.github.bumptech.glide:glide:4.16.0")
     androidTestImplementation(libs.androidx.junit)
@@ -68,4 +69,5 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    implementation("com.google.android.material:material:1.11.0")
 }

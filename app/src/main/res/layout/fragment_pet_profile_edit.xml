@@ -48,7 +48,8 @@
                 android:text="@string/age"
                 android:textAlignment="center"
                 android:textColor="@color/pawty_text_primary"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                tools:ignore="VisualLintTextFieldSize" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -75,12 +76,13 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
             <EditText
                 android:id="@+id/likes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:autofillHints=""
                 android:fontFamily="@font/marcellus"
                 android:gravity="center"
                 android:paddingBottom="12dp"
@@ -123,8 +125,22 @@
                 android:text="Bio"
                 android:textAlignment="center"
                 android:textColor="@color/pawty_text_primary"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:ignore="HardcodedText,LabelFor,TextFields" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="46dp"
+            android:text="Save"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

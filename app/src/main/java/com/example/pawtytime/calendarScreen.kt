@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,6 +29,13 @@ class calendarScreen : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.calendarRecyclerView)
+
+// 7 columns for a calendar (Sun → Sat)
+        val gridLayoutManager = GridLayoutManager(requireContext(), 7)
+
+        recyclerView?.layoutManager = gridLayoutManager
     }
 
     override fun onCreateView(

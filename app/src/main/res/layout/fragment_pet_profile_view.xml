@@ -94,7 +94,7 @@
                 android:fontFamily="@font/marcellus"
                 android:gravity="center"
                 android:paddingBottom="12dp"
-                android:text="Allergies"
+                android:text="@string/allergies"
                 android:textAlignment="center"
                 android:textColor="@color/pawty_text_primary"
                 android:textSize="20sp" />
@@ -106,7 +106,7 @@
                 android:fontFamily="@font/marcellus"
                 android:gravity="center"
                 android:paddingBottom="12dp"
-                android:text="Bio"
+                android:text="@string/bio"
                 android:textAlignment="center"
                 android:textColor="@color/pawty_text_primary"
                 android:textSize="20sp" />
@@ -118,7 +118,7 @@
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="INVITE TO PAWTY!"
+            android:text="@string/invite_to_pawty"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

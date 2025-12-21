@@ -107,5 +107,10 @@
     <string name="age">Age</string>
     <string name="likes">Likes</string>
     <string name="dislikes">Dislikes</string>
+    <string name="bio">Bio</string>
+    <string name="allergies">Allergies</string>
+    <string name="invite_to_pawty">INVITE TO PAWTY!</string>
+    <string name="your_calender">Your Calender</string>
+    <string name="info_button">info button</string>
 
 </resources>
